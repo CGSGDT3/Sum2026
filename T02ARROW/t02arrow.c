@@ -86,10 +86,10 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   
     GetCursorPos(&pt);
     ScreenToClient(hWnd, &pt);
-  
-    for (i = 0; i < W; i += 125)
-      for (j = 0; j < H; j += 125)
-        DrawArrow(hMemDC, i, j, 120, 30.47, hWnd);       
+
+    srand(47);
+    for (i = 0; i < 120; i ++)
+        DrawArrow(hMemDC, rand() % W, rand() % H, 120, 30.47, hWnd);       
     ReleaseDC(hWnd, hDC);  
     InvalidateRect(hWnd, NULL, FALSE);
     return 0;

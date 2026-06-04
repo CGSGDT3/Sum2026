@@ -1,0 +1,90 @@
+#include <windows.h>
+#include <stdio.h>
+#include <conio.h>
+
+typedef DOUBLE DBL;
+
+#define MAX 3
+static DBL A[MAX][MAX];
+static INT N;
+static INT p[MAX];
+static BOOL IsParity, Par[MAX];
+static INT Perm[MAX][MAX];
+static INT k = 0;
+
+VOID Swap( INT *a, INT *b )
+{
+  INT tmp = *a;
+
+  *a = *b, *b = tmp;
+}
+
+VOID Go( INT Pos )
+{
+  INT i;
+
+  if (Pos == MAX)
+  {
+    for (i = 0; i < MAX; i++)
+      Perm[k][i] = p[i];
+    Par[k] = IsParity;
+    k++;
+  }
+  else
+  {
+    if (Pos == 0)
+      for (i = 0; i < MAX; i++)
+        p[i] = i;
+    for (i = Pos; i < MAX; i++)
+    {
+      Swap(&p[Pos], &p[i]);
+      if (Pos != i)
+        IsParity = !IsParity;
+      Go(Pos + 1);
+      Swap(&p[Pos], &p[i]);
+      if (Pos != i)
+        IsParity = !IsParity;
+    }
+  }
+}
+
+BOOL LoadMatrix( char *FileName )
+{
+  FILE *F;
+  INT i, j;
+  IsParity = TRUE;
+  Go(0);
+  N = 0;
+  if ((F = fopen("IN.TXT", "r")) == NULL)
+    return FALSE;
+
+  fscanf(F, "%d", &N);
+  if (N < 0)
+    N = 0;
+  else 
+    if (N > MAX)
+      N = MAX;
+
+  for (i = 0; i < N; i++)
+    for (j = 0; j < N; j++)
+      fscanf(F, "%lf", &A[i][j]);
+
+  fclose(F);
+  return TRUE;
+}
+VOID main( VOID )
+{
+
+  INT i, j;
+  DOUBLE prod = 0, det = 0;
+
+  LoadMatrix("IN.TXT");
+  for (j = 0; j < N; j++) 
+    for (i = 0; i < N; i++)
+    {
+      prod *= A[i][Perm[j][i]];
+      det += (Par[j] * 2 - 1) * prod;
+    }
+    printf("Det:%lf", det);
+    _getch();
+}
