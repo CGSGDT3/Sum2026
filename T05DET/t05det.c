@@ -15,7 +15,7 @@ static INT k = 0;
 VOID Swap( INT *a, INT *b )
 {
   INT tmp = *a;
-
+  
   *a = *b, *b = tmp;
 }
 
@@ -52,10 +52,8 @@ BOOL LoadMatrix( char *FileName )
 {
   FILE *F;
   INT i, j;
-  IsParity = TRUE;
-  Go(0);
   N = 0;
-  if ((F = fopen("IN.TXT", "r")) == NULL)
+  if ((F = fopen(FileName, "r")) == NULL)
     return FALSE;
 
   fscanf(F, "%d", &N);
@@ -74,12 +72,14 @@ BOOL LoadMatrix( char *FileName )
 }
 VOID main( VOID )
 {
-
   INT i, j;
   DOUBLE prod = 0, det = 0;
+  IsParity = TRUE; 
+  k = 0;          
 
-  Go(0);
-  LoadMatrix("IN.TXT");
+  Go(0);           
+  LoadMatrix("IN.TXT");  
+      
 
   for (j = 0; j < 6; j++)
   {
@@ -90,5 +90,5 @@ VOID main( VOID )
       det += (Par[j] ? 1 : -1) * prod;
   }
   printf("Det:%lf", det);
-  _getch();
+  _getch(); 
 }
