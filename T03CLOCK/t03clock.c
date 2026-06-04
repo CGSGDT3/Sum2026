@@ -67,6 +67,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   static HDC hMemDC, hDCClock;
   static HBITMAP hBm, hBmClock;
   static BITMAP bmpInfo;
+  static POINT pts[3];
 
   switch (Msg)
   {
@@ -108,43 +109,65 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     rc.bottom = H - 18;
     hDC = GetDC(hWnd);
 
-    hPen = CreatePen(PS_SOLID, 5, RGB(0, 0, 0));
+    hPen = CreatePen(PS_NULL, 5, RGB(255, 255, 255));
     hBrush = CreateSolidBrush(RGB(255, 255, 255));
     SelectObject(hMemDC, hPen);
-    SelectObject(hMemDC, hBrush);  
-    
-    Rectangle(hMemDC, 0, 0, W, H); 
-  
+    SelectObject(hMemDC, hBrush);
+
+    Rectangle(hMemDC, 0, 0, W, H);
+    DeleteObject(hBrush);
+
     BitBlt(hMemDC, (W - bmpInfo.bmWidth) / 2, (H - bmpInfo.bmHeight) / 2, W, H, hDCClock, 0, 0, SRCCOPY);
     GetLocalTime(&st);
 
-    hPen = CreatePen(PS_SOLID, 5, RGB(0, 0, 0));
-    SelectObject(hMemDC, hPen);
-    a = - PI * (st.wSecond % 60) / 30 + PI;
+    a = -PI * (st.wSecond % 60 + st.wMilliseconds / 1000.0) / 30 + PI;
+    pts[0].x = W / 2 + 0.75 * bmpInfo.bmWidth * sin(a) / 2;
+    pts[0].y = 0.75 * bmpInfo.bmHeight * cos(a) / 2 + H / 2;
+    pts[1].x = W / 2 + 0.1 * bmpInfo.bmWidth * sin(a - 0.25) / 2;
+    pts[1].y = 0.1 * bmpInfo.bmHeight * cos(a - 0.25) / 2 + H / 2;
+    pts[2].x = W / 2 + 0.1 * bmpInfo.bmWidth * sin(a + 0.25) / 2;
+    pts[2].y = 0.1 * bmpInfo.bmHeight * cos(a + 0.25) / 2 + H / 2;
 
-    MoveToEx(hMemDC, W / 2, H / 2, NULL);
-    LineTo(hMemDC, W / 2 + 0.75 * bmpInfo.bmWidth * sin(a) / 2, 0.75 * bmpInfo.bmHeight * cos(a) / 2 + H / 2);
+    hBrush = CreateSolidBrush(RGB(0, 0, 0));
+    SelectObject(hMemDC, hBrush);
+    Polygon(hMemDC, pts, 3);
+    DeleteObject(hBrush);
 
-    hPen = CreatePen(PS_SOLID, 10, RGB(47 * 255 / 100, 18 * 255 / 100, 30 * 255 / 100));
-    SelectObject(hMemDC, hPen);
-    a = - PI * (st.wMinute + (st.wSecond % 60) / 60.0) / 30 + PI;                                   
-    MoveToEx(hMemDC, W / 2, H / 2, NULL);
-    LineTo(hMemDC, W / 2 + bmpInfo.bmWidth * sin(a) / 4, bmpInfo.bmHeight * cos(a) / 4 + H / 2);
+    a = -PI * (st.wMinute + (st.wSecond % 60) / 60.0) / 30 + PI;
+    pts[0].x = W / 2 + bmpInfo.bmWidth * sin(a) / 4;
+    pts[0].y = bmpInfo.bmHeight * cos(a) / 4 + H / 2;
+    pts[1].x = W / 2 + 0.12 * bmpInfo.bmWidth * sin(a - 0.25) / 4;
+    pts[1].y = 0.12 * bmpInfo.bmHeight * cos(a - 0.25) / 4 + H / 2;
+    pts[2].x = W / 2 + 0.12 * bmpInfo.bmWidth * sin(a + 0.25) / 4;
+    pts[2].y = 0.12 * bmpInfo.bmHeight * cos(a + 0.25) / 4 + H / 2;
 
-    hPen = CreatePen(PS_SOLID, 15, RGB(18 * 255 / 100, 30 * 255 / 100, 47 * 255 / 100));
-    SelectObject(hMemDC, hPen);
-    a = - PI * (st.wHour % 12 + (st.wMinute % 60) / 60.0) / 6 + PI;
-    MoveToEx(hMemDC, W / 2, H / 2, NULL);
-    LineTo(hMemDC, W / 2 + bmpInfo.bmWidth * sin(a) / 8,  bmpInfo.bmHeight * cos(a) / 8 + H / 2);
+    hBrush = CreateSolidBrush(RGB(47 * 255 / 100, 18 * 255 / 100, 30 * 255 / 100));
+    SelectObject(hMemDC, hBrush);
+    Polygon(hMemDC, pts, 3);
+    DeleteObject(hBrush);
+
+    a = -PI * (st.wHour % 12 + (st.wMinute % 60) / 60.0) / 6 + PI;
+    pts[0].x = W / 2 + bmpInfo.bmWidth * sin(a) / 8;
+    pts[0].y = bmpInfo.bmHeight * cos(a) / 8 + H / 2;
+    pts[1].x = W / 2 + 0.15 * bmpInfo.bmWidth * sin(a - 0.25) / 8;
+    pts[1].y = 0.15 * bmpInfo.bmHeight * cos(a - 0.25) / 8 + H / 2;
+    pts[2].x = W / 2 + 0.15 * bmpInfo.bmWidth * sin(a + 0.25) / 8;
+    pts[2].y = 0.15 * bmpInfo.bmHeight * cos(a + 0.25) / 8 + H / 2;
+
+    hBrush = CreateSolidBrush(RGB(18 * 255 / 100, 30 * 255 / 100, 47 * 255 / 100));
+    SelectObject(hMemDC, hBrush);
+    Polygon(hMemDC, pts, 3);
+    DeleteObject(hBrush);
 
     SelectObject(hMemDC, hFnt);
     DrawText(hMemDC, Buf, wsprintf(Buf, ">>> %i::%i::%i <<<", st.wHour, st.wMinute, st.wSecond), &rc,
       DT_CENTER);
     DeleteObject(hFnt);
     DeleteObject(hPen);
-    ReleaseDC(hWnd, hDC);  
+    ReleaseDC(hWnd, hDC);
     InvalidateRect(hWnd, NULL, FALSE);
     return 0;
+
   case WM_PAINT:
     hDC = BeginPaint(hWnd, &ps);
     BitBlt(hDC, 0, 0, W, H, hMemDC, 0, 0, SRCCOPY);
