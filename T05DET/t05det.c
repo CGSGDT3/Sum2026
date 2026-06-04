@@ -9,7 +9,7 @@ static DBL A[MAX][MAX];
 static INT N;
 static INT p[MAX];
 static BOOL IsParity, Par[MAX];
-static INT Perm[MAX][MAX];
+static INT Perm[6][MAX];
 static INT k = 0;
 
 VOID Swap( INT *a, INT *b )
@@ -27,7 +27,7 @@ VOID Go( INT Pos )
   {
     for (i = 0; i < MAX; i++)
       Perm[k][i] = p[i];
-    Par[k] = IsParity;
+    Par[k] = IsParity;  
     k++;
   }
   else
@@ -78,13 +78,17 @@ VOID main( VOID )
   INT i, j;
   DOUBLE prod = 0, det = 0;
 
+  Go(0);
   LoadMatrix("IN.TXT");
-  for (j = 0; j < N; j++) 
-    for (i = 0; i < N; i++)
-    {
-      prod *= A[i][Perm[j][i]];
-      det += (Par[j] * 2 - 1) * prod;
-    }
-    printf("Det:%lf", det);
-    _getch();
+
+  for (j = 0; j < 6; j++)
+  {
+      prod = 1;
+      for (i = 0; i < N; i++)
+          prod *= A[i][Perm[j][i]];
+
+      det += (Par[j] ? 1 : -1) * prod;
+  }
+  printf("Det:%lf", det);
+  _getch();
 }
