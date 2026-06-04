@@ -8,7 +8,7 @@ typedef DOUBLE DBL;
 static DBL A[MAX][MAX];
 static INT N;
 static INT p[MAX];
-static BOOL IsParity, Par[MAX];
+static BOOL IsParity, Par[6];
 static INT Perm[6][MAX];
 static INT k = 0;
 
