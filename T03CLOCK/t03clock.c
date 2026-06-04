@@ -67,7 +67,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   static HDC hMemDC, hDCClock;
   static HBITMAP hBm, hBmClock;
   static BITMAP bmpInfo;
-  static POINT pts[3];
+  POINT pts[3];
 
   switch (Msg)
   {
