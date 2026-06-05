@@ -4,13 +4,14 @@
 
 typedef DOUBLE DBL;
 
-#define MAX 3
+#define MAX 10
+#define MAXF 3628800
 static DBL A[MAX][MAX];
 static INT N;
 static INT p[MAX];
-static BOOL IsParity, Par[6];
-static INT Perm[6][MAX];
-static INT k = 0;
+static BOOL IsParity, Par[MAXF];
+static INT Perm[MAXF][MAX];
+static INT k;
 
 VOID Swap( INT *a, INT *b )
 {
@@ -81,7 +82,7 @@ VOID main( VOID )
   LoadMatrix("IN.TXT");  
       
 
-  for (j = 0; j < 6; j++)
+  for (j = 0; j < MAXF; j++)
   {
       prod = 1;
       for (i = 0; i < N; i++)

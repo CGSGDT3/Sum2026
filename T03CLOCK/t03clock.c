@@ -64,10 +64,10 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   static INT W, H;
   DOUBLE a;
   SYSTEMTIME st;
-  static HDC hMemDC, hDCClock;
-  static HBITMAP hBm, hBmClock;
-  static BITMAP bmpInfo;
-  POINT pts[3];
+  static HDC hMemDC, hDCClock, hDCA, hDCO;
+  static HBITMAP hBm, hBmClock, hBmA, hBmO;
+  static BITMAP bmpInfo, capyInfo;
+  POINT pts[3], pt;
 
   switch (Msg)
   {
@@ -75,6 +75,8 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     hDC = GetDC(hWnd);
     hMemDC = CreateCompatibleDC(hDC);
     hDCClock = CreateCompatibleDC(hDC);
+    hDCA = CreateCompatibleDC(hDC);
+    hDCO = CreateCompatibleDC(hDC);
     ReleaseDC(hWnd, hDC);
     SetTimer(hWnd, 30, 1, NULL);
     return 0;
@@ -87,13 +89,19 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     hBm = CreateCompatibleBitmap(hDC, W, H);
     if (hBmClock != NULL)
       DeleteObject(hBmClock);
-    hBmClock = LoadImage(NULL, "clock.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+    hBmClock = LoadImage(NULL, "clock3.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+ 
+    hBmA = LoadImage(NULL, "ca.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+    hBmO = LoadImage(NULL, "cxo.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
     GetObject(hBmClock, sizeof(BITMAP), &bmpInfo);
+    GetObject(hBmA, sizeof(BITMAP), &capyInfo);
  
     ReleaseDC(hWnd, hDC);
     SelectObject(hMemDC, hBm);
     SelectObject(hDCClock, hBmClock);
+    SelectObject(hDCA, hBmA);
+    SelectObject(hDCO, hBmO);
 
     return 0;
   case WM_TIMER:
@@ -118,6 +126,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     DeleteObject(hBrush);
 
     BitBlt(hMemDC, (W - bmpInfo.bmWidth) / 2, (H - bmpInfo.bmHeight) / 2, W, H, hDCClock, 0, 0, SRCCOPY);
+ 
     GetLocalTime(&st);
 
     a = -PI * (st.wSecond % 60 + st.wMilliseconds / 1000.0) / 30 + PI;
@@ -162,8 +171,16 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     SelectObject(hMemDC, hFnt);
     DrawText(hMemDC, Buf, wsprintf(Buf, ">>> %i::%i::%i <<<", st.wHour, st.wMinute, st.wSecond), &rc,
       DT_CENTER);
+
+    GetCursorPos(&pt);
+    ScreenToClient(hWnd, &pt);
+
+    BitBlt(hMemDC, pt.x - capyInfo.bmWidth / 2, pt.y - capyInfo.bmHeight / 2, W, H, hDCA, 0, 0, SRCAND);
+    BitBlt(hMemDC, pt.x - capyInfo.bmWidth / 2, pt.y - capyInfo.bmHeight / 2, W, H, hDCO, 0, 0, SRCINVERT);
+
     DeleteObject(hFnt);
     DeleteObject(hPen);
+    /* remember to release */
     ReleaseDC(hWnd, hDC);
     InvalidateRect(hWnd, NULL, FALSE);
     return 0;
@@ -178,8 +195,16 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   case WM_CLOSE:
     break;
   case WM_DESTROY:
+    /* remember to delete */
     DeleteObject(hBm);
     DeleteDC(hMemDC);
+    DeleteObject(hBmClock);
+    DeleteDC(hDCClock);
+    DeleteObject(hBmA);
+    DeleteDC(hDCA);
+    DeleteObject(hBmO);
+    DeleteDC(hDCO);
+
     KillTimer(hWnd, 30);
     PostQuitMessage(30);
     return 0;

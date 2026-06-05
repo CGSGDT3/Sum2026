@@ -1,4 +1,4 @@
-#define MAX 4
+#define MAX 3
 
 #include <windows.h>
 #include <stdio.h>
