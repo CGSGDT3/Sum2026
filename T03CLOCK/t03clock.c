@@ -91,8 +91,8 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
       DeleteObject(hBmClock);
     hBmClock = LoadImage(NULL, "clock3.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
  
-    hBmA = LoadImage(NULL, "ca.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-    hBmO = LoadImage(NULL, "cxo.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+    hBmA = LoadImage(NULL, "cutea.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+    hBmO = LoadImage(NULL, "cuteo.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
     GetObject(hBmClock, sizeof(BITMAP), &bmpInfo);
     GetObject(hBmA, sizeof(BITMAP), &capyInfo);
