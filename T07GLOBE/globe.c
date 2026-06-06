@@ -10,10 +10,24 @@
 
 #define GLB_GRID_W 30
 #define GLB_GRID_H 18
+#define MIN(A, B) ((A) < (B) ? (A) : (B))
+#define MAX(A, B) ((A) > (B) ? (A) : (B))
 
-static VEC GLB_Geom[GLB_GRID_H][GLB_GRID_W];
+static VEC GLB_Geom[GLB_GRID_H][GLB_GRID_W], GLB_GeomN[GLB_GRID_H][GLB_GRID_W];
 static INT GLB_Ws, GLB_Hs, Ws, Hs;
 static DBL GLB_ProjSize = 1, GLB_Wp, GLB_Hp, ProjDist = 1;
+
+COLORREF ColorTo255( VEC Color )
+{
+  INT
+    R = Color.X * 255,
+    G = Color.Y * 255,
+    B = Color.Z * 255;
+  R = MIN(255, MAX(0, R));
+  G = MIN(255, MAX(0, G));
+  B = MIN(255, MAX(0, B));
+  return RGB(R, G, B);
+}
 
 VOID GLB_Init( DBL R )
 {
@@ -26,6 +40,9 @@ VOID GLB_Init( DBL R )
       GLB_Geom[i][j].X = R * sin(theta) * sin(phi);
       GLB_Geom[i][j].Y = R * cos(theta);
       GLB_Geom[i][j].Z = R * sin(theta) * cos(phi);
+      GLB_GeomN[i][j].X = sin(theta) * sin(phi);
+      GLB_GeomN[i][j].Y = cos(theta);
+      GLB_GeomN[i][j].Z = sin(theta) * cos(phi);
     }
 }
 
@@ -68,20 +85,21 @@ VOID GLB_Draw( HDC hDC )
   HPEN hPen;
   HBRUSH hBrush;
   static POINT pnts[GLB_GRID_H][GLB_GRID_W], ps[4]; 
-  DBL t = 0.3 * (DBL)clock() / CLOCKS_PER_SEC;
+  DBL t = 0.3 * (DBL)clock() / CLOCKS_PER_SEC, len, nl;
+  VEC L, N, P, M;
+  L.X = L.Y = L.Z = 1;
+  len = sqrt(L.X * L.X + L.Y * L.Y + L.Z * L.Z);
+  L.X /= len, L.Y /= len, L.Z /= len;
 
   GLB_Init(0.5);
 
-  hPen = CreatePen(PS_SOLID, 5, RGB(255, 255, 255));
-  hBrush = CreateSolidBrush(RGB(55, 55, 55));
-
+  hPen = CreatePen(PS_SOLID, 5, RGB(125, 125, 0));
   SelectObject(hDC, hPen);
-  SelectObject(hDC, hBrush);
 
   for (i = 0; i < GLB_GRID_H; i++)
     for (j = 0; j < GLB_GRID_W; j++)
     {
-      VEC P = GLB_Geom[i][j];
+      P = GLB_Geom[i][j];
       P = RotateZ(P, 30 * t);
       P = RotateY(P, 47 * t);
       P = RotateX(P, 18 * t); 
@@ -96,7 +114,19 @@ VOID GLB_Draw( HDC hDC )
 
   for (i = 0; i < GLB_GRID_H - 1; i++)
     for (j = 0; j < GLB_GRID_W - 1; j++)
-    {
+    {     
+      N = GLB_GeomN[i][j];
+      N = RotateZ(N, 30 * t);
+      N = RotateY(N, 47 * t);
+      N = RotateX(N, 18 * t);  
+      nl = N.X * L.X + N.Y * L.Y + N.Z * L.Z;
+        if (nl < 0.18)
+          nl = 0.18;
+      M.X = 0.47 * nl;
+      M.Y = 0.8 * nl;
+      M.Z = 0.30 * nl;
+      hBrush = CreateSolidBrush(ColorTo255(M));
+      SelectObject(hDC, hBrush);
       ps[0] = pnts[i][j];
       ps[1] = pnts[i][j + 1];
       ps[2] = pnts[i + 1][j + 1];
@@ -106,6 +136,7 @@ VOID GLB_Draw( HDC hDC )
           (ps[2].x - ps[3].x) * (ps[2].y + ps[3].y) +
           (ps[3].x - ps[0].x) * (ps[3].y + ps[0].y) <= 0)
         Polygon(hDC, ps, 4);
+      DeleteObject(hBrush);
     }
 
       /*
@@ -122,7 +153,6 @@ VOID GLB_Draw( HDC hDC )
        LineTo(hDC, pnts[i][j].x, pnts[i][j].y);
   }    */
   DeleteObject(hPen);
-  DeleteObject(hBrush);
 }
 
 VOID GLB_Resize( INT W, INT H )
