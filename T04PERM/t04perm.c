@@ -1,4 +1,10 @@
-#define MAX 3
+ /* FILE NAME: t04perm.c
+ * PROGRAMMER: DT3
+ * DATE: 04.06.2026
+ * PURPOSE: Permuations of numbers.
+ */
+
+#define MAX 4
 
 #include <windows.h>
 #include <stdio.h>

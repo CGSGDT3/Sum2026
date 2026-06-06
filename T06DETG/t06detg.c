@@ -1,3 +1,9 @@
+ /* FILE NAME: t06detg.c
+ * PROGRAMMER: DT3
+ * DATE: 05.06.2026
+ * PURPOSE: Matrix determinate by Gauss method.
+ */
+
 #include <windows.h>
 #include <stdio.h>
 #include <conio.h>

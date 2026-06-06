@@ -1,3 +1,9 @@
+ /* FILE NAME: t05det.c
+ * PROGRAMMER: DT3
+ * DATE: 04.06.2026
+ * PURPOSE: Determinate of matrix by definition.
+ */
+
 #include <windows.h>
 #include <stdio.h>
 #include <conio.h>
