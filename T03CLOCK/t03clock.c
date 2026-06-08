@@ -130,12 +130,12 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     GetLocalTime(&st);
 
     a = -PI * (st.wSecond % 60 + st.wMilliseconds / 1000.0) / 30 + PI;
-    pts[0].x = W / 2 + 0.75 * bmpInfo.bmWidth * sin(a) / 2;
-    pts[0].y = 0.75 * bmpInfo.bmHeight * cos(a) / 2 + H / 2;
-    pts[1].x = W / 2 + 0.1 * bmpInfo.bmWidth * sin(a - 0.25) / 2;
-    pts[1].y = 0.1 * bmpInfo.bmHeight * cos(a - 0.25) / 2 + H / 2;
-    pts[2].x = W / 2 + 0.1 * bmpInfo.bmWidth * sin(a + 0.25) / 2;
-    pts[2].y = 0.1 * bmpInfo.bmHeight * cos(a + 0.25) / 2 + H / 2;
+    pts[0].x = W / 2 + 0.75 * bmpInfo.bmWidth * sin(a);
+    pts[0].y = 0.75 * bmpInfo.bmHeight * cos(a) + H / 2;
+    pts[1].x = W / 2 + 0.1 * bmpInfo.bmWidth * sin(a - 0.25);
+    pts[1].y = 0.1 * bmpInfo.bmHeight * cos(a - 0.25) + H / 2;
+    pts[2].x = W / 2 + 0.1 * bmpInfo.bmWidth * sin(a + 0.25);
+    pts[2].y = 0.1 * bmpInfo.bmHeight * cos(a + 0.25) + H / 2;
 
     hBrush = CreateSolidBrush(RGB(0, 0, 0));
     SelectObject(hMemDC, hBrush);
@@ -143,12 +143,12 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     DeleteObject(hBrush);
 
     a = -PI * (st.wMinute + (st.wSecond % 60) / 60.0) / 30 + PI;
-    pts[0].x = W / 2 + bmpInfo.bmWidth * sin(a) / 4;
-    pts[0].y = bmpInfo.bmHeight * cos(a) / 4 + H / 2;
-    pts[1].x = W / 2 + 0.12 * bmpInfo.bmWidth * sin(a - 0.25) / 4;
-    pts[1].y = 0.12 * bmpInfo.bmHeight * cos(a - 0.25) / 4 + H / 2;
-    pts[2].x = W / 2 + 0.12 * bmpInfo.bmWidth * sin(a + 0.25) / 4;
-    pts[2].y = 0.12 * bmpInfo.bmHeight * cos(a + 0.25) / 4 + H / 2;
+    pts[0].x = W / 2 + bmpInfo.bmWidth * sin(a) / 2;
+    pts[0].y = bmpInfo.bmHeight * cos(a) / 2 + H / 2;
+    pts[1].x = W / 2 + 0.12 * bmpInfo.bmWidth * sin(a - 0.25) / 2;
+    pts[1].y = 0.12 * bmpInfo.bmHeight * cos(a - 0.25) / 2 + H / 2;
+    pts[2].x = W / 2 + 0.12 * bmpInfo.bmWidth * sin(a + 0.25) / 2;
+    pts[2].y = 0.12 * bmpInfo.bmHeight * cos(a + 0.25) / 2 + H / 2;
 
     hBrush = CreateSolidBrush(RGB(47 * 255 / 100, 18 * 255 / 100, 30 * 255 / 100));
     SelectObject(hMemDC, hBrush);
@@ -156,12 +156,12 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     DeleteObject(hBrush);
 
     a = -PI * (st.wHour % 12 + (st.wMinute % 60) / 60.0) / 6 + PI;
-    pts[0].x = W / 2 + bmpInfo.bmWidth * sin(a) / 8;
-    pts[0].y = bmpInfo.bmHeight * cos(a) / 8 + H / 2;
-    pts[1].x = W / 2 + 0.15 * bmpInfo.bmWidth * sin(a - 0.25) / 8;
-    pts[1].y = 0.15 * bmpInfo.bmHeight * cos(a - 0.25) / 8 + H / 2;
-    pts[2].x = W / 2 + 0.15 * bmpInfo.bmWidth * sin(a + 0.25) / 8;
-    pts[2].y = 0.15 * bmpInfo.bmHeight * cos(a + 0.25) / 8 + H / 2;
+    pts[0].x = W / 2 + bmpInfo.bmWidth * sin(a) / 2;
+    pts[0].y = bmpInfo.bmHeight * cos(a) / 2 + H / 2;
+    pts[1].x = W / 2 + 0.15 * bmpInfo.bmWidth * sin(a - 0.25) / 2;
+    pts[1].y = 0.15 * bmpInfo.bmHeight * cos(a - 0.25) / 2 + H / 2;
+    pts[2].x = W / 2 + 0.15 * bmpInfo.bmWidth * sin(a + 0.25) / 2;
+    pts[2].y = 0.15 * bmpInfo.bmHeight * cos(a + 0.25) / 2 + H / 2;
 
     hBrush = CreateSolidBrush(RGB(18 * 255 / 100, 30 * 255 / 100, 47 * 255 / 100));
     SelectObject(hMemDC, hBrush);

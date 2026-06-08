@@ -2,8 +2,7 @@
  * PROGRAMMER: DT3
  * DATE: 06.06.2026
  * PURPOSE: Main file in drawing globe program.
- */
-
+ */  
 #include "globe.h"
 
 #define WND_CLASS_NAME "CGSG DT3!!!"
@@ -113,3 +112,4 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);
 }
+/* End of 't07globe.c file */
