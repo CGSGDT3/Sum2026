@@ -1,0 +1,23 @@
+ /* FILE NAME: rnddata.c
+ * PROGRAMMER: DT3
+ * DATE: 09.06.2026
+ * PURPOSE: Data file in animation program.
+ */  
+
+#include "def.h"
+
+HWND DT3_hRndWnd;        /* Work window handle */
+HDC DT3_hRndDCFrame;     /* Work window memory device context  */
+HBITMAP DT3_hRndBmFrame; /* Work window background bitmap handle */
+INT DT3_RndFrameW, DT3_RndFrameH; /* Work window size */
+
+DBL
+  DT3_RndProjSize = 0.1,     /* Project plane fit square */
+  DT3_RndProjDist = 0.1,     /* Distance to project plane from viewer (near) */
+  DT3_RndProjFarClip = 300;  /* Distance to project far clip plane (far) */
+
+MATR
+  DT3_RndMatrView, /* View coordinate system matrix */
+  DT3_RndMatrProj, /* Projection coordinate system matrix */
+  DT3_RndMatrVP;   /* Stored (View * Proj) matrix */
+/* END OF 'rnddata.c' FILE */
