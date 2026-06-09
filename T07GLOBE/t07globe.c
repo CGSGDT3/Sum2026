@@ -4,10 +4,12 @@
  * PURPOSE: Main file in drawing globe program.
  */  
 #include "globe.h"
+#include "timer.h"
 
 #define WND_CLASS_NAME "CGSG DT3!!!"
 
 LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam );
+VOID FlipFullScreen( HWND hWnd );
 
 INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    CHAR *CmdLine, INT ShowCmd )
@@ -39,11 +41,15 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   ShowWindow(hWnd, SW_SHOWNORMAL);
   UpdateWindow(hWnd);
 
-  while (GetMessage(&msg, NULL, 0, 0))
-  {
-    TranslateMessage(&msg);
-    DispatchMessage(&msg);
-  }
+  while (TRUE)
+    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+    {
+      if (msg.message == WM_QUIT)
+        break;
+      DispatchMessage(&msg);
+    }
+    else
+      SendMessage(hWnd, WM_TIMER, 30.47, 0);
   return msg.wParam;
 }
 
@@ -57,14 +63,21 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   HPEN hPen;
   HBRUSH hBrush;
   PAINTSTRUCT ps;
+  MINMAXINFO *minmax;
 
   switch (Msg)
   {
+  case WM_GETMINMAXINFO:            
+    minmax = (MINMAXINFO *)lParam;
+    minmax->ptMaxTrackSize.y = GetSystemMetrics(SM_CYMAXTRACK) +
+      GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER) * 2;
+    return 0;
   case WM_CREATE:
     hDC = GetDC(hWnd);
     GLB_Init(1);
     hMemDC = CreateCompatibleDC(hDC);
     ReleaseDC(hWnd, hDC);
+    GLB_TimerInit();
     SetTimer(hWnd, 30, 1, NULL);
     return 0;
   case WM_SIZE:
@@ -79,7 +92,14 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     SelectObject(hMemDC, hBm);
     SendMessage(hWnd, WM_TIMER, 47, 0);
     return 0;
+  case WM_KEYDOWN:
+    if (wParam == 'P')
+      GLB_IsPause = !GLB_IsPause;
+    if (wParam == 'F')
+      FlipFullScreen(hWnd);
+    return 0;
   case WM_TIMER:
+    GLB_TimerResponse();
     hPen = CreatePen(PS_NULL, 5, RGB(0, 0, 0));
     hBrush = CreateSolidBrush(RGB(0, 0, 0));
     SelectObject(hMemDC, hPen);
@@ -111,5 +131,54 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     return 0;
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);
-}
+}    
+
+/* Flip window full screen mode function.
+ * ARGUMENTS:
+ *   - window handle:
+ *       HWND hWnd;
+ * RETURNS: None.
+ */
+
+VOID FlipFullScreen( HWND hWnd )
+{
+  static BOOL IsFullScreen = FALSE;
+  static RECT SaveRect;
+
+  if (!IsFullScreen)
+  {
+    HMONITOR hmon;
+    MONITORINFO mi;
+    RECT rc;
+
+    /* Save old window size and position */
+    GetWindowRect(hWnd, &SaveRect);
+
+    /* Obtain nearest monitor */
+    hmon = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+    mi.cbSize = sizeof(mi);
+
+    GetMonitorInfo(hmon, &mi);
+
+    /* Go to full screen mode */
+    rc = mi.rcMonitor;
+    AdjustWindowRect(&rc, GetWindowLong(hWnd, GWL_STYLE), FALSE);
+
+
+    /* Expand window */
+    SetWindowPos(hWnd, HWND_TOP,
+      rc.left, rc.top,
+      rc.right - rc.left,
+      rc.bottom - rc.top,
+      SWP_NOOWNERZORDER);
+  }
+  else
+    /* Restore from full screen mode */
+    SetWindowPos(hWnd, HWND_TOP,
+      SaveRect.left, SaveRect.top,
+      SaveRect.right - SaveRect.left,
+      SaveRect.bottom - SaveRect.top,
+      SWP_NOOWNERZORDER);
+  IsFullScreen = !IsFullScreen;
+} /* End of 'FlipFullScreen' function */
 /* End of 't07globe.c file */

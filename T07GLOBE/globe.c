@@ -7,6 +7,7 @@
 #include <time.h>
 
 #include "globe.h"
+#include "timer.h"
 
 #define GLB_GRID_W 30
 #define GLB_GRID_H 18
@@ -41,6 +42,13 @@ COLORREF ColorTo255( VEC Color )
   return RGB(R, G, B);
 } /* End of 'ColorTo255' function */
 
+DBL Power( DBL A, DBL B )
+{
+  if (A >= 0)
+    return pow(A, B);
+  else
+    return -pow(-A, B);
+}
 /* Initialising of globe function.
  * ARGUMENTS:
  *     radius of globe:
@@ -55,9 +63,9 @@ VOID GLB_Init( DBL R )
     for (j = 0; j < GLB_GRID_W; j++)
     {
       DBL theta = i * PI / (GLB_GRID_H - 1), phi = j * 2 * PI / (GLB_GRID_W - 1);  
-      GLB_Geom[i][j].X = 2 * R * sin(theta) * sin(phi);
-      GLB_Geom[i][j].Y = 2.6 * R * cos(theta);
-      GLB_Geom[i][j].Z = 2 * R * sin(theta) * cos(phi);
+      GLB_Geom[i][j].X = R * Power(sin(theta) * sin(phi), 0.47);
+      GLB_Geom[i][j].Y = 2 * R * Power(cos(theta), 3);
+      GLB_Geom[i][j].Z = R * Power(sin(theta) * cos(phi), 0.30);
     }
 
     for (i = 0; i < GLB_GRID_H - 1; i++)
@@ -82,26 +90,34 @@ VOID GLB_Init( DBL R )
 VOID GLB_Draw( HDC hDC )
 {
   INT i, j;
+  RECT rc;
   HPEN hPen;
   HBRUSH hBrush;
   static POINT pnts[GLB_GRID_H][GLB_GRID_W], ps[4]; 
-  DBL t = 0.3 * (DBL)clock() / CLOCKS_PER_SEC, nl;
+  DBL t = 0.3 * Time, nl;
+  CHAR Buf[100];
   VEC L = VecNormalize(VecSet(3, 1, 1)),
     L1 = VecNormalize(VecSet(-2, sin(t * 18), 1)), N, P, M;
   MATR m = MatrMulMatr(MatrMulMatr(MatrRotateZ(300 * t / 2), 
         MatrRotateY(470 * t / 2)), MatrRotateX(180 * t));
+
+  rc.left = 18;
+  rc.top = 18;
+  rc.right = GLB_Ws - 18;
+  rc.bottom = GLB_Hs - 18;
+  DrawText(hDC, Buf, sprintf(Buf, "FPS: %f", FPS), &rc, DT_CENTER);   
   VecNormalize(L);
 
 
   GLB_Init(0.5);
 
-  hPen = CreatePen(PS_SOLID, 5, RGB(125, 125, 0));
+  hPen = CreatePen(PS_NULL, 5, RGB(125, 125, 0));
   SelectObject(hDC, hPen);
 
   for (i = 0; i < GLB_GRID_H; i++)
     for (j = 0; j < GLB_GRID_W; j++)
     {
-      P = PointTransform(GLB_Geom[i][j], MatrMulMatr(m, MatrTranslate(VecSet(0, 0, -4))));
+      P = PointTransform(GLB_Geom[i][j], MatrMulMatr(m, MatrTranslate(VecSet(sin(t), - cos(2 * t), -3 - 7 * fabs(cos(t))))));
       P.X = P.X * GLB_Ws / GLB_Wp;
       P.Y = P.Y * GLB_Hs / GLB_Hp;
       P.X *= ProjDist / (-P.Z);
@@ -113,6 +129,7 @@ VOID GLB_Draw( HDC hDC )
   for (i = 0; i < GLB_GRID_H - 1; i++)
     for (j = 0; j < GLB_GRID_W - 1; j++)
     {     
+      m = MatrTranspose(MatrInverse(m));
       N = VectorTransform(GLB_GeomN[i][j], m);
       nl = VecDotVec(N, L);
         if (nl < 0.18)
