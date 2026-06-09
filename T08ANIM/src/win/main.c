@@ -6,6 +6,7 @@
 
 #include "def.h"
 #include "anim/rnd/rnd.h"
+#include <time.h>
 
 #define WND_CLASS_NAME "CGSG DT3!!!"
 
@@ -49,6 +50,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
       if (msg.message == WM_QUIT)
         break;
       DispatchMessage(&msg);
+      SendMessage(hWnd, WM_TIMER, 30, 0);
     }
     else
       SendMessage(hWnd, WM_TIMER, 30, 0);
@@ -60,7 +62,9 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
 {
   INT W, H;
   MINMAXINFO *minmax;
-  HDC hDC;
+  HDC hDC;   
+  PAINTSTRUCT ps;
+  static dt3PRIM Pr;
   switch (Msg)
   {
   case WM_GETMINMAXINFO:
@@ -70,6 +74,21 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     return 0;
   case WM_CREATE:
     DT3_RndInit(hWnd);
+    if (dt3_RndPrimCreate(&Pr, 4, 6))
+    {
+      Pr.V[0].P = VecSet(0, 0, 0);
+      Pr.V[1].P = VecSet(2, 0, 0);
+      Pr.V[2].P = VecSet(0, 2, 0);
+      Pr.V[3].P = VecSet(2, 2, 0);
+
+      Pr.I[0] = 0;
+      Pr.I[1] = 1;
+      Pr.I[2] = 2;
+
+      Pr.I[3] = 2;
+      Pr.I[4] = 1;
+      Pr.I[5] = 3;
+    }
     return 0;
   case WM_SIZE:
     W = LOWORD(lParam);
@@ -80,19 +99,23 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   case WM_KEYDOWN:
     return 0;
   case WM_TIMER:
-    DT3_RndStart();
-    InvalidateRect(hWnd, NULL, FALSE); 
-    return 0;
-  case WM_PAINT:   
     hDC = GetDC(hWnd);
-    DT3_RndCopyFrame(hDC);
+    DT3_RndStart();
+    dt3_RndPrimDraw(&Pr, MatrRotateY(30 * (GetTickCount() / 1000.0)));
     ReleaseDC(hWnd, hDC);
+    InvalidateRect(hWnd, NULL, FALSE);
+    return 0;
+  case WM_PAINT:
+    hDC = BeginPaint(hWnd, &ps);
+    DT3_RndCopyFrame(hDC);
+    EndPaint(hWnd, &ps);
     return 0;
   case WM_ERASEBKGND:
     return 1;
   case WM_CLOSE:
     break;
   case WM_DESTROY:
+    dt3_RndPrimFree(&Pr);
     KillTimer(hWnd, 30);
     PostQuitMessage(30);
     return 0;
