@@ -205,6 +205,10 @@
 					RelativePath=".\src\anim\rnd\rnddata.c"
 					>
 				</File>
+				<File
+					RelativePath=".\src\anim\rnd\rndprim.c"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Windows Depended"

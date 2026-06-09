@@ -23,5 +23,27 @@ extern MATR
   DT3_RndMatrView, /* View coordinate system matrix */
   DT3_RndMatrProj, /* Projection coordinate system matrix */
   DT3_RndMatrVP;   /* Stored (View * Proj) matrix */
+
+typedef struct tagdt3VERTEX
+{
+  VEC P;  /* Vertex position */
+} dt3VERTEX;
+
+typedef struct tagdt3PRIM
+{
+  dt3VERTEX *V; /* Vertex attributes array */
+  INT NumOfV;   /* Number of vertices */
+
+  INT *I;       /* Index array (for trimesh – by 3 ones) */
+  INT NumOfI;   /* Number of indices */
+
+  MATR Trans;   /* Additional transformation matrix */
+} dt3PRIM;
+
+BOOL dt3_RndPrimCreate( dt3PRIM *Pr, INT NoofV, INT NoofI );
+VOID dt3_RndPrimFree( dt3PRIM *Pr );
+VOID dt3_RndPrimDraw( dt3PRIM *Pr, MATR World );
+BOOL dt3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName );
+
 #endif /* __rnd_h */
 /* END OF 'rnd.h' FILE */
