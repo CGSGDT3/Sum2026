@@ -10,7 +10,6 @@
 VOID DT3_RndClose( VOID )
 {
   DeleteDC(DT3_hRndDCFrame);
-  DeleteObject(DT3_hRndWnd);
   DeleteObject(DT3_hRndBmFrame);
  }
 
@@ -41,11 +40,9 @@ VOID DT3_RndResize( INT W, INT H )
 
   SelectObject(DT3_hRndDCFrame, DT3_hRndBmFrame);
 
-  /* сохраняем размеры */
   DT3_RndFrameW = W;
   DT3_RndFrameH = H;
 
-  /* пересчитываем проекию */
   DT3_RndProjSet();
 }
 
@@ -57,10 +54,20 @@ VOID DT3_RndCamSet( VEC Loc, VEC At, VEC Up )
 
 
 VOID DT3_RndInit( HWND hWnd )
-{                     
+{     
+  HDC hDC;      
+  RECT rect;
+  LONG W, H;
+  GetWindowRect(hWnd, &rect);
+
+  W = rect.right - rect.left;
+  H = rect.bottom - rect.top;  
   DT3_hRndWnd = hWnd;
-  DT3_hRndDCFrame = CreateCompatibleDC(GetDC((hWnd)));
-  DT3_hRndBmFrame = CreateCompatibleBitmap(DT3_hRndDCFrame, DT3_RndFrameW, DT3_RndFrameH);
+  hDC = GetDC(hWnd);
+  DT3_hRndDCFrame = CreateCompatibleDC(hDC);
+  DT3_hRndBmFrame = CreateCompatibleBitmap(hDC, W, H);
+  ReleaseDC(hWnd, hDC);
+  SelectObject(DT3_hRndDCFrame, DT3_hRndBmFrame);
   DT3_RndCamSet(VecSet1(5), VecSet1(0), VecSet(0, 1, 0));
 }
 
@@ -72,14 +79,15 @@ VOID DT3_RndCopyFrame( HDC hDC )
 
 VOID DT3_RndStart( VOID )
 {
-  SelectObject(DT3_hRndDCFrame, GetStockObject(WHITE_BRUSH));
-  SelectObject(DT3_hRndDCFrame, GetStockObject(NULL_PEN));
+  HPEN hPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));  
+  HBRUSH hBrush = CreateSolidBrush(RGB(255, 0, 0));  
+  SelectObject(DT3_hRndDCFrame, hBrush);
 
+  SelectObject(DT3_hRndDCFrame, hPen);
+   
   Rectangle(DT3_hRndDCFrame, 0, 0, DT3_RndFrameW, DT3_RndFrameH);
-
-  SetDCPenColor(DT3_hRndDCFrame, RGB(255, 0, 0));
-  SelectObject(DT3_hRndDCFrame, GetStockObject(DC_PEN));
-
-  Ellipse(DT3_hRndDCFrame, 0, 0, DT3_RndFrameW, DT3_RndFrameH);
+  
+  DeleteObject(hPen);
+  DeleteObject(hBrush); 
 } 
 /* END OF 'rndbase.c' FILE */
