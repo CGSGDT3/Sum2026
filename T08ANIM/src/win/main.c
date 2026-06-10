@@ -142,7 +142,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     return 0;
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);
-}
+} /* End of 'MyWindowFunc' function */ 
 
 /* Flip window full screen mode function.
  * ARGUMENTS:
