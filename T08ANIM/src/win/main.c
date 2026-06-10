@@ -74,6 +74,19 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   return msg.wParam;
 }
 
+/* Window handle function.
+ * ARGUMENTS:
+ *   - window handle:
+ *       HWND hWnd;
+ *   - message type (see WM_***):
+ *       UINT Msg;
+ *   - message 'word' parameter:
+ *       WPARAM wParam;
+ *   - message 'long' parameter:
+ *       LPARAM lParam;
+ * RETURNS:
+ *   (LRESULT) message depende return value.
+ */
 LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
                                WPARAM wParam, LPARAM lParam )
 {
