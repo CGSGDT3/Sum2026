@@ -179,4 +179,4 @@ VOID FlipFullScreen( HWND hWnd )
   IsFullScreen = !IsFullScreen;
 } /* End of 'FlipFullScreen' function */
 
-/* End of 'main.c file */
+/* END OF 'main.c FILE */
