@@ -8,10 +8,28 @@
 #include "anim/rnd/rnd.h"
 #include <time.h>
 
+/* Window class name */
 #define WND_CLASS_NAME "CGSG DT3!!!"
 
+/* Forward declaration */
 LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam );
+VOID FlipFullScreen( HWND hWnd );
 
+
+/* Main startup program function.
+ * ARGUMENTS:
+ *   - application instance handle:
+ *       HINSTANCE hInstance;
+ *   - previouse application instance handle
+ *     (not used, alway NULL):
+ *       HINSTANCE hPrevInstance;
+ *   - command line string:
+ *       CHAR *CmdLine;
+ *   - command line window show parameter (see SW_***):
+ *       INT CmdShow;
+ * RETURNS:
+ *   (INT) system error level value.
+ */
 INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    CHAR *CmdLine, INT ShowCmd )
 {
@@ -50,7 +68,6 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
       if (msg.message == WM_QUIT)
         break;
       DispatchMessage(&msg);
-      SendMessage(hWnd, WM_TIMER, 30, 0);
     }
     else
       SendMessage(hWnd, WM_TIMER, 30, 0);
@@ -74,21 +91,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     return 0;
   case WM_CREATE:
     DT3_RndInit(hWnd);
-    if (dt3_RndPrimCreate(&Pr, 4, 6))
-    {
-      Pr.V[0].P = VecSet(0, 0, 0);
-      Pr.V[1].P = VecSet(2, 0, 0);
-      Pr.V[2].P = VecSet(0, 2, 0);
-      Pr.V[3].P = VecSet(2, 2, 0);
-
-      Pr.I[0] = 0;
-      Pr.I[1] = 1;
-      Pr.I[2] = 2;
-
-      Pr.I[3] = 2;
-      Pr.I[4] = 1;
-      Pr.I[5] = 3;
-    }
+    dt3_RndPrimLoad(&Pr, "bin/models/cow.obj"); 
     return 0;
   case WM_SIZE:
     W = LOWORD(lParam);
@@ -96,12 +99,17 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     DT3_RndResize(W, H);
     SendMessage(hWnd, WM_TIMER, 47, 0);
     return 0;
-  case WM_KEYDOWN:
+ case WM_KEYDOWN:
+    if (wParam == 'F')
+      FlipFullScreen(hWnd);
+    if (wParam == VK_ESCAPE) 
+      SendMessage(hWnd, WM_DESTROY, 30, 0);
     return 0;
   case WM_TIMER:
     hDC = GetDC(hWnd);
     DT3_RndStart();
-    dt3_RndPrimDraw(&Pr, MatrRotateY(30 * (GetTickCount() / 1000.0)));
+    dt3_RndPrimDraw(&Pr, MatrMulMatr3(MatrTranslate(VecSet(0, -2, 0)), 
+      MatrRotateY(30 * clock() / 1000.0), MatrScale(VecSet1(0.27))));
     ReleaseDC(hWnd, hDC);
     InvalidateRect(hWnd, NULL, FALSE);
     return 0;
@@ -122,4 +130,53 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);
 }
+
+/* Flip window full screen mode function.
+ * ARGUMENTS:
+ *   - window handle:
+ *       HWND hWnd;
+ * RETURNS: None.
+ */   
+VOID FlipFullScreen( HWND hWnd )
+{
+  static BOOL IsFullScreen = FALSE;
+  static RECT SaveRect;
+
+  if (!IsFullScreen)
+  {
+    HMONITOR hmon;
+    MONITORINFO mi;
+    RECT rc;
+
+    /* Save old window size and position */
+    GetWindowRect(hWnd, &SaveRect);
+
+    /* Obtain nearest monitor */
+    hmon = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+    mi.cbSize = sizeof(mi);
+
+    GetMonitorInfo(hmon, &mi);
+
+    /* Go to full screen mode */
+    rc = mi.rcMonitor;
+    AdjustWindowRect(&rc, GetWindowLong(hWnd, GWL_STYLE), FALSE);
+
+
+    /* Expand window */
+    SetWindowPos(hWnd, HWND_TOP,
+      rc.left, rc.top,
+      rc.right - rc.left,
+      rc.bottom - rc.top,
+      SWP_NOOWNERZORDER);
+  }
+  else
+    /* Restore from full screen mode */
+    SetWindowPos(hWnd, HWND_TOP,
+      SaveRect.left, SaveRect.top,
+      SaveRect.right - SaveRect.left,
+      SaveRect.bottom - SaveRect.top,
+      SWP_NOOWNERZORDER);
+  IsFullScreen = !IsFullScreen;
+} /* End of 'FlipFullScreen' function */
+
 /* End of 'main.c file */

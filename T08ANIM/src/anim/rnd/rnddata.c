@@ -20,4 +20,5 @@ MATR
   DT3_RndMatrView, /* View coordinate system matrix */
   DT3_RndMatrProj, /* Projection coordinate system matrix */
   DT3_RndMatrVP;   /* Stored (View * Proj) matrix */
+
 /* END OF 'rnddata.c' FILE */

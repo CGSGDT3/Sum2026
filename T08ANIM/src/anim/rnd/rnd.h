@@ -1,13 +1,15 @@
+/* FILE NAME: rnd.h
+* PROGRAMMER: DT3
+* DATE: 09.06.2026
+* PURPOSE: render header file in animation program.
+*/
+
 #ifndef __rnd_h_
 #define __rnd_h_          
 #include "def.h"
 
-VOID DT3_RndInit( HWND hWnd );
-VOID DT3_RndClose( VOID );
-VOID DT3_RndResize( INT W, INT H );
-VOID DT3_RndCamSet( VEC Loc, VEC At, VEC Up );
-VOID DT3_RndCopyFrame( HDC hDC );
-VOID DT3_RndStart( VOID );
+#define Gr_W 18
+#define Gr_H 30
 
 extern HWND DT3_hRndWnd;        /* Work window handle */
 extern HDC DT3_hRndDCFrame;     /* Work window memory device context  */
@@ -40,10 +42,142 @@ typedef struct tagdt3PRIM
   MATR Trans;   /* Additional transformation matrix */
 } dt3PRIM;
 
+/* Work window init function.
+ * ARGUMENTS:
+ *   handler of window:
+ *    HWND hWnd;
+ * RETURNS:
+ *   None.
+ */
+VOID DT3_RndInit( HWND hWnd );
+
+/* Closing work window function.
+ * ARGUMENTS:
+ *   None.
+ * RETURNS:
+ *   None.
+ */
+VOID DT3_RndClose( VOID );
+
+/* Work window resizing function.
+ * ARGUMENTS:
+ *   New window width and height:
+ *    INT W, H;
+ * RETURNS:
+ *   None.
+ */
+VOID DT3_RndResize( INT W, INT H );
+
+/* Camera set function.
+ * ARGUMENTS:
+ *   Vectors of camera position:
+ *    VEC Loc, At, Up;
+ * RETURNS:
+ *   None.
+ */
+VOID DT3_RndCamSet( VEC Loc, VEC At, VEC Up );
+
+/* Copying frame from work DC to differen DC function.
+ * ARGUMENTS:
+ *   Device context handle to copy:
+ *    HDC hDC;
+ * RETURNS:
+ *   None.
+ */
+VOID DT3_RndCopyFrame( HDC hDC );
+
+/* Start work on window (erasing background) function.
+ * ARGUMENTS:
+ *   None.
+ * RETURNS:
+ *   None.
+ */
+VOID DT3_RndStart( VOID );
+
+/* Creating primitive (memory allocation for vertices and indices) function.
+ * ARGUMENTS:
+ *   - pointer to primitive to be memory allocated:
+ *       dt3PRIM *Pr;
+ *   - number of vertices and indiced:
+ *       INT NoofV, NoofI;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FALSE otherwise.
+ */
 BOOL dt3_RndPrimCreate( dt3PRIM *Pr, INT NoofV, INT NoofI );
+
+/* Primitive free function.
+ * ARGUMENTS:
+ *   - pointer to primitive to be free:
+ *       dt3PRIM *Pr;
+ * RETURNS:
+ *   None.
+ */
 VOID dt3_RndPrimFree( dt3PRIM *Pr );
+
+/* Drawing primitive function.
+ * ARGUMENTS:
+ *   - pointer to primitive to be draw:
+ *       dt3PRIM *Pr;
+ *   - world matrix:
+ *       MATR World;
+ * RETURNS:
+ *   None.
+ */
 VOID dt3_RndPrimDraw( dt3PRIM *Pr, MATR World );
+
+/* Primitive load function.
+ * ARGUMENTS:
+ *   - primitive to be load:
+ *       dt3PRIM *Pr;
+ *   - primitve filename (.OBJ):
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FLASE otherwise.
+ */
 BOOL dt3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName );
+
+/* Create sphere primitive function.
+ * ARGUMENTS:
+ *   - pointer to primitive to create:
+ *       dt3PRIM *Pr;
+ *   - sphere radius:
+ *       DBL R;
+ *   - split parts counts:
+ *       INT W, H;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FALSE otherwise.
+ */
+BOOL dt3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H );
+
+/* Create cyllinder primitive function.
+ * ARGUMENTS:
+ *   - pointer to primitive to create:
+ *       dt3PRIM *Pr;
+ *   - cyllinder radius:
+ *       DBL R;
+  *   - cyllinder height:
+ *       DBL Z;
+ *   - split parts counts:
+ *       INT W, H;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FALSE otherwise.
+ */
+BOOL dt3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H );
+
+/* Create thorus primitive function.
+ * ARGUMENTS:
+ *   - pointer to primitive to create:
+ *       dt3PRIM *Pr;
+ *   - inner radius:
+ *       DBL Ri;
+  *   - outer radius:
+ *       DBL Ro;
+ *   - split parts counts:
+ *       INT W, H;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FALSE otherwise.
+ */
+BOOL dt3_RndPrimCreateTh( dt3PRIM *Pr, DBL Ri, DBL Ro, INT W, INT H );
 
 #endif /* __rnd_h */
 /* END OF 'rnd.h' FILE */
