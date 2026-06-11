@@ -5,7 +5,8 @@
  */  
 
 #include "def.h"
-#include "anim/rnd/rnd.h"
+#include "units/units.h"
+
 #include <time.h>
 
 /* Window class name */
@@ -36,6 +37,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   WNDCLASS wc;
   MSG msg;
   HWND hWnd;
+  dt3UNIT *Uni, *Uni1, *Uni2;
 
   SetDbgMemHooks();
 
@@ -58,6 +60,14 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
   hWnd = CreateWindow(WND_CLASS_NAME, "CGSG PML #30 FOREVER!!", WS_CLIPCHILDREN | WS_OVERLAPPEDWINDOW,
     0, 0, 500, 300, NULL, NULL, hInstance, NULL);
+
+  DT3_AnimInit(hWnd);
+  Uni = DT3_UnitCreateBall();
+  Uni1 = DT3_UnitCreateBall();
+  Uni2 = DT3_UnitCreateBall();
+  DT3_AnimUnitAdd(Uni2);
+  DT3_AnimUnitAdd(Uni);
+  DT3_AnimUnitAdd(Uni1);
 
   ShowWindow(hWnd, SW_SHOWNORMAL);
   UpdateWindow(hWnd);
@@ -93,8 +103,8 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   INT W, H;
   MINMAXINFO *minmax;
   HDC hDC;   
-  PAINTSTRUCT ps;
-  static dt3PRIM Pr;
+  PAINTSTRUCT ps;   
+
   switch (Msg)
   {
   case WM_GETMINMAXINFO:
@@ -103,13 +113,12 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
       GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER) * 2;
     return 0;
   case WM_CREATE:
-    DT3_RndInit(hWnd);
-    dt3_RndPrimLoad(&Pr, "bin/models/cow.obj"); 
+    DT3_AnimInit(hWnd);
     return 0;
   case WM_SIZE:
     W = LOWORD(lParam);
     H = HIWORD(lParam);
-    DT3_RndResize(W, H);
+    DT3_AnimResize(W, H);
     SendMessage(hWnd, WM_TIMER, 47, 0);
     return 0;
  case WM_KEYDOWN:
@@ -120,15 +129,14 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     return 0;
   case WM_TIMER:
     hDC = GetDC(hWnd);
-    DT3_RndStart();
-    dt3_RndPrimDraw(&Pr, MatrMulMatr3(MatrTranslate(VecSet(0, -2, 0)), 
-      MatrRotateY(30 * clock() / 1000.0), MatrScale(VecSet1(0.27))));
+    DT3_AnimRender();
+    DT3_AnimCopyFrame(hDC);
     ReleaseDC(hWnd, hDC);
     InvalidateRect(hWnd, NULL, FALSE);
     return 0;
   case WM_PAINT:
     hDC = BeginPaint(hWnd, &ps);
-    DT3_RndCopyFrame(hDC);
+    DT3_AnimCopyFrame(hDC);
     EndPaint(hWnd, &ps);
     return 0;
   case WM_ERASEBKGND:
@@ -136,7 +144,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   case WM_CLOSE:
     break;
   case WM_DESTROY:
-    dt3_RndPrimFree(&Pr);
+    DT3_AnimClose();
     KillTimer(hWnd, 30);
     PostQuitMessage(30);
     return 0;

@@ -179,5 +179,7 @@ BOOL dt3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H );
  */
 BOOL dt3_RndPrimCreateTh( dt3PRIM *Pr, DBL Ri, DBL Ro, INT W, INT H );
 
+VOID DT3_RndEnd( VOID );
+
 #endif /* __rnd_h */
 /* END OF 'rnd.h' FILE */

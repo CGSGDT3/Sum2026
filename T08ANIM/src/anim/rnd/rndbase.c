@@ -133,4 +133,8 @@ VOID DT3_RndStart( VOID )
   DeleteObject(hBrush); 
 } /* End of 'DT3_RndStart' function */ 
 
+VOID DT3_RndEnd( VOID )
+{
+}
+
 /* END OF 'rndbase.c' FILE */

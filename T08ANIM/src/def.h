@@ -26,6 +26,8 @@
 #  define SetDbgMemHooks() ((void)0)
 #endif /* NDEBUG */
 #include <stdlib.h>
+#define rand1() 2 * ((DBL)rand() / RAND_MAX - 0.5)
+
 #include <windows.h>
 
 #include "mth/mth.h"
