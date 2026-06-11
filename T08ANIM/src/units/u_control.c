@@ -106,7 +106,15 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
         Ani->JPov = ji.dwPOV == 0xFFFF ? -1 : ji.dwPOV / 4500;
       }                            
     }
-  }
+  }                    
+
+  if (Ani->JBut[JOY_BUTTON1] == 1)
+    FlipFullScreen(Ani->hWnd);
+  if (Ani->JBut[JOY_BUTTON2] == 1 && Ani->JButClick[JOY_BUTTON2] == 1)
+    Ani->IsPause = !Ani->IsPause;
+  if (Ani->JBut[JOY_BUTTON3] == 1)
+    SendMessage(Ani->hWnd, WM_DESTROY, 30, 0);
+
   DT3_RndCamSet(Uni->CamLoc, Uni->CamDir, Uni->CamUp); 
 } /* End of 'DT3_UnitResponse' function */ 
 
