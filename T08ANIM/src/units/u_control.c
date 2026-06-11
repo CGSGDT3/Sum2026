@@ -99,7 +99,9 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
         Ani->JY = DT3_GET_JOYSTIC_AXIS(Y);
         Ani->JZ = DT3_GET_JOYSTIC_AXIS(Z);
         Ani->JR = DT3_GET_JOYSTIC_AXIS(R);
-
+        Uni->CamLoc = VecAddVec(Uni->CamLoc, VecMulNum(Uni->CamDir, Ani->DeltaTime * Uni->Speed *
+          (2 * (Ani->JY + Ani->JZ))));
+        DT3_RndCamSet(Uni->CamLoc, Uni->CamDir, Uni->CamUp); 
         Ani->JPov = ji.dwPOV == 0xFFFF ? -1 : ji.dwPOV / 4500;
       }                            
     }
