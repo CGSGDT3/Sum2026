@@ -2,9 +2,8 @@
  * PROGRAMMER: DT3
  * DATE: 09.06.2026
  * PURPOSE: Functional file in animation program.
- */
+ */    
 
-#include "def.h" 
 #include "rnd.h"
 
 /* Closing work window function.

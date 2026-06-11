@@ -56,7 +56,8 @@ static VOID DT3_UnitResponse( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitRender( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 {
-  dt3_RndPrimDraw(&Uni->Ball, MatrTranslate(Uni->Pos));
+  dt3_RndPrimDraw(&Uni->Ball, MatrMulMatr(MatrTranslate(Uni->Pos),
+    MatrRotateY(90 * (Ani->JX + Ani->JR))));
 } /* End of 'DT3_UnitRender' function */ 
 
 /* Unit deinitialization function.
@@ -67,8 +68,9 @@ static VOID DT3_UnitRender( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
  *       dt3ANIM *Ani;
  * RETURNS: None.
  */
-static VOID DT3_UnitClose( dt3UNIT *Uni, dt3ANIM *Ani )
+static VOID DT3_UnitClose( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 {
+  dt3_RndPrimFree(&Uni->Ball);
 } /* End of 'DT3_UnitClose' function */ 
 
 /* Unit ball creation function.

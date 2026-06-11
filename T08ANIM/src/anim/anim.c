@@ -5,7 +5,7 @@
  */
 
 #include "anim.h"
-#include "rnd/rnd.h"
+
 dt3ANIM DT3_Anim; /* Global animation variable */
 
 static UINT64
@@ -32,7 +32,7 @@ VOID  DT3_AnimInit( HWND hWnd )
   DT3_Anim.W = DT3_RndFrameW;
   DT3_Anim.H = DT3_RndFrameH;
   DT3_Anim.Mx = DT3_Anim.My = DT3_Anim.Mz = DT3_Anim.Mdx = DT3_Anim.Mdy = DT3_Anim.Mdz =
-    DT3_Anim.JX = DT3_Anim.JY = DT3_Anim.JZ = DT3_Anim.JR = DT3_Anim.JPov = 0;
+    (INT)DT3_Anim.JX = (INT)DT3_Anim.JY = (INT)DT3_Anim.JZ = (INT)DT3_Anim.JR = DT3_Anim.JPov = 0;
 } /* End of 'DT3_AnimInit' function */ 
 
 /* Animation deinitialization function.

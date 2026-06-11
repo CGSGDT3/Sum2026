@@ -7,7 +7,6 @@
 #ifndef __anim_h_
 #define __anim_h_
 
-#include "def.h"
 #include "rnd/rnd.h"
 
 /* const of MAX size of UNIT array */

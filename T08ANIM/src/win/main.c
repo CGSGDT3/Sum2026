@@ -4,10 +4,7 @@
  * PURPOSE: Main file in animation program.
  */  
 
-#include "def.h"
 #include "units/units.h"
-
-#include <time.h>
 
 /* Window class name */
 #define WND_CLASS_NAME "CGSG DT3!!!"
@@ -97,7 +94,6 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
                                WPARAM wParam, LPARAM lParam )
 {
-  INT W, H;
   MINMAXINFO *minmax;
   HDC hDC;   
   PAINTSTRUCT ps;   
@@ -114,9 +110,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     DT3_AnimInit(hWnd);
     return 0;
   case WM_SIZE:
-    W = LOWORD(lParam);
-    H = HIWORD(lParam);
-    DT3_AnimResize(W, H);
+    DT3_AnimResize(LOWORD(lParam), HIWORD(lParam));
     SendMessage(hWnd, WM_TIMER, 47, 0);
     return 0;
   case WM_TIMER:

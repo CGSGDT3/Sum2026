@@ -1,6 +1,6 @@
 /* FILE NAME  : def.h
  * PROGRAMMER : DT3
- * LAST UPDATE: 09.06.2026
+ * DATE: 09.06.2026
  * PURPOSE    : 3D animation project.
  *              Common declaration module.
  */

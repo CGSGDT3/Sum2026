@@ -46,6 +46,7 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
   POINT pt;
   INT i;
 
+  /* Mouse responsing */
   GetCursorPos(&pt);
   ScreenToClient(Ani->hWnd, &pt);
   Ani->Mdx = pt.x - Ani->Mx;
@@ -54,7 +55,10 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
   Ani->Mx = pt.x;
   Ani->My = pt.y;
 
+  /* Transforming camera position */
   Uni->CamLoc = PointTransform(Uni->CamLoc, MatrRotateY(Ani->DeltaTime * Uni->AngleSpeed * Ani->Mdx));
+  
+  /* KeyBoard responsing */
   GetKeyboardState(Ani->Keys);
 
   for (i = 0; i < 256; i++)
@@ -73,8 +77,6 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
     Ani->IsPause = !Ani->IsPause;
   if (Ani->Keys[VK_ESCAPE] == 1)
     SendMessage(Ani->hWnd, WM_DESTROY, 30, 0);
-
-  DT3_RndCamSet(Uni->CamLoc, Uni->CamDir, Uni->CamUp); 
 
   if (joyGetNumDevs() > 0)
   {
@@ -101,11 +103,11 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
         Ani->JR = DT3_GET_JOYSTIC_AXIS(R);
         Uni->CamLoc = VecAddVec(Uni->CamLoc, VecMulNum(Uni->CamDir, Ani->DeltaTime * Uni->Speed *
           (2 * (Ani->JY + Ani->JZ))));
-        DT3_RndCamSet(Uni->CamLoc, Uni->CamDir, Uni->CamUp); 
         Ani->JPov = ji.dwPOV == 0xFFFF ? -1 : ji.dwPOV / 4500;
       }                            
     }
   }
+  DT3_RndCamSet(Uni->CamLoc, Uni->CamDir, Uni->CamUp); 
 } /* End of 'DT3_UnitResponse' function */ 
 
 /* Unit render function.
