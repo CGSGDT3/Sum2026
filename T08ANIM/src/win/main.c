@@ -149,6 +149,12 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     KillTimer(hWnd, 30);
     PostQuitMessage(30);
     return 0;
+  case WM_LBUTTONDOWN:
+    SetCapture(hWnd);
+    return 0;
+  case WM_LBUTTONUP:
+    ReleaseCapture();
+    return 0;
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);
 } /* End of 'MyWindowFunc' function */ 

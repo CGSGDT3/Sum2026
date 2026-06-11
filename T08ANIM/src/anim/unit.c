@@ -1,3 +1,9 @@
+/* FILE NAME: unit.c
+ * PROGRAMMER: DT3
+ * DATE: 10.06.2026
+ * PURPOSE: base unit functions template functional file in animation program.
+ */
+
 #include "anim.h"
 
 /* Unit initialization function.
@@ -72,5 +78,7 @@ dt3UNIT * DT3_AnimUnitCreate( INT Size )
 
   return Uni;
 } /* End of 'DT3_AnimUnitCreate' function */
+
+/* END OF 'unit.c' FILE */
 
 
