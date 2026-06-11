@@ -6,12 +6,13 @@
 
 #include "units.h"
 
+/* Structure of ball unit */
 typedef struct tagdt3UNIT_BALL
 {
-  UNIT_BASE_FIELDS;
-  dt3PRIM Ball;
-  VEC Pos;
-  DBL Size, Speed;
+  UNIT_BASE_FIELDS; /* Basic unit functions */ 
+  dt3PRIM Ball;     /* Primitives to drawing */
+  VEC Pos;          /* Vector of position */
+  DBL Size, Speed;  /* Size of ball and his speed of jumping */
 } dt3UNIT_BALL;
 
 /* Unit initialization function.
@@ -24,11 +25,11 @@ typedef struct tagdt3UNIT_BALL
  */
 static VOID DT3_UnitInit( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 {
-  Uni->Pos = VecSet(3 * rand1(), 3 * rand1(), rand1());
-  Uni->Size = (DBL)rand() / RAND_MAX;
+  Uni->Pos = VecSet(8 * rand1(), 1, 8 * rand1());
+  Uni->Size = 1 + rand1() * 0.5;
   if (Uni->Size < 0.08)
     Uni->Size = 0.08;
-  Uni->Speed = 5 * (DBL)rand() / RAND_MAX;
+  Uni->Speed = 30 * (DBL)rand() / RAND_MAX;
   dt3_RndPrimCreateSphere(&Uni->Ball, Uni->Size, Gr_W, Gr_H);
 } /* End of 'DT3_UnitInit' function */ 
 
@@ -42,7 +43,7 @@ static VOID DT3_UnitInit( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitResponse( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 {
-  Uni->Pos = VecSet(Uni->Pos.X, sin(Uni->Speed * 3 * Ani->Time), Uni->Pos.Z);
+  Uni->Pos = VecSet(Uni->Pos.X, sin(Uni->Speed * Ani->Time), Uni->Pos.Z);
 } /* End of 'DT3_UnitResponse' function */ 
 
 /* Unit render function.

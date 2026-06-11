@@ -6,7 +6,7 @@
 
 #include "anim.h"
 #include "rnd/rnd.h"
-dt3ANIM DT3_Anim;
+dt3ANIM DT3_Anim; /* Global animation variable */
 
 static UINT64
   StartTime,    /* Start program time */

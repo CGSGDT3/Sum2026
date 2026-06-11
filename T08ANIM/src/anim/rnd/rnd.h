@@ -182,5 +182,13 @@ BOOL dt3_RndPrimCreateTh( dt3PRIM *Pr, DBL Ri, DBL Ro, INT W, INT H );
 
 VOID DT3_RndEnd( VOID );
 
+/* Flip window full screen mode function.
+ * ARGUMENTS:
+ *   - window handle:
+ *       HWND hWnd;
+ * RETURNS: None.
+ */   
+VOID FlipFullScreen( HWND hWnd );
+
 #endif /* __rnd_h */
 /* END OF 'rnd.h' FILE */

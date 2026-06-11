@@ -122,7 +122,7 @@ VOID DT3_RndCopyFrame( HDC hDC )
  */
 VOID DT3_RndStart( VOID )
 {
-  HPEN hPen = CreatePen(PS_NULL, 1, RGB(255, 0, 0));  
+  HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));  
   HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 0));  
   SelectObject(DT3_hRndDCFrame, hBrush);       
   SelectObject(DT3_hRndDCFrame, hPen);
@@ -136,5 +136,53 @@ VOID DT3_RndStart( VOID )
 VOID DT3_RndEnd( VOID )
 {
 }
+
+/* Flip window full screen mode function.
+ * ARGUMENTS:
+ *   - window handle:
+ *       HWND hWnd;
+ * RETURNS: None.
+ */   
+VOID FlipFullScreen( HWND hWnd )
+{
+  static BOOL IsFullScreen = FALSE;
+  static RECT SaveRect;
+
+  if (!IsFullScreen)
+  {
+    HMONITOR hmon;
+    MONITORINFO mi;
+    RECT rc;
+
+    /* Save old window size and position */
+    GetWindowRect(hWnd, &SaveRect);
+
+    /* Obtain nearest monitor */
+    hmon = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+    mi.cbSize = sizeof(mi);
+
+    GetMonitorInfo(hmon, &mi);
+
+    /* Go to full screen mode */
+    rc = mi.rcMonitor;
+    AdjustWindowRect(&rc, GetWindowLong(hWnd, GWL_STYLE), FALSE);
+
+
+    /* Expand window */
+    SetWindowPos(hWnd, HWND_TOP,
+      rc.left, rc.top,
+      rc.right - rc.left,
+      rc.bottom - rc.top,
+      SWP_NOOWNERZORDER);
+  }
+  else
+    /* Restore from full screen mode */
+    SetWindowPos(hWnd, HWND_TOP,
+      SaveRect.left, SaveRect.top,
+      SaveRect.right - SaveRect.left,
+      SaveRect.bottom - SaveRect.top,
+      SWP_NOOWNERZORDER);
+  IsFullScreen = !IsFullScreen;
+} /* End of 'FlipFullScreen' function */
 
 /* END OF 'rndbase.c' FILE */

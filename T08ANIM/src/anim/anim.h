@@ -16,13 +16,14 @@
 /* Forward declaration */
 typedef struct tagdt3UNIT dt3UNIT;
 
+/* Structure of animation */
 typedef struct tagdt3ANIM
 {
-  HWND hWnd;                      
-  HDC hDC;                        
+  HWND hWnd;                     /* Animation work window */                      
+  HDC hDC;                       /* Animation device context */ 
   INT W, H, Mx, My, Mz, Mdx, Mdy, Mdz, NumOfUnits, JPov;                       
 
-  dt3UNIT * Units[dt3_MAX_UNITS]; 
+  dt3UNIT * Units[dt3_MAX_UNITS];/* Array of units */
 
   DBL
     GlobalTime, GlobalDeltaTime, /* Global time and interframe interval */
@@ -112,9 +113,10 @@ VOID DT3_TimerInit( VOID );
  * RETURNS:
  *    None.
  */  
-VOID DT3_TimerResponse( VOID ); 
+VOID DT3_TimerResponse( VOID );  
 
-extern dt3ANIM DT3_Anim;
+/* Global animation variable */
+extern dt3ANIM DT3_Anim;     
 
 #endif /* __anim_h_ */
 

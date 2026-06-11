@@ -14,8 +14,6 @@
 
 /* Forward declaration */
 LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam );
-VOID FlipFullScreen( HWND hWnd );
-
 
 /* Main startup program function.
  * ARGUMENTS:
@@ -121,12 +119,6 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     DT3_AnimResize(W, H);
     SendMessage(hWnd, WM_TIMER, 47, 0);
     return 0;
- case WM_KEYDOWN:
-    if (wParam == 'F')
-      FlipFullScreen(hWnd);
-    if (wParam == VK_ESCAPE) 
-      SendMessage(hWnd, WM_DESTROY, 30, 0);
-    return 0;
   case WM_TIMER:
     DT3_TimerResponse();
     hDC = GetDC(hWnd);
@@ -158,53 +150,5 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);
 } /* End of 'MyWindowFunc' function */ 
-
-/* Flip window full screen mode function.
- * ARGUMENTS:
- *   - window handle:
- *       HWND hWnd;
- * RETURNS: None.
- */   
-VOID FlipFullScreen( HWND hWnd )
-{
-  static BOOL IsFullScreen = FALSE;
-  static RECT SaveRect;
-
-  if (!IsFullScreen)
-  {
-    HMONITOR hmon;
-    MONITORINFO mi;
-    RECT rc;
-
-    /* Save old window size and position */
-    GetWindowRect(hWnd, &SaveRect);
-
-    /* Obtain nearest monitor */
-    hmon = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
-    mi.cbSize = sizeof(mi);
-
-    GetMonitorInfo(hmon, &mi);
-
-    /* Go to full screen mode */
-    rc = mi.rcMonitor;
-    AdjustWindowRect(&rc, GetWindowLong(hWnd, GWL_STYLE), FALSE);
-
-
-    /* Expand window */
-    SetWindowPos(hWnd, HWND_TOP,
-      rc.left, rc.top,
-      rc.right - rc.left,
-      rc.bottom - rc.top,
-      SWP_NOOWNERZORDER);
-  }
-  else
-    /* Restore from full screen mode */
-    SetWindowPos(hWnd, HWND_TOP,
-      SaveRect.left, SaveRect.top,
-      SaveRect.right - SaveRect.left,
-      SaveRect.bottom - SaveRect.top,
-      SWP_NOOWNERZORDER);
-  IsFullScreen = !IsFullScreen;
-} /* End of 'FlipFullScreen' function */
 
 /* END OF 'main.c FILE */

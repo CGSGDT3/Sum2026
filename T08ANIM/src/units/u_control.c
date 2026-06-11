@@ -11,12 +11,13 @@
 
 #pragma comment(lib, "winmm")
 
+/* Structure of controller unit */
 typedef struct tagdt3UNIT_CONTROL
 {
-  UNIT_BASE_FIELDS;
+  UNIT_BASE_FIELDS;          /* Basic functions of unit */
 
-  VEC CamLoc, CamDir, CamUp;
-  DBL Speed, AngleSpeed;
+  VEC CamLoc, CamDir, CamUp; /* Camera position */
+  DBL Speed, AngleSpeed;     /* Angle and linear speed of camera */
 } dt3UNIT_CONTROL;
 
 /* Unit initialization function.
@@ -66,6 +67,12 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
     (Ani->Keys[VK_UP] - Ani->Keys[VK_DOWN])));
   memcpy(Ani->KeysOld, Ani->Keys, 256); 
 
+  if (Ani->Keys['F'] == 1)
+    FlipFullScreen(Ani->hWnd);
+  if (Ani->Keys['P'] == 1 && Ani->KeysClick['P'] == 1)
+    Ani->IsPause = !Ani->IsPause;
+  if (Ani->Keys[VK_ESCAPE] == 1)
+    SendMessage(Ani->hWnd, WM_DESTROY, 30, 0);
 
   DT3_RndCamSet(Uni->CamLoc, Uni->CamDir, Uni->CamUp); 
 
