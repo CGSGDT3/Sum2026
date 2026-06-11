@@ -13,8 +13,10 @@ struct tagdt3UNIT_BALL
 
 static VOID DT3_UnitInit( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 {
-  Uni->Pos = VecSet(rand1(), rand1(), rand1());
-  Uni->Size = 2 * (DBL)rand() / RAND_MAX;
+  Uni->Pos = VecSet(3 * rand1(), 3 * rand1(), rand1());
+  Uni->Size = (DBL)rand() / RAND_MAX;
+  if (Uni->Size < 0.08)
+    Uni->Size = 0.08;
   Uni->Speed = 5 * (DBL)rand() / RAND_MAX;
   dt3_RndPrimCreateSphere(&Uni->Ball, Uni->Size, Gr_W, Gr_H);
 }
@@ -26,7 +28,7 @@ static VOID DT3_UnitResponse( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 
 static VOID DT3_UnitRender( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 {
-  dt3_RndPrimDraw(&Uni->Ball, MatrMulMatr(MatrTranslate(Uni->Pos), MatrRotateY(30 * clock() / 1000)));
+  dt3_RndPrimDraw(&Uni->Ball, MatrTranslate(Uni->Pos));
 }
 
 static VOID DT3_UnitClose( dt3UNIT *Uni, dt3ANIM *Ani )

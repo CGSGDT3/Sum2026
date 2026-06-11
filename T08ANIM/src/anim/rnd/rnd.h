@@ -8,8 +8,8 @@
 #define __rnd_h_          
 #include "def.h"
 
-#define Gr_W 18
-#define Gr_H 30
+#define Gr_W 12
+#define Gr_H 8
 
 extern HWND DT3_hRndWnd;        /* Work window handle */
 extern HDC DT3_hRndDCFrame;     /* Work window memory device context  */
