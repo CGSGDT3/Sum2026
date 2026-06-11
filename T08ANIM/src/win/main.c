@@ -37,7 +37,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   WNDCLASS wc;
   MSG msg;
   HWND hWnd;
-  dt3UNIT *Uni[18];
+  dt3UNIT *Uni[18], *Uni1;
   INT i;
 
   SetDbgMemHooks();
@@ -65,6 +65,8 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   DT3_AnimInit(hWnd);
   for (i = 0; i < 18; i++)
     Uni[i] = DT3_UnitCreateBall(), DT3_AnimUnitAdd(Uni[i]);
+  Uni1 = DT3_UnitCreateControl();
+  DT3_AnimUnitAdd(Uni1);
 
   ShowWindow(hWnd, SW_SHOWNORMAL);
   UpdateWindow(hWnd);
@@ -110,6 +112,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
       GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYBORDER) * 2;
     return 0;
   case WM_CREATE:
+    DT3_TimerInit();
     DT3_AnimInit(hWnd);
     return 0;
   case WM_SIZE:
@@ -125,6 +128,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
       SendMessage(hWnd, WM_DESTROY, 30, 0);
     return 0;
   case WM_TIMER:
+    DT3_TimerResponse();
     hDC = GetDC(hWnd);
     DT3_AnimRender();
     DT3_AnimCopyFrame(hDC);

@@ -36,6 +36,9 @@
 typedef long long INT64;
 typedef unsigned long long UINT64;
 
+#define DT3_GET_JOYSTIC_AXIS(A) \
+  (2.0 * (ji.dw ## A ## pos - jc.w ## A ## min) / (jc.w ## A ## max - jc.w ## A ## min) - 1)
+
 #endif /* __def_h_ */
 
 /* END OF 'def.h' FILE */

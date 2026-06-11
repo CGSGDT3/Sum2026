@@ -1,7 +1,5 @@
 #include "units.h"
 
-#include <time.h>
-
 typedef struct tagdt3UNIT_BALL dt3UNIT_BALL;
 struct tagdt3UNIT_BALL
 {
@@ -23,7 +21,7 @@ static VOID DT3_UnitInit( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 
 static VOID DT3_UnitResponse( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 {
-  Uni->Pos = VecSet(Uni->Pos.X, sin(Uni->Speed * 3 * clock() / 1000.0), Uni->Pos.Z);
+  Uni->Pos = VecSet(Uni->Pos.X, sin(Uni->Speed * 3 * Ani->Time), Uni->Pos.Z);
 }
 
 static VOID DT3_UnitRender( dt3UNIT_BALL *Uni, dt3ANIM *Ani )

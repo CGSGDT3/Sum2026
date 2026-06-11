@@ -1,3 +1,6 @@
+#ifndef __anim_h_
+#define __anim_h_
+
 #include "def.h"
 #include "rnd/rnd.h"
 
@@ -9,17 +12,18 @@ struct tagdt3ANIM
 {
   HWND hWnd;                      
   HDC hDC;                        
-  INT W, H;                       
+  INT W, H, Mx, My, Mz, Mdx, Mdy, Mdz, NumOfUnits, JPov;                       
 
   dt3UNIT * Units[dt3_MAX_UNITS]; 
-  INT NumOfUnits;                 
 
   DBL
     GlobalTime, GlobalDeltaTime, /* Global time and interframe interval */
     Time, DeltaTime,             /* Time with pause and interframe interval */
-    FPS;                         /* Frames per second value */
+    FPS,                         /* Frames per second value */
+    JX, JY, JZ, JR;
   BOOL
     IsPause;                     /* Pause flag */
+  BYTE Keys[256], KeysClick[256], KeysOld[256], JBut[256], JButOld[32], JButClick[32];
 };
 
 #define UNIT_BASE_FIELDS \
@@ -49,4 +53,9 @@ VOID dt3TimerInit( VOID );
 
 VOID dt3TimerResponse( VOID );
 
+VOID DT3_TimerResponse( VOID );
+
+VOID DT3_TimerInit( VOID );
+
 extern dt3ANIM DT3_Anim;
+#endif /* __anim_h_ */

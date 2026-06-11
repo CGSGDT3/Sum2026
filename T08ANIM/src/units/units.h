@@ -1,3 +1,6 @@
+#ifndef __units_h_
+#define __units_h_
+
 #include "anim/anim.h"
 #include "anim/rnd/rnd.h"
 
@@ -51,3 +54,7 @@ static VOID DT3_UnitRender( dt3UNIT *Uni, dt3ANIM *Ani );
 dt3UNIT * DT3_AnimUnitCreate( INT Size );
 
 dt3UNIT * DT3_UnitCreateBall( VOID );
+
+dt3UNIT * DT3_UnitCreateControl( VOID );
+
+#endif __units_h_
