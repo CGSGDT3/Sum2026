@@ -201,22 +201,6 @@
 					RelativePath=".\src\anim\anim.h"
 					>
 				</File>
-				<File
-					RelativePath=".\src\anim\input.c"
-					>
-				</File>
-				<File
-					RelativePath=".\src\anim\rnd\rndprim.c"
-					>
-				</File>
-				<File
-					RelativePath=".\src\anim\timer.c"
-					>
-				</File>
-				<File
-					RelativePath=".\src\anim\timer.h"
-					>
-				</File>
 				<Filter
 					Name="OpenGL"
 					>
@@ -240,6 +224,10 @@
 						RelativePath=".\src\anim\rnd\rnddata.c"
 						>
 					</File>
+					<File
+						RelativePath=".\src\anim\rnd\rndprim.c"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Unit Samples"
@@ -258,6 +246,26 @@
 					</File>
 					<File
 						RelativePath=".\src\units\units.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Timer System"
+					>
+					<File
+						RelativePath=".\src\anim\timer.c"
+						>
+					</File>
+					<File
+						RelativePath=".\src\anim\timer.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Input System"
+					>
+					<File
+						RelativePath=".\src\anim\input.c"
 						>
 					</File>
 				</Filter>

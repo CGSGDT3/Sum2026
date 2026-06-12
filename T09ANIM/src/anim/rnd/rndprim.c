@@ -61,14 +61,23 @@ BOOL dt3_RndPrimCreate( dt3PRIM *Pr, INT NoofV, INT NoofI )
 VOID dt3_RndPrimDraw( dt3PRIM *Pr, MATR World )
 {
   INT i;
+  DBL nl;
+  VEC L = VecNormalize(VecSet1(1));
   MATR wvp = MatrMulMatr3(Pr->Trans, World, DT3_RndMatrVP);
 
   glLoadMatrixf(wvp.A[0]);
 
   /* Draw triangles by edges */
   glBegin(GL_TRIANGLES);
+  srand(30.47);
+/*  DT3_RndPrimTriMeshAutoNormals(Pr->V, Pr->NumOfV, Pr->I, Pr->NumOfI); */
   for (i = 0; i < Pr->NumOfI; i++)
-  {           
+  {
+    /* nl = VecDotVec(Pr->V[i].N, L);
+    if (nl < 0.1)
+      nl = 0.1;
+    Pr->V[i].C = VecSet4(0.30 * nl, 0.4 * nl, 0.1 * nl, 1); 
+    glColor4fv(&Pr->V[Pr->I[i]].C.X); */
     glVertex3fv(&Pr->V[Pr->I[i]].P.X);
   }
   glEnd();
@@ -323,7 +332,7 @@ BOOL dt3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName )
 /* Tri-mesh geometry autonormal evaluation function.
  * ARGUMENTS:
  *   - vertex array:
- *       vg4VERTEX *V;
+ *       dt3VERTEX *V;
  *   - vertex array size:
  *       INT NumOfV;
  *   - index array:
