@@ -58,10 +58,10 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
     0, 0, 500, 300, NULL, NULL, hInstance, NULL);
 
   DT3_AnimInit(hWnd);
-  Uni1 = DT3_UnitCreateControl();
-  DT3_AnimUnitAdd(Uni1);
   for (i = 0; i < 18; i++)
     Uni[i] = DT3_UnitCreateBall(), DT3_AnimUnitAdd(Uni[i]);
+  Uni1 = DT3_UnitCreateControl();
+  DT3_AnimUnitAdd(Uni1);
 
   ShowWindow(hWnd, SW_SHOWNORMAL);
   UpdateWindow(hWnd);
@@ -113,23 +113,18 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     return 0;
   case WM_EXITSIZEMOVE:
     DT3_Anim.IsActive = TRUE;
-    return 0;
-  case WM_CREATE:       
+  case WM_CREATE:
     return 0;
   case WM_SIZE:
     DT3_AnimResize(LOWORD(lParam), HIWORD(lParam));
-    SendMessage(hWnd, WM_TIMER, 47, 0);
     return 0;
   case WM_TIMER:
-    hDC = GetDC(hWnd);
     DT3_AnimRender();
-    DT3_AnimCopyFrame(hDC);
-    ReleaseDC(hWnd, hDC);
-    InvalidateRect(hWnd, NULL, FALSE);
+    DT3_AnimCopyFrame();
     return 0;
   case WM_PAINT:
     hDC = BeginPaint(hWnd, &ps);
-    DT3_AnimCopyFrame(hDC);
+    DT3_AnimCopyFrame();
     EndPaint(hWnd, &ps);
     return 0;
   case WM_ERASEBKGND:
@@ -140,12 +135,6 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     DT3_AnimClose();
     KillTimer(hWnd, 30);
     PostQuitMessage(30);
-    return 0;
-  case WM_LBUTTONDOWN:
-    SetCapture(hWnd);
-    return 0;
-  case WM_LBUTTONUP:
-    ReleaseCapture();
     return 0;
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);

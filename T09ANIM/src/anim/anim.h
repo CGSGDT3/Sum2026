@@ -31,7 +31,7 @@ typedef struct tagdt3ANIM
     FPS,                         /* Frames per second value */
     JX, JY, JZ, JR;
   BOOL
-    IsPause, IsActive;                     /* Pause, activate flag */
+    IsPause, IsActive;                     /* Pause flag */
   BYTE Keys[256], KeysClick[256], KeysOld[256], JBut[256], JButOld[32], JButClick[32];
 } dt3ANIM; 
 
@@ -75,12 +75,11 @@ VOID DT3_AnimResize( INT W, INT H );
 
 /* Animation copying frame from work window to different device context function.
  * ARGUMENTS:
- *   - Handler of device context:
- *       HDC hDC;
+ *       None.
  * RETURNS: 
  *       None.
  */
-VOID DT3_AnimCopyFrame( HDC hDC );
+VOID DT3_AnimCopyFrame( VOID );
 
 /* Animation rendering function.
  * ARGUMENTS:
@@ -99,7 +98,6 @@ VOID DT3_AnimRender( VOID );
  */
 VOID DT3_AnimUnitAdd( dt3UNIT *Uni );
 
-
 /* Initialising animation input function.
  * ARGUMENTS:
  *   None.
@@ -117,7 +115,7 @@ VOID DT3_AnimInputInit( VOID );
 VOID DT3_AnimInputResponse( VOID );
 
 /* Global animation variable */
-extern dt3ANIM DT3_Anim; 
+extern dt3ANIM DT3_Anim;    
 
 extern UINT64
   StartTime,    /* Start program time */

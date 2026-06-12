@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="T08ANIM"
+	Name="T09ANIM"
 	ProjectGUID="{2861538F-4110-4DB9-8CA1-1830BD09B17D}"
-	RootNamespace="T08ANIM"
+	RootNamespace="T09ANIM"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -206,18 +206,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\anim\rnd\rnd.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\anim\rnd\rndbase.c"
-					>
-				</File>
-				<File
-					RelativePath=".\src\anim\rnd\rnddata.c"
-					>
-				</File>
-				<File
 					RelativePath=".\src\anim\rnd\rndprim.c"
 					>
 				</File>
@@ -229,22 +217,50 @@
 					RelativePath=".\src\anim\timer.h"
 					>
 				</File>
-				<File
-					RelativePath=".\src\units\u_ball.c"
+				<Filter
+					Name="OpenGL"
 					>
-				</File>
-				<File
-					RelativePath=".\src\units\u_control.c"
+					<File
+						RelativePath=".\src\anim\rnd\opengl\glew.c"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Rendering System"
 					>
-				</File>
-				<File
-					RelativePath=".\src\anim\unit.c"
+					<File
+						RelativePath=".\src\anim\rnd\rnd.h"
+						>
+					</File>
+					<File
+						RelativePath=".\src\anim\rnd\rndbase.c"
+						>
+					</File>
+					<File
+						RelativePath=".\src\anim\rnd\rnddata.c"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Unit Samples"
 					>
-				</File>
-				<File
-					RelativePath=".\src\units\units.h"
-					>
-				</File>
+					<File
+						RelativePath=".\src\units\u_ball.c"
+						>
+					</File>
+					<File
+						RelativePath=".\src\units\u_control.c"
+						>
+					</File>
+					<File
+						RelativePath=".\src\anim\unit.c"
+						>
+					</File>
+					<File
+						RelativePath=".\src\units\units.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Windows Depended"

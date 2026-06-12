@@ -27,14 +27,14 @@ VOID  DT3_AnimInit( HWND hWnd )
 {      
   memset(&DT3_Anim, 0, sizeof(dt3ANIM)); 
   DT3_RndInit(hWnd);
+  DT3_TimerInit();
   DT3_Anim.hWnd = DT3_hRndWnd;
-  DT3_Anim.hDC = DT3_hRndDCFrame;
+  DT3_Anim.hDC = DT3_hRndDC;
   DT3_Anim.W = DT3_RndFrameW;
   DT3_Anim.H = DT3_RndFrameH;
   DT3_Anim.Mx = DT3_Anim.My = DT3_Anim.Mz = DT3_Anim.Mdx = DT3_Anim.Mdy = DT3_Anim.Mdz =
     (INT)DT3_Anim.JX = (INT)DT3_Anim.JY = (INT)DT3_Anim.JZ = (INT)DT3_Anim.JR = DT3_Anim.JPov = 0;
-  DT3_TimerInit();
-  DT3_AnimInputInit();
+  
 } /* End of 'DT3_AnimInit' function */ 
 
 /* Animation deinitialization function.
@@ -63,20 +63,20 @@ VOID DT3_AnimResize( INT W, INT H )
 {
   DT3_RndResize(W, H); 
   DT3_Anim.W = DT3_RndFrameW;
-  DT3_Anim.H = DT3_RndFrameH;   
+  DT3_Anim.H = DT3_RndFrameH;  
+
   DT3_AnimRender();
 } /* End of 'DT3_AnimResize' function */ 
 
 /* Animation copying frame from work window to different device context function.
  * ARGUMENTS:
- *   - Handler of device context:
- *       HDC hDC;
+ *       None.
  * RETURNS: 
  *       None.
  */
-VOID DT3_AnimCopyFrame( HDC hDC )
+VOID DT3_AnimCopyFrame( VOID )
 {
-  DT3_RndCopyFrame(hDC);
+  DT3_RndCopyFrame();
 } /* End of 'DT3_AnimCopyFrame' function */ 
 
 /* Animation rendering function.
@@ -92,9 +92,11 @@ VOID DT3_AnimRender( VOID )
   DT3_TimerResponse();
   if (DT3_Anim.IsActive)
     DT3_AnimInputResponse();
+
+  DT3_RndStart();
   for (i = 0; i < DT3_Anim.NumOfUnits; i++)
     DT3_Anim.Units[i]->Response(DT3_Anim.Units[i], &DT3_Anim);
-  DT3_RndStart();
+
   for (i = 0; i < DT3_Anim.NumOfUnits; i++)
     DT3_Anim.Units[i]->Render(DT3_Anim.Units[i], &DT3_Anim);
   DT3_RndEnd();
