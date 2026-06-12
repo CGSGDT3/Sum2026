@@ -201,10 +201,58 @@
 					RelativePath=".\src\anim\anim.h"
 					>
 				</File>
+				<Filter
+					Name="Unit Samples"
+					>
+					<File
+						RelativePath=".\src\units\u_ball.c"
+						>
+					</File>
+					<File
+						RelativePath=".\src\units\u_control.c"
+						>
+					</File>
+					<File
+						RelativePath=".\src\anim\unit.c"
+						>
+					</File>
+					<File
+						RelativePath=".\src\units\units.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Timer System"
+					>
+					<File
+						RelativePath=".\src\anim\timer.c"
+						>
+					</File>
+					<File
+						RelativePath=".\src\anim\timer.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Input System"
+					>
+					<File
+						RelativePath=".\src\anim\input.c"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Windows Depended"
+				>
 				<File
-					RelativePath=".\src\anim\input.c"
+					RelativePath=".\src\win\main.c"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="Rendering System"
+				>
 				<File
 					RelativePath=".\src\anim\rnd\rnd.h"
 					>
@@ -219,38 +267,6 @@
 				</File>
 				<File
 					RelativePath=".\src\anim\rnd\rndprim.c"
-					>
-				</File>
-				<File
-					RelativePath=".\src\anim\timer.c"
-					>
-				</File>
-				<File
-					RelativePath=".\src\anim\timer.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\units\u_ball.c"
-					>
-				</File>
-				<File
-					RelativePath=".\src\units\u_control.c"
-					>
-				</File>
-				<File
-					RelativePath=".\src\anim\unit.c"
-					>
-				</File>
-				<File
-					RelativePath=".\src\units\units.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Windows Depended"
-				>
-				<File
-					RelativePath=".\src\win\main.c"
 					>
 				</File>
 			</Filter>
