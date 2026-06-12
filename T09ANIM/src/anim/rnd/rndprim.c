@@ -67,17 +67,20 @@ VOID dt3_RndPrimDraw( dt3PRIM *Pr, MATR World )
 
   glLoadMatrixf(wvp.A[0]);
 
+  DT3_RndPrimTriMeshAutoNormals(Pr->V, Pr->NumOfV, Pr->I, Pr->NumOfI);
+
   /* Draw triangles by edges */
   glBegin(GL_TRIANGLES);
   srand(30.47);
-/*  DT3_RndPrimTriMeshAutoNormals(Pr->V, Pr->NumOfV, Pr->I, Pr->NumOfI); */
+
   for (i = 0; i < Pr->NumOfI; i++)
   {
-    /* nl = VecDotVec(Pr->V[i].N, L);
+    nl = VecDotVec(Pr->V[Pr->I[i]].N, L);
     if (nl < 0.1)
       nl = 0.1;
-    Pr->V[i].C = VecSet4(0.30 * nl, 0.4 * nl, 0.1 * nl, 1); 
-    glColor4fv(&Pr->V[Pr->I[i]].C.X); */
+    Pr->V[Pr->I[i]].C = VecSet4(0.8 * nl, 0.47 * nl, 0.30 * nl, 1); 
+    glColor4fv(&Pr->V[Pr->I[i]].C.X);
+    
     glVertex3fv(&Pr->V[Pr->I[i]].P.X);
   }
   glEnd();
