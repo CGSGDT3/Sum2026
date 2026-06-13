@@ -10,7 +10,7 @@
 #define GLEW_STATIC
 #include <glew.h>
 
-#include "def.h"
+#include "res/rndres.h"
 
 #define Gr_W 12
 #define Gr_H 8
@@ -30,22 +30,37 @@ extern MATR
   DT3_RndMatrProj, /* Projection coordinate system matrix */
   DT3_RndMatrVP;   /* Stored (View * Proj) matrix */
 
+/* Primitive type */
+typedef enum tagdt3PRIM_TYPE
+{
+  DT3_RND_PRIM_POINTS,   /* Array of points  – GL_POINTS */
+  DT3_RND_PRIM_LINES,    /* Line segments (by 2 points) – GL_LINES */
+  DT3_RND_PRIM_TRIMESH,  /* Triangle mesh - array of triangles – GL_TRIANGLES */
+} dt3PRIM_TYPE;
+  
 typedef struct tagdt3VERTEX
 {
   VEC P;  /* Vertex position */
-  VEC4 C; /* Vertex color */
+
   VEC2 T;  /* Texture coordinate */
   VEC N;   /* normal */
+  VEC4 C; /* Vertex color */
 
 } dt3VERTEX;
 
+/* Primitive representation type */
 typedef struct tagdt3PRIM
 {
-  dt3VERTEX *V; /* Vertex attributes array */
-  INT NumOfV;   /* Number of vertices */
+  dt3PRIM_TYPE Type; /* Primitive type */
 
-  INT *I;       /* Index array (for trimesh – by 3 ones) */
-  INT NumOfI;   /* Number of indices */
+  INT
+    VA,              /* Vertex array Id */
+    VBuf,            /* Vertex buffer Id */
+    IBuf;            /* Index buffer Id (if 0 - use only vertex buffer) */
+
+  INT NumOfElements; /* Number of indices/vecrtices */
+
+  VEC MinBB, MaxBB;  /* Bound box */
 
   MATR Trans;   /* Additional transformation matrix */
 } dt3PRIM;
@@ -101,23 +116,30 @@ VOID DT3_RndCopyFrame( VOID );
  */
 VOID DT3_RndStart( VOID );
 
-/* Creating primitive (memory allocation for vertices and indices) function.
+/* Create primitive function.
  * ARGUMENTS:
- *   - pointer to primitive to be memory allocated:
+ *   - pointer to primitive to create:
  *       dt3PRIM *Pr;
- *   - number of vertices and indiced:
- *       INT NoofV, NoofI;
- * RETURNS:
- *   (BOOL) TRUE if success, FALSE otherwise.
+ *   - primitive type:
+ *       dt3PRIM_TYPE Type;
+ *   - vertex attributes array:
+ *       dt3VERTEX *V;
+ *   - vertex attributes array size:
+ *       INT NoofV;
+ *   - primitive vertex index array:
+ *       INT *Ind;
+ *   - primitive vertex index array size:
+ *       INT NoofI;
+ * RETURNS: None.
  */
-BOOL DT3_RndPrimCreate( dt3PRIM *Pr, INT NoofV, INT NoofI );
+VOID DT3_RndPrimCreate( dt3PRIM *Pr, dt3PRIM_TYPE Type,
+                        dt3VERTEX *V, INT NoofV, INT *Ind, INT NoofI );
 
 /* Primitive free function.
  * ARGUMENTS:
- *   - pointer to primitive to be free:
+ *   - primitive to be free:
  *       dt3PRIM *Pr;
- * RETURNS:
- *   None.
+ * RETURNS: None.
  */
 VOID DT3_RndPrimFree( dt3PRIM *Pr );
 
@@ -130,18 +152,7 @@ VOID DT3_RndPrimFree( dt3PRIM *Pr );
  * RETURNS:
  *   None.
  */
-VOID DT3_RndPrimLoad( dt3PRIM *Pr, MATR World );
-
-/* Primitive load function.
- * ARGUMENTS:
- *   - primitive to be load:
- *       dt3PRIM *Pr;
- *   - primitve filename (.OBJ):
- *       CHAR *FileName;
- * RETURNS:
- *   (BOOL) TRUE if success, FLASE otherwise.
- */
-BOOL dt3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName );
+VOID DT3_RndPrimDraw( dt3PRIM *Pr, MATR World );
 
 /* Create sphere primitive function.
  * ARGUMENTS:
@@ -208,6 +219,40 @@ VOID FlipFullScreen( HWND hWnd );
  *       INT NumOfI;
  */
 VOID DT3_RndPrimTriMeshAutoNormals( dt3VERTEX *V, INT NumOfV, INT *Ind, INT NumOfI );
+
+/* Primitive load function.
+ * ARGUMENTS:
+ *   - primitive to be load:
+ *       dt3PRIM *Pr;
+ *   - primitve filename (.OBJ):
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FLASE otherwise.
+ */
+BOOL DT3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName );
+
+
+/* Debug output function.
+ * ARGUMENTS:
+ *   - source APi or device:
+ *       UINT Source;
+ *   - error type:
+ *       UINT Type;
+ *   - error message id:
+ *       UINT Id, 
+ *   - message severity:
+ *       UINT severity, 
+ *   - message text length:
+ *       INT Length, 
+ *   - message text:
+ *       CHAR *Message, 
+ *   - user addon parameters pointer:
+ *       VOID *UserParam;
+ * RETURNS: None.
+ */
+VOID APIENTRY glDebugOutput( UINT Source, UINT Type, UINT Id, UINT Severity,
+                             INT Length, const CHAR *Message,
+                             const VOID *UserParam );
 
 #endif /* __rnd_h */
 /* END OF 'rnd.h' FILE */

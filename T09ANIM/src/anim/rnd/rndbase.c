@@ -19,6 +19,7 @@
  */
 VOID DT3_RndClose( VOID )
 {
+  DT3_RndResClose();
   wglMakeCurrent(NULL, NULL);
   wglDeleteContext(DT3_hRndGLRC);
   ReleaseDC(DT3_hRndWnd, DT3_hRndDC);
@@ -92,6 +93,15 @@ VOID DT3_RndInit( HWND hWnd )
   INT i;
   PIXELFORMATDESCRIPTOR pfd = {0};
 
+  #ifndef NDEBUG
+    OutputDebugString(glGetString(GL_VERSION));
+    OutputDebugString("\n");
+    OutputDebugString(glGetString(GL_VENDOR));
+    OutputDebugString("\n");
+    OutputDebugString(glGetString(GL_RENDERER));
+    OutputDebugString("\n");
+  #endif /* NDEBUG */
+
   DT3_hRndWnd = hWnd;
 
   /* Prepare frame compatible device contesxt */
@@ -124,6 +134,8 @@ VOID DT3_RndInit( HWND hWnd )
   DT3_RndFrameW = 470;
   DT3_RndFrameH = 470;
   DT3_RndCamSet(VecSet(5, 5, 5), VecSet(0, 0, 0), VecSet(0, 1, 0));
+
+  DT3_RndResInit();
 } /* End of 'DT3_RndInit' function */
 
 /* Copying frame from work DC to differen DC function.

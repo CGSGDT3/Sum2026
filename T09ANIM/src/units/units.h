@@ -34,6 +34,14 @@ dt3UNIT * DT3_UnitCreateBall( VOID );
  */
 dt3UNIT * DT3_UnitCreateControl( VOID );
 
+/* Unit control creation function.
+ * ARGUMENTS:
+ *   None.
+ * RETURNS:
+ *   (dt3UNIT *) pointer to created unit.
+ */
+dt3UNIT * DT3_UnitCreateCow( VOID );
+
 #endif /* __units_h_ */
 
 /* END OF 'units.h' FILE */

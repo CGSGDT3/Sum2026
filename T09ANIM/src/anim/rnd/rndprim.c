@@ -8,83 +8,127 @@
 #include "rnd.h"
 
 #include <stdio.h>
-
-/* Primitive type */
-typedef enum tagdt3PRIM_TYPE
-{
-  dt3_RND_PRIM_POINTS,   /* Array of points  – GL_POINTS */
-  dt3_RND_PRIM_LINES,    /* Line segments (by 2 points) – GL_LINES */
-  dt3_RND_PRIM_TRIMESH,  /* Triangle mesh - array of triangles – GL_TRIANGLES */
-} dt3PRIM_TYPE;
-
-
-/* Primitive free function.
+  
+/* Create primitive function.
  * ARGUMENTS:
- *   - pointer to primitive to be free:
+ *   - pointer to primitive to create:
  *       dt3PRIM *Pr;
- * RETURNS:
- *   None.
+ *   - primitive type:
+ *       dt3PRIM_TYPE Type;
+ *   - vertex attributes array:
+ *       dt3VERTEX *V;
+ *   - vertex attributes array size:
+ *       INT NoofV;
+ *   - primitive vertex index array:
+ *       INT *Ind;
+ *   - primitive vertex index array size:
+ *       INT NoofI;
+ * RETURNS: None.
  */
-VOID DT3_RndPrimFree( dt3PRIM *Pr )
+VOID DT3_RndPrimCreate( dt3PRIM *Pr, dt3PRIM_TYPE Type,
+                        dt3VERTEX *V, INT NoofV, INT *Ind, INT NoofI )
 {
-  free(Pr->V);
-  memset(Pr, 0, sizeof(dt3PRIM));   
-} /* End of 'DT3_RndPrimFree' function */
-
-
-/* Creating primitive (memory allocation for vertices and indices) function.
- * ARGUMENTS:
- *   - pointer to primitive to be memory allocated:
- *       dt3PRIM *Pr;
- *   - number of vertices and indiced:
- *       INT NoofV, NoofI;
- * RETURNS:
- *   (BOOL) TRUE if success, FALSE otherwise.
- */
-BOOL DT3_RndPrimCreate( dt3PRIM *Pr, INT NoofV, INT NoofI )
-{
-  INT size;
-
   memset(Pr, 0, sizeof(dt3PRIM));
-  size = sizeof(dt3VERTEX) * NoofV + sizeof(INT) * NoofI;
-
-  if ((Pr->V = malloc(size)) == NULL)
-    return FALSE;
-  Pr->I = (INT *)(Pr->V + NoofV);
-  Pr->NumOfV = NoofV;
-  Pr->NumOfI = NoofI;
   Pr->Trans = MatrIdentity();
-  memset(Pr->V, 0, size);
-  return TRUE;
+  Pr->Type = Type;
+
+  glGenVertexArrays(1, &Pr->VA);
+
+  /* Vertex data */
+  if (V != NULL && NoofV != 0)
+  {
+    glBindVertexArray(Pr->VA);
+    glGenBuffers(1, &Pr->VBuf);
+    glBindBuffer(GL_ARRAY_BUFFER, Pr->VBuf);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(dt3VERTEX) * NoofV, V, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, FALSE, sizeof(dt3VERTEX),
+                          (VOID *)0); /* position */
+    glVertexAttribPointer(1, 2, GL_FLOAT, FALSE, sizeof(dt3VERTEX),
+                          (VOID *)sizeof(VEC)); /* texture coordinates */
+    glVertexAttribPointer(2, 3, GL_FLOAT, FALSE, sizeof(dt3VERTEX),
+                          (VOID *)(sizeof(VEC) + sizeof(VEC2))); /* normal */
+    glVertexAttribPointer(3, 4, GL_FLOAT, FALSE, sizeof(dt3VERTEX),
+                          (VOID *)(sizeof(VEC) * 2 + sizeof(VEC2))); /* color */
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+
+    glBindVertexArray(0);
+
+    /* Obtain BB */
+    if (NoofV > 0)
+    {
+      INT i;
+
+      Pr->MinBB = Pr->MaxBB = V[0].P;
+      for (i = 1; i < NoofV; i++)
+      {
+        Pr->MinBB = VecMinVec(Pr->MinBB, V[i].P);
+        Pr->MaxBB = VecMaxVec(Pr->MaxBB, V[i].P);
+      }
+    }
+  }
+
+  /* Index data */
+  if (Ind != NULL && NoofI != 0)
+  {
+    glGenBuffers(1, &Pr->IBuf);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Pr->IBuf);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INT) * NoofI, Ind, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    Pr->NumOfElements = NoofI;
+  }
+  else
+    Pr->NumOfElements = NoofV;
 } /* End of 'DT3_RndPrimCreate' function */
 
-VOID DT3_RndPrimLoad( dt3PRIM *Pr, MATR World )
+/* Primitive draw function.
+ * ARGUMENTS:
+ *   - primitive to be draw:
+ *       dt3PRIM *Pr;
+ *   - transformation matrix:
+ *       MATR World;
+ * RETURNS: None.
+ */
+VOID DT3_RndPrimDraw( dt3PRIM *Pr, MATR World )
 {
-  INT i;
-  DBL nl;
-  VEC L = VecNormalize(VecSet1(1));
   MATR wvp = MatrMulMatr3(Pr->Trans, World, DT3_RndMatrVP);
+  INT prim_type =
+    Pr->Type == DT3_RND_PRIM_LINES ? GL_LINES :
+    Pr->Type == DT3_RND_PRIM_TRIMESH ? GL_TRIANGLES :
+    GL_POINTS;
 
   glLoadMatrixf(wvp.A[0]);
 
-  DT3_RndPrimTriMeshAutoNormals(Pr->V, Pr->NumOfV, Pr->I, Pr->NumOfI);
-
-  /* Draw triangles by edges */
-  glBegin(GL_TRIANGLES);
-  srand(30.47);
-
-  for (i = 0; i < Pr->NumOfI; i++)
+  glBindVertexArray(Pr->VA);
+  if (Pr->IBuf == 0)
+    glDrawArrays(prim_type, 0, Pr->NumOfElements);
+  else
   {
-    nl = VecDotVec(Pr->V[Pr->I[i]].N, L);
-    if (nl < 0.1)
-      nl = 0.1;
-    Pr->V[Pr->I[i]].C = VecSet4(0.8 * nl, 0.47 * nl, 0.30 * nl, 1); 
-    glColor4fv(&Pr->V[Pr->I[i]].C.X);
-    
-    glVertex3fv(&Pr->V[Pr->I[i]].P.X);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Pr->IBuf);
+    glDrawElements(prim_type, Pr->NumOfElements, GL_UNSIGNED_INT, NULL);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
-  glEnd();
-} /* End of 'DT3_RndPrimLoad' function */
+  glBindVertexArray(0);
+} /* End of 'DT3_RndPrimDraw' function */
+
+/* Primitive free function.
+ * ARGUMENTS:
+ *   - primitive to be free:
+ *       dt3PRIM *Pr;
+ * RETURNS: None.
+ */
+VOID DT3_RndPrimFree( dt3PRIM *Pr )
+{
+  glDeleteVertexArrays(1, &Pr->VA);
+  glDeleteBuffers(1, &Pr->VBuf);
+  glDeleteBuffers(1, &Pr->IBuf);
+  memset(Pr, 0, sizeof(dt3PRIM));
+} /* End of 'DT3_RndPrimFree' function */  
 
 /* Create sphere primitive function.
  * ARGUMENTS:
@@ -98,34 +142,46 @@ VOID DT3_RndPrimLoad( dt3PRIM *Pr, MATR World )
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
 BOOL DT3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H )
-{
-  INT i, j, k;
+{    
+  INT i, j, k, nv =  W * H, nf = (H - 1) * (W - 1) * 6, size;
   DBL theta, phi;
+  dt3VERTEX *V;
+  INT *Ind;
 
-  if (!DT3_RndPrimCreate(Pr, W * H, (H - 1) * (W - 1) * 2 * 3))
+  size = sizeof(dt3VERTEX) * nv + sizeof(INT) * nf * 3;
+  if ((V = malloc(size)) == NULL)
     return FALSE;
+  Ind = (INT *)(V + nv);
 
-  /* Fill vertex array */
   for (k = 0, i = 0, theta = 0; i < H; i++, theta += PI / (H - 1))
     for (j = 0, phi = 0; j < W; j++, phi += 2 * PI / (W - 1))
-      Pr->V[k++].P = VecSet(R * sin(theta) * sin(phi),
+      V[k++].P = VecSet(R * sin(theta) * sin(phi),
                             R * cos(theta),
                             R * sin(theta) * cos(phi));
-
-  /* Fill vertex array */
-  for (k = 0, i = 0; i < H - 1; i++)
+  k = 0;
+  for (i = 0; i < H - 1; i++)
     for (j = 0; j < W - 1; j++)
     {
-      /* bottom-left */
-      Pr->I[k++] = i * W + j;
-      Pr->I[k++] = i * W + j + 1;
-      Pr->I[k++] = (i + 1) * W + j;
-      /* top-right */
-      Pr->I[k++] = (i + 1) * W + j;
-      Pr->I[k++] = i * W + j + 1;
-      Pr->I[k++] = (i + 1) * W + j + 1;
-    }
-  return TRUE;
+      Ind[k++] = i * W + j;
+      Ind[k++] = i * W + j + 1;
+      Ind[k++] = (i + 1) * W + j;
+      Ind[k++] = (i + 1) * W + j;
+      Ind[k++] = i * W + j + 1;
+      Ind[k++] = (i + 1) * W + j + 1;
+    }      
+  DT3_RndPrimTriMeshAutoNormals(V, nv, Ind, nf);
+
+  for (i = 0; i < nv; i++) 
+  {
+    VEC L = VecNormalize(VecSet1(1)); 
+    FLT nl = VecDotVec(L, V[i].N);
+    V[i].C = VecSet4(nl * 0.8, nl * 0.47, nl * 0.30, 1);
+  }
+
+  DT3_RndPrimCreate(Pr, DT3_RND_PRIM_TRIMESH, V, nv, Ind, nf);   
+
+  free(V);
+  return TRUE;    
 } /* End of 'DT3_RndPrimCreateSphere' function */
 
 /* Create cyllinder primitive function.
@@ -143,41 +199,45 @@ BOOL DT3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H )
  */
 BOOL DT3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H )
 {
-  INT i, j, k = 0;
-  DBL phi, m;
+  INT i, m, j, k, nv =  W * H, nf = (H - 1) * (W - 1) * 6, size;
+  DBL phi;
+  dt3VERTEX *V;
+  INT *Ind;
 
-  if (!DT3_RndPrimCreate(Pr, W * H, (H - 1) * (W - 1) * 2 * 3))
+  size = sizeof(dt3VERTEX) * nv + sizeof(INT) * nf * 3;
+  if ((V = malloc(size)) == NULL)
     return FALSE;
+  Ind = (INT *)(V + nv);
 
-  /* Fill vertex array */
-  for (i = 0; i < H; i++)
+  for (k = 0, i = 0; i < H; i++)
   {
     m = (DBL)i / (H - 1) * Z; 
 
     for (j = 0; j < W; j++)
     {
       phi = j * 2 * PI / (W - 1);
-      Pr->V[k++].P = VecSet(R * cos(phi), m,
+     V[k++].P = VecSet(R * cos(phi), m,
                             R * sin(phi));
     }
   }
-
-  /* Fill index array */
   k = 0;
   for (i = 0; i < H - 1; i++)
     for (j = 0; j < W - 1; j++)
     {
-      /* bottom-left triangle */
-      Pr->I[k++] = i * W + j;
-      Pr->I[k++] = i * W + j + 1;
-      Pr->I[k++] = (i + 1) * W + j;
-      /* top-right triangle */
-      Pr->I[k++] = (i + 1) * W + j;
-      Pr->I[k++] = i * W + j + 1;
-      Pr->I[k++] = (i + 1) * W + j + 1;
-    }
-    
-  return TRUE;
+      Ind[k++] = i * W + j;
+      Ind[k++] = i * W + j + 1;
+      Ind[k++] = (i + 1) * W + j;
+      Ind[k++] = (i + 1) * W + j;
+      Ind[k++] = i * W + j + 1;
+      Ind[k++] = (i + 1) * W + j + 1;
+    }      
+  DT3_RndPrimTriMeshAutoNormals(V, nv, Ind, nf);
+
+  DT3_RndPrimCreate(Pr, DT3_RND_PRIM_TRIMESH, V, nv, Ind, nf);   
+
+  free(V);
+  return TRUE;    
+
 } /* End of 'DT3_RndPrimCreateCyll' function */
 
 /* Create thorus primitive function.
@@ -194,41 +254,46 @@ BOOL DT3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H )
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
 BOOL DT3_RndPrimCreateTh( dt3PRIM *Pr, DBL Ri, DBL Ro, INT W, INT H )
-{
-  INT i, j, k = 0;
-  DBL phi, th = 0, x, y;
+{ 
+  INT i, x, y, th, j, k, nv =  W * H, nf = (H - 1) * (W - 1) * 6, size;
+  DBL phi;
+  dt3VERTEX *V;
+  INT *Ind;
 
-  if (!DT3_RndPrimCreate(Pr, W * H, (H - 1) * (W - 1) * 2 * 3))
-    return FALSE; 
+  size = sizeof(dt3VERTEX) * nv + sizeof(INT) * nf * 3;
+  if ((V = malloc(size)) == NULL)
+    return FALSE;
+  Ind = (INT *)(V + nv);
 
-  /* Fill vertex array */
-    for (i = 0; i < H; i++)
+  for (k = 0,i = 0; i < H; i++)
   {
     th = (DBL)i / (H - 1) * 2 * PI; 
-  for (j = 0; j < W; j++)
+    for (j = 0; j < W; j++)
     {         
       phi = (DBL)j / (W - 1) * 2 * PI; 
       y = (Ro + Ri * cos(phi)) * sin(th);
       x = (Ro + Ri * cos(phi)) * cos(th);
-      Pr->V[k++].P = VecSet(x, y, sin(phi) * Ri);
+      V[k++].P = VecSet(x, y, sin(phi) * Ri);
     }
   }
 
-  /* Fill index array */
   k = 0;
   for (i = 0; i < H - 1; i++)
     for (j = 0; j < W - 1; j++)
     {
-      /* bottom-left triangle */
-      Pr->I[k++] = i * W + j;
-      Pr->I[k++] = i * W + j + 1;
-      Pr->I[k++] = (i + 1) * W + j;
-      /* top-right triangle */
-      Pr->I[k++] = (i + 1) * W + j;
-      Pr->I[k++] = i * W + j + 1;
-      Pr->I[k++] = (i + 1) * W + j + 1;
-    }                    
-  return TRUE;
+      Ind[k++] = i * W + j;
+      Ind[k++] = i * W + j + 1;
+      Ind[k++] = (i + 1) * W + j;
+      Ind[k++] = (i + 1) * W + j;
+      Ind[k++] = i * W + j + 1;
+      Ind[k++] = (i + 1) * W + j + 1;
+    }      
+  DT3_RndPrimTriMeshAutoNormals(V, nv, Ind, nf);
+
+  DT3_RndPrimCreate(Pr, DT3_RND_PRIM_TRIMESH, V, nv, Ind, nf);   
+
+  free(V);
+  return TRUE;   
 } /* End of 'DT3_RndPrimCreateTh' function */
 
 /* Primitive load function.
@@ -240,11 +305,14 @@ BOOL DT3_RndPrimCreateTh( dt3PRIM *Pr, DBL Ri, DBL Ro, INT W, INT H )
  * RETURNS:
  *   (BOOL) TRUE if success, FLASE otherwise.
  */
-BOOL dt3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName )
-{
+BOOL DT3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName )
+{  
   FILE *F;
-  INT nv = 0, nf = 0;
+  INT i, nv = 0, nf = 0;
   static CHAR Buf[3000];
+  dt3VERTEX *V;
+  INT *Ind; 
+  DBL size;
 
   memset(Pr, 0, sizeof(dt3PRIM));
 
@@ -270,13 +338,15 @@ BOOL dt3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName )
 
       nf += n - 2;
     }
-  }
-
-  if (!DT3_RndPrimCreate(Pr, nv, nf * 3))
+  } 
+  size = sizeof(dt3VERTEX) * nv + sizeof(INT) * nf * 6;
+  if ((V = malloc(size)) == NULL)
   {
     fclose(F);
     return FALSE;
   }
+  Ind = (INT *)(V + nv);
+  memset(V, 0, size);
 
   /* Load model */
   rewind(F);
@@ -288,8 +358,8 @@ BOOL dt3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName )
     {
       DBL x, y, z;
 
-      sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
-      Pr->V[nv++].P = VecSet(x, y, z);
+      sscanf(Buf + 2, "%lf %lf %lf", &x, &y, &z);
+      V[nv++].P = VecSet(x, y, z);
     }
     else if (Buf[0] == 'f' && Buf[1] == ' ')
     {
@@ -316,9 +386,9 @@ BOOL dt3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName )
           {
             n3 = n;
 
-            Pr->I[nf++] = n1;
-            Pr->I[nf++] = n2;
-            Pr->I[nf++] = n3;
+            Ind[nf++] = n1;
+            Ind[nf++] = n2;
+            Ind[nf++] = n3;
 
             n2 = n3;
           }
@@ -329,8 +399,18 @@ BOOL dt3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName )
     }
   }
   fclose(F);
+  DT3_RndPrimTriMeshAutoNormals(V, nv, Ind, nf);
+
+  for (i = 0; i < nv; i++) 
+  {
+    VEC L = VecNormalize(VecSet1(1)); 
+    FLT nl = VecDotVec(L, V[i].N);
+    V[i].C = VecSet4(nl * 0.8, nl * 0.47, nl * 0.30, 1);
+  }
+  DT3_RndPrimCreate(Pr, DT3_RND_PRIM_TRIMESH, V, nv, Ind, nf);
+  free(V);   
   return TRUE;
-} /* End of 'dt3_RndPrimLoad' function */
+} /* End of 'DT3_RndPrimLoad' function */
 
 /* Tri-mesh geometry autonormal evaluation function.
  * ARGUMENTS:
@@ -347,7 +427,7 @@ VOID DT3_RndPrimTriMeshAutoNormals( dt3VERTEX *V, INT NumOfV, INT *Ind, INT NumO
 {
   INT i;
 
- for (i = 0; i < NumOfV; i++)
+  for (i = 0; i < NumOfV; i++)
     V[i].N = VecSet(0, 0, 0);
 
   for (i = 0; i < NumOfI; i += 3)
@@ -364,7 +444,7 @@ VOID DT3_RndPrimTriMeshAutoNormals( dt3VERTEX *V, INT NumOfV, INT *Ind, INT NumO
   }  
 
   for (i = 0; i < NumOfV; i++)
-    V[i].N = VecNormalize(V[i].N);
+    V[i].N = VecNormalize(V[i].N); 
 } /* End of 'DT3_RndPrimTriMeshAutoNormals' function */
 
 /* END OF 'rndprim.c FILE */

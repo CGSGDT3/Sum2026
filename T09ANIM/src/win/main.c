@@ -32,7 +32,6 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   WNDCLASS wc;
   MSG msg;
   HWND hWnd;
-  dt3UNIT *Uni[47], *Uni1;
   INT i;
 
   SetDbgMemHooks();
@@ -59,9 +58,9 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
   DT3_AnimInit(hWnd);
   for (i = 0; i < 47; i++)
-    Uni[i] = DT3_UnitCreateBall(), DT3_AnimUnitAdd(Uni[i]);
-  Uni1 = DT3_UnitCreateControl();
-  DT3_AnimUnitAdd(Uni1);
+    DT3_AnimUnitAdd(DT3_UnitCreateBall());
+  DT3_AnimUnitAdd(DT3_UnitCreateControl());
+  DT3_AnimUnitAdd(DT3_UnitCreateCow());
 
   ShowWindow(hWnd, SW_SHOWNORMAL);
   UpdateWindow(hWnd);

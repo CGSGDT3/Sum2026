@@ -38,17 +38,35 @@ static VOID DT3_UnitInit( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
 {
+  INT modes[2];
+
   /* Transforming camera position */
   Uni->CamLoc = PointTransform(Uni->CamLoc, MatrRotateY(Ani->DeltaTime * Uni->AngleSpeed * Ani->Mdx));
     
   Uni->CamLoc = VecAddVec(Uni->CamLoc, VecMulNum(Uni->CamDir, Ani->DeltaTime * Uni->Speed *
       (Ani->Keys[VK_UP] - Ani->Keys[VK_DOWN])));
-  if (Ani->Keys['F'] == 1)
+  if (Ani->Keys['F'] == 1  && Ani->KeysClick['F'] == 1)
     FlipFullScreen(Ani->hWnd);
   if (Ani->Keys['P'] == 1 && Ani->KeysClick['P'] == 1)
     Ani->IsPause = !Ani->IsPause;
   if (Ani->Keys[VK_ESCAPE] == 1)
     SendMessage(Ani->hWnd, WM_DESTROY, 30, 0);
+
+  if (Ani->Keys[VK_SHIFT] && Ani->KeysClick['W'])
+  {
+    glGetIntegerv(GL_POLYGON_MODE, modes);
+
+    if (modes[0] == GL_FILL)
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    else
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  }
+  if (Ani->KeysClick['1'])
+    glLineWidth(1);
+  if (Ani->KeysClick['2'])
+    glLineWidth(2);
+  if (Ani->KeysClick['3'])
+    glLineWidth(3);
 
   if (Ani->JBut[JOY_BUTTON7] == 1)
     FlipFullScreen(Ani->hWnd);
