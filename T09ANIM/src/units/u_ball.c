@@ -30,7 +30,7 @@ static VOID DT3_UnitInit( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
   if (Uni->Size < 0.08)
     Uni->Size = 0.08;
   Uni->Speed = 30 * (DBL)rand() / RAND_MAX;
-  dt3_RndPrimCreateSphere(&Uni->Ball, Uni->Size, Gr_W, Gr_H);
+  DT3_RndPrimCreateSphere(&Uni->Ball, Uni->Size, Gr_W, Gr_H);
 } /* End of 'DT3_UnitInit' function */ 
 
 /* Unit inter frame events handle function.
@@ -56,7 +56,7 @@ static VOID DT3_UnitResponse( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitRender( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 {
-  dt3_RndPrimDraw(&Uni->Ball, MatrMulMatr(MatrTranslate(Uni->Pos),
+  DT3_RndPrimLoad(&Uni->Ball, MatrMulMatr(MatrTranslate(Uni->Pos),
     MatrRotateY(90 * (Ani->JX + Ani->JR))));
 } /* End of 'DT3_UnitRender' function */ 
 
@@ -70,7 +70,7 @@ static VOID DT3_UnitRender( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitClose( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 {
-  dt3_RndPrimFree(&Uni->Ball);
+  DT3_RndPrimFree(&Uni->Ball);
 } /* End of 'DT3_UnitClose' function */ 
 
 /* Unit ball creation function.

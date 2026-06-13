@@ -16,11 +16,11 @@
  * RETURNS:
  *   None.
  */
-VOID dt3_RndPrimFree( dt3PRIM *Pr )
+VOID DT3_RndPrimFree( dt3PRIM *Pr )
 {
   free(Pr->V);
   memset(Pr, 0, sizeof(dt3PRIM));   
-} /* End of 'dt3_RndPrimFree' function */
+} /* End of 'DT3_RndPrimFree' function */
 
 
 /* Creating primitive (memory allocation for vertices and indices) function.
@@ -32,7 +32,7 @@ VOID dt3_RndPrimFree( dt3PRIM *Pr )
  * RETURNS:
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
-BOOL dt3_RndPrimCreate( dt3PRIM *Pr, INT NoofV, INT NoofI )
+BOOL DT3_RndPrimCreate( dt3PRIM *Pr, INT NoofV, INT NoofI )
 {
   INT size;
 
@@ -47,18 +47,9 @@ BOOL dt3_RndPrimCreate( dt3PRIM *Pr, INT NoofV, INT NoofI )
   Pr->Trans = MatrIdentity();
   memset(Pr->V, 0, size);
   return TRUE;
-} /* End of 'dt3_RndPrimCreate' function */
+} /* End of 'DT3_RndPrimCreate' function */
 
-/* Drawing primitive function.
- * ARGUMENTS:
- *   - pointer to primitive to be draw:
- *       dt3PRIM *Pr;
- *   - world matrix:
- *       MATR World;
- * RETURNS:
- *   None.
- */
-VOID dt3_RndPrimDraw( dt3PRIM *Pr, MATR World )
+VOID DT3_RndPrimLoad( dt3PRIM *Pr, MATR World )
 {
   INT i;
   DBL nl;
@@ -67,21 +58,24 @@ VOID dt3_RndPrimDraw( dt3PRIM *Pr, MATR World )
 
   glLoadMatrixf(wvp.A[0]);
 
+  DT3_RndPrimTriMeshAutoNormals(Pr->V, Pr->NumOfV, Pr->I, Pr->NumOfI);
+
   /* Draw triangles by edges */
   glBegin(GL_TRIANGLES);
   srand(30.47);
-/*  DT3_RndPrimTriMeshAutoNormals(Pr->V, Pr->NumOfV, Pr->I, Pr->NumOfI); */
+
   for (i = 0; i < Pr->NumOfI; i++)
   {
-    /* nl = VecDotVec(Pr->V[i].N, L);
+    nl = VecDotVec(Pr->V[Pr->I[i]].N, L);
     if (nl < 0.1)
       nl = 0.1;
-    Pr->V[i].C = VecSet4(0.30 * nl, 0.4 * nl, 0.1 * nl, 1); 
-    glColor4fv(&Pr->V[Pr->I[i]].C.X); */
+    Pr->V[Pr->I[i]].C = VecSet4(0.8 * nl, 0.47 * nl, 0.30 * nl, 1); 
+    glColor4fv(&Pr->V[Pr->I[i]].C.X);
+    
     glVertex3fv(&Pr->V[Pr->I[i]].P.X);
   }
   glEnd();
-} /* End of 'dt3_RndPrimDraw' function */
+} /* End of 'DT3_RndPrimLoad' function */
 
 /* Create sphere primitive function.
  * ARGUMENTS:
@@ -94,12 +88,12 @@ VOID dt3_RndPrimDraw( dt3PRIM *Pr, MATR World )
  * RETURNS:
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
-BOOL dt3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H )
+BOOL DT3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H )
 {
   INT i, j, k;
   DBL theta, phi;
 
-  if (!dt3_RndPrimCreate(Pr, W * H, (H - 1) * (W - 1) * 2 * 3))
+  if (!DT3_RndPrimCreate(Pr, W * H, (H - 1) * (W - 1) * 2 * 3))
     return FALSE;
 
   /* Fill vertex array */
@@ -123,7 +117,7 @@ BOOL dt3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H )
       Pr->I[k++] = (i + 1) * W + j + 1;
     }
   return TRUE;
-} /* End of 'dt3_RndPrimCreateSphere' function */
+} /* End of 'DT3_RndPrimCreateSphere' function */
 
 /* Create cyllinder primitive function.
  * ARGUMENTS:
@@ -138,12 +132,12 @@ BOOL dt3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H )
  * RETURNS:
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
-BOOL dt3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H )
+BOOL DT3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H )
 {
   INT i, j, k = 0;
   DBL phi, m;
 
-  if (!dt3_RndPrimCreate(Pr, W * H, (H - 1) * (W - 1) * 2 * 3))
+  if (!DT3_RndPrimCreate(Pr, W * H, (H - 1) * (W - 1) * 2 * 3))
     return FALSE;
 
   /* Fill vertex array */
@@ -175,7 +169,7 @@ BOOL dt3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H )
     }
     
   return TRUE;
-} /* End of 'dt3_RndPrimCreateCyll' function */
+} /* End of 'DT3_RndPrimCreateCyll' function */
 
 /* Create thorus primitive function.
  * ARGUMENTS:
@@ -190,12 +184,12 @@ BOOL dt3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H )
  * RETURNS:
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
-BOOL dt3_RndPrimCreateTh( dt3PRIM *Pr, DBL Ri, DBL Ro, INT W, INT H )
+BOOL DT3_RndPrimCreateTh( dt3PRIM *Pr, DBL Ri, DBL Ro, INT W, INT H )
 {
   INT i, j, k = 0;
   DBL phi, th = 0, x, y;
 
-  if (!dt3_RndPrimCreate(Pr, W * H, (H - 1) * (W - 1) * 2 * 3))
+  if (!DT3_RndPrimCreate(Pr, W * H, (H - 1) * (W - 1) * 2 * 3))
     return FALSE; 
 
   /* Fill vertex array */
@@ -226,7 +220,7 @@ BOOL dt3_RndPrimCreateTh( dt3PRIM *Pr, DBL Ri, DBL Ro, INT W, INT H )
       Pr->I[k++] = (i + 1) * W + j + 1;
     }                    
   return TRUE;
-} /* End of 'dt3_RndPrimCreateTh' function */
+} /* End of 'DT3_RndPrimCreateTh' function */
 
 /* Primitive load function.
  * ARGUMENTS:
@@ -269,7 +263,7 @@ BOOL dt3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName )
     }
   }
 
-  if (!dt3_RndPrimCreate(Pr, nv, nf * 3))
+  if (!DT3_RndPrimCreate(Pr, nv, nf * 3))
   {
     fclose(F);
     return FALSE;

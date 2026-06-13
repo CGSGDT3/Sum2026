@@ -110,7 +110,7 @@ VOID DT3_RndStart( VOID );
  * RETURNS:
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
-BOOL dt3_RndPrimCreate( dt3PRIM *Pr, INT NoofV, INT NoofI );
+BOOL DT3_RndPrimCreate( dt3PRIM *Pr, INT NoofV, INT NoofI );
 
 /* Primitive free function.
  * ARGUMENTS:
@@ -119,7 +119,7 @@ BOOL dt3_RndPrimCreate( dt3PRIM *Pr, INT NoofV, INT NoofI );
  * RETURNS:
  *   None.
  */
-VOID dt3_RndPrimFree( dt3PRIM *Pr );
+VOID DT3_RndPrimFree( dt3PRIM *Pr );
 
 /* Drawing primitive function.
  * ARGUMENTS:
@@ -130,7 +130,7 @@ VOID dt3_RndPrimFree( dt3PRIM *Pr );
  * RETURNS:
  *   None.
  */
-VOID dt3_RndPrimDraw( dt3PRIM *Pr, MATR World );
+VOID DT3_RndPrimLoad( dt3PRIM *Pr, MATR World );
 
 /* Primitive load function.
  * ARGUMENTS:
@@ -154,7 +154,7 @@ BOOL dt3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName );
  * RETURNS:
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
-BOOL dt3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H );
+BOOL DT3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H );
 
 /* Create cyllinder primitive function.
  * ARGUMENTS:
@@ -169,7 +169,7 @@ BOOL dt3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H );
  * RETURNS:
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
-BOOL dt3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H );
+BOOL DT3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H );
 
 /* Create thorus primitive function.
  * ARGUMENTS:
@@ -184,7 +184,7 @@ BOOL dt3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H );
  * RETURNS:
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
-BOOL dt3_RndPrimCreateTh( dt3PRIM *Pr, DBL Ri, DBL Ro, INT W, INT H );
+BOOL DT3_RndPrimCreateTh( dt3PRIM *Pr, DBL Ri, DBL Ro, INT W, INT H );
 
 VOID DT3_RndEnd( VOID );
 
