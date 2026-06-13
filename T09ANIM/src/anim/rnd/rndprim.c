@@ -9,6 +9,15 @@
 
 #include <stdio.h>
 
+/* Primitive type */
+typedef enum tagdt3PRIM_TYPE
+{
+  dt3_RND_PRIM_POINTS,   /* Array of points  – GL_POINTS */
+  dt3_RND_PRIM_LINES,    /* Line segments (by 2 points) – GL_LINES */
+  dt3_RND_PRIM_TRIMESH,  /* Triangle mesh - array of triangles – GL_TRIANGLES */
+} dt3PRIM_TYPE;
+
+
 /* Primitive free function.
  * ARGUMENTS:
  *   - pointer to primitive to be free:
