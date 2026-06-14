@@ -1,4 +1,4 @@
-/* FILE NAME: u_ball.c
+/* FILE NAME: u_cow.c
  * PROGRAMMER: DT3
  * DATE: 11.06.2026
  * PURPOSE: unit COW file in animation program.
@@ -39,7 +39,6 @@ static VOID DT3_UnitInit( dt3UNIT_COW *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitResponse( dt3UNIT_COW *Uni, dt3ANIM *Ani )
 {
-  Uni->Pos = VecSet(Uni->Pos.X, 10 * sin(Ani->Time), Uni->Pos.Z);
 } /* End of 'DT3_UnitResponse' function */ 
 
 /* Unit render function.
@@ -52,8 +51,13 @@ static VOID DT3_UnitResponse( dt3UNIT_COW *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitRender( dt3UNIT_COW *Uni, dt3ANIM *Ani )
 {
-  DT3_RndPrimDraw(&Uni->COW, MatrMulMatr(MatrTranslate(Uni->Pos),
-    MatrRotateY(90 * (Ani->JX + Ani->JR))));
+  INT i, i1, i2, S = 15;
+
+  for (i = 0; i < S; i++)
+    for (i1 = 0; i1 < S; i1++)
+      for (i2 = 0; i2 < S; i2++)
+        DT3_RndPrimDraw(&Uni->COW, MatrMulMatr3(MatrScale(VecSet1(0.1)), MatrTranslate(VecAddVec(Uni->Pos, VecSet(i * 2.5, i1 * 2.5, i2 * 2.5))),
+    MatrRotateZ(30 * sin(Ani->Time))));
 } /* End of 'DT3_UnitRender' function */ 
 
 /* Unit deinitialization function.
@@ -89,4 +93,4 @@ dt3UNIT * DT3_UnitCreateCow( VOID )
   return (dt3UNIT *)Uni;
 } /* End of 'DT3_UnitCreateBall' function */ 
 
-/* END OF 'u_ball.c' FILE */
+/* END OF 'u_cow.c' FILE */
