@@ -33,6 +33,9 @@ VOID DT3_KeyBoardResponse( dt3ANIM *Ani )
 {
   INT i;
 
+  for (i = 0; i < 256; i++)
+    Ani->KeysOld[i] = Ani->Keys[i];
+
   /* KeyBoard responsing */
   GetKeyboardState(Ani->Keys);
 
