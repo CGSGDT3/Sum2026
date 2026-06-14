@@ -52,7 +52,7 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
   if (Ani->Keys[VK_ESCAPE] == 1)
     SendMessage(Ani->hWnd, WM_DESTROY, 30, 0);
 
-  if (Ani->Keys[VK_SHIFT] && Ani->KeysClick['W'])
+  if (Ani->Keys[VK_SHIFT] == 1 && Ani->KeysClick['W'] == 1)
   {
     glGetIntegerv(GL_POLYGON_MODE, modes);
 
