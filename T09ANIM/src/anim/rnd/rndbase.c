@@ -93,15 +93,6 @@ VOID DT3_RndInit( HWND hWnd )
   INT i;
   PIXELFORMATDESCRIPTOR pfd = {0};
 
-  #ifndef NDEBUG
-    OutputDebugString(glGetString(GL_VERSION));
-    OutputDebugString("\n");
-    OutputDebugString(glGetString(GL_VENDOR));
-    OutputDebugString("\n");
-    OutputDebugString(glGetString(GL_RENDERER));
-    OutputDebugString("\n");
-  #endif /* NDEBUG */
-
   DT3_hRndWnd = hWnd;
 
   /* Prepare frame compatible device contesxt */
@@ -124,6 +115,21 @@ VOID DT3_RndInit( HWND hWnd )
 
   if (glewInit() != GLEW_OK)
     exit(0);
+
+  #ifndef NDEBUG
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(glDebugOutput, NULL);
+
+    OutputDebugString(glGetString(GL_VERSION));
+    OutputDebugString("\n");
+    OutputDebugString(glGetString(GL_VENDOR));
+    OutputDebugString("\n");
+    OutputDebugString(glGetString(GL_RENDERER));
+    OutputDebugString("\n");
+  #endif /* NDEBUG */
+
+ 
 
   /* Render parameters setup */
   glEnable(GL_DEPTH_TEST);
