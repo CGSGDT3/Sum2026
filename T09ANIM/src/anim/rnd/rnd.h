@@ -40,7 +40,7 @@ typedef enum tagdt3PRIM_TYPE
   DT3_RND_PRIM_LINES,    /* Line segments (by 2 points) – GL_LINES */
   DT3_RND_PRIM_TRIMESH,  /* Triangle mesh - array of triangles – GL_TRIANGLES */
 } dt3PRIM_TYPE;
-  
+
 typedef struct tagdt3VERTEX
 {
   VEC P;  /* Vertex position */
@@ -50,6 +50,13 @@ typedef struct tagdt3VERTEX
   VEC4 C; /* Vertex color */
 
 } dt3VERTEX;
+
+/* Grid topology representation type */
+typedef struct tagdt3GRID
+{
+  INT W, H;      /* Grid size (in vertices) */
+  dt3VERTEX *V;  /* Array (2D) of vertex */
+} dt3GRID;
 
 /* Primitive representation type */
 typedef struct tagdt3PRIM
@@ -256,6 +263,57 @@ BOOL DT3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName );
 VOID APIENTRY glDebugOutput( UINT Source, UINT Type, UINT Id, UINT Severity,
                              INT Length, const CHAR *Message,
                              const VOID *UserParam );
+
+/* Create grid function.
+ * ARGUMENTS:
+ *   - grid data:
+ *       dt3GRID *G;
+ *   - grid size:
+ *       INT W, H;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FALSE otherwise.
+ */
+BOOL DT3_RndGridCreate( dt3GRID *G, INT W, INT H );    
+
+/* Free grid function.
+ * ARGUMENTS:
+ *   - grid data:
+ *       dt3GRID *G;
+ * RETURNS: None.
+ */
+VOID DT3_RndGridFree( dt3GRID *G );   
+
+/* Create primitive from grid function.
+ * ARGUMENTS:
+ *   - primitive to be create:
+ *       dt3PRIM *Pr;
+ *   - grid data:
+ *       dt3GRID *G;
+ * RETURNS: None.
+ */
+VOID DT3_RndPrimFromGrid( dt3PRIM *Pr, dt3GRID *G );     
+
+/* Build grid normals function.
+ * ARGUMENTS:
+ *   - grid data:
+ *       dt3GRID *G;
+ * RETURNS: None.
+ */
+VOID DT3_RndGridAutoNormals( dt3GRID *G );
+
+/* Create sphere grid function.
+ * ARGUMENTS:
+ *   - grid data:
+ *       dt3GRID *G;
+ *   - sphere radius:
+ *       FLT R;
+ *   - grid size:
+ *       INT W, H;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FALSE otherwise.
+ */
+BOOL DT3_RndGridCreateSphere( dt3GRID *G, FLT R, INT W, INT H );  
+
 
 #endif /* __rnd_h */
 /* END OF 'rnd.h' FILE */
