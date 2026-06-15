@@ -6,6 +6,7 @@
 
 #include "def.h"
 #include "rnd.h"
+#include "anim/anim.h"
 
 #include <stdio.h>
   
@@ -96,11 +97,21 @@ VOID DT3_RndPrimCreate( dt3PRIM *Pr, dt3PRIM_TYPE Type,
  */
 VOID DT3_RndPrimDraw( dt3PRIM *Pr, MATR World )
 {
-  MATR wvp = MatrMulMatr3(Pr->Trans, World, DT3_RndMatrVP);
+  MATR wvp = MatrMulMatr(World, MatrMulMatr(DT3_RndMatrView, DT3_RndMatrProj));
+  UINT ProgId = DT3_RndShaders[0].ProgId;
+  INT loc;
+
   INT prim_type =
     Pr->Type == DT3_RND_PRIM_LINES ? GL_LINES :
     Pr->Type == DT3_RND_PRIM_TRIMESH ? GL_TRIANGLES :
     GL_POINTS;
+
+
+  glUseProgram(ProgId);
+  if ((loc = glGetUniformLocation(ProgId, "MatrWVP")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, wvp.A[0]);
+  if ((loc = glGetUniformLocation(ProgId, "Time")) != -1)
+    glUniform1f(loc, DT3_Anim.Time);
 
   glLoadMatrixf(wvp.A[0]);
 
@@ -113,7 +124,8 @@ VOID DT3_RndPrimDraw( dt3PRIM *Pr, MATR World )
     glDrawElements(prim_type, Pr->NumOfElements, GL_UNSIGNED_INT, NULL);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
-  glBindVertexArray(0);
+  glBindVertexArray(0);  
+  glUseProgram(0); 
 } /* End of 'DT3_RndPrimDraw' function */
 
 /* Primitive free function.

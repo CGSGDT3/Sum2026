@@ -8,7 +8,8 @@
 #define __rnd_h_ 
 
 #define GLEW_STATIC
-#include <glew.h>
+
+#include <glew.h>       
 
 #include "res/rndres.h"
 
@@ -24,6 +25,8 @@ extern DBL
   DT3_RndProjSize,     /* Project plane fit square */
   DT3_RndProjDist,     /* Distance to project plane from viewer (near) */
   DT3_RndProjFarClip;  /* Distance to project far clip plane (far) */
+extern VEC
+  DT3_RndCamAt, DT3_RndCamLoc, DT3_RndCamRight, DT3_RndCamUp; /* Camera position */
 
 extern MATR
   DT3_RndMatrView, /* View coordinate system matrix */

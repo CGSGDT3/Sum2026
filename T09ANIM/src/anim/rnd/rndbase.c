@@ -5,6 +5,7 @@
  */    
 
 #include "rnd.h"
+#include "anim/anim.h"
 
 #include <wglew.h>
 #include <gl/wglext.h>
@@ -78,7 +79,18 @@ if (DT3_hRndDCFrame != NULL)
 VOID DT3_RndCamSet( VEC Loc, VEC At, VEC Up )
 {
   DT3_RndMatrView = MatrView(Loc, At, Up);
-  DT3_RndMatrVP = MatrMulMatr(DT3_RndMatrView, DT3_RndMatrProj);
+  DT3_RndMatrVP = MatrMulMatr(DT3_RndMatrView, DT3_RndMatrProj);            
+  DT3_RndCamRight = VecSet(DT3_RndMatrView.A[0][0],
+    DT3_RndMatrView.A[1][0],
+    DT3_RndMatrView.A[2][0]);
+  DT3_RndCamUp = VecSet(DT3_RndMatrView.A[0][1],
+    DT3_RndMatrView.A[1][1],
+    DT3_RndMatrView.A[2][1]);
+  DT3_RndCamRight = VecSet(-DT3_RndMatrView.A[0][2],
+    -DT3_RndMatrView.A[1][2],
+    -DT3_RndMatrView.A[2][2]);
+  DT3_RndCamLoc = Loc;
+  DT3_RndCamAt = At;
 } /* End of 'DT3_RndCamSet' function */
 
 /* Work window init function.
@@ -139,7 +151,7 @@ VOID DT3_RndInit( HWND hWnd )
   DT3_RndProjFarClip = 300;
   DT3_RndFrameW = 470;
   DT3_RndFrameH = 470;
-  DT3_RndCamSet(VecSet(5, 5, 5), VecSet(0, 0, 0), VecSet(0, 1, 0));
+  DT3_RndCamSet(VecSet(5, 5, 5), VecSet(0, 0, 1), VecSet(0, 1, 0));
 
   DT3_RndResInit();
 } /* End of 'DT3_RndInit' function */
