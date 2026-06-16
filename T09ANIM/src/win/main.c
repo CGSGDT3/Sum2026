@@ -57,10 +57,11 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
     0, 0, 500, 300, NULL, NULL, hInstance, NULL);
 
   DT3_AnimInit(hWnd);
-  for (i = 0; i < 3; i++)
+  for (i = 0; i < 1; i++)
       DT3_AnimUnitAdd(DT3_UnitCreateBall());   
   DT3_AnimUnitAdd(DT3_UnitCreateControl());
   DT3_AnimUnitAdd(DT3_UnitCreateCow());
+  DT3_AnimUnitAdd(DT3_UnitCreateLand());
 
   ShowWindow(hWnd, SW_SHOWNORMAL);
   UpdateWindow(hWnd);
