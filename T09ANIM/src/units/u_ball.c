@@ -13,6 +13,7 @@ typedef struct tagdt3UNIT_BALL
   dt3PRIM Ball;     /* Primitives to drawing */
   VEC Pos;          /* Vector of position */
   DBL Size, Speed;  /* Size of ball and his speed of jumping */
+  dt3GRID G;
 } dt3UNIT_BALL;
 
 /* Unit initialization function.
@@ -30,7 +31,8 @@ static VOID DT3_UnitInit( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
   if (Uni->Size < 0.08)
     Uni->Size = 0.08;
   Uni->Speed = 30 * (DBL)rand() / RAND_MAX;
-  DT3_RndPrimCreateSphere(&Uni->Ball, Uni->Size, Gr_W, Gr_H);
+  DT3_RndGridCreateSphere(&Uni->G, Uni->Size, Gr_W, Gr_H); 
+  DT3_RndPrimFromGrid(&Uni->Ball, &Uni->G);
 } /* End of 'DT3_UnitInit' function */ 
 
 /* Unit inter frame events handle function.
@@ -70,6 +72,7 @@ static VOID DT3_UnitRender( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitClose( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 {
+  DT3_RndGridFree(&Uni->G);
   DT3_RndPrimFree(&Uni->Ball);
 } /* End of 'DT3_UnitClose' function */ 
 

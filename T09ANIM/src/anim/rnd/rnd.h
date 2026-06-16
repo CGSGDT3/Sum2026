@@ -39,6 +39,7 @@ typedef enum tagdt3PRIM_TYPE
   DT3_RND_PRIM_POINTS,   /* Array of points  – GL_POINTS */
   DT3_RND_PRIM_LINES,    /* Line segments (by 2 points) – GL_LINES */
   DT3_RND_PRIM_TRIMESH,  /* Triangle mesh - array of triangles – GL_TRIANGLES */
+  DT3_RND_PRIM_TRISTRIP,
 } dt3PRIM_TYPE;
 
 typedef struct tagdt3VERTEX
@@ -289,9 +290,9 @@ VOID DT3_RndGridFree( dt3GRID *G );
  *       dt3PRIM *Pr;
  *   - grid data:
  *       dt3GRID *G;
- * RETURNS: None.
+ *   (BOOL) TRUE if success, FALSE otherwise.
  */
-VOID DT3_RndPrimFromGrid( dt3PRIM *Pr, dt3GRID *G );     
+BOOL DT3_RndPrimFromGrid( dt3PRIM *Pr, dt3GRID *G );     
 
 /* Build grid normals function.
  * ARGUMENTS:
