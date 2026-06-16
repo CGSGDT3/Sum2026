@@ -110,13 +110,8 @@ VOID DT3_RndGridAutoNormals( dt3GRID *G )
     G->V[i].N = VecNormalize(G->V[i].N);
   }
 
-  for (i = 0; i < W * H; i++) 
-  {
-    VEC L = VecNormalize(VecSet1(1)); 
-    FLT nl = VecDotVec(L, G->V[i].N);
-    G->V[i].C = VecSet4(nl * 0.8, nl * 0.47, nl * 0.30, 1);
-  }       
-
+  for (i = 0; i < W * H; i++)                      
+    G->V[i].C = VecSet4(0.8, 0.47, 0.30, 1);
 } /* End of 'DT3_RndGridAutoNormals' function */
 
 /* Create sphere grid function.
