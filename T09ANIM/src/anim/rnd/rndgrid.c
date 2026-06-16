@@ -17,8 +17,6 @@
  */
 BOOL DT3_RndGridCreate( dt3GRID *G, INT W, INT H )
 {
-  INT i, j;
-
   memset(G, 0, sizeof(dt3GRID));
   G->W = W;
   G->H = H;
@@ -27,14 +25,6 @@ BOOL DT3_RndGridCreate( dt3GRID *G, INT W, INT H )
     return FALSE;
 
   memset(G->V, 0, sizeof(dt3VERTEX) * W * H);
-
-  for (i = 0; i < W - 1; i++)
-    for (j = 0; j < H - 1; j++)
-    {
-      G->V[i * W + j].N = VecSet(j, 1, -i);
-      G->V[i * W + j].T.X = j / (W - 1.0);
-      G->V[i * W + j].T.Y = i / (H - 1.0);
-    }
   return TRUE;
 } /* End of 'DT3_RndGridCreate' function */
 
@@ -76,6 +66,8 @@ BOOL DT3_RndPrimFromGrid( dt3PRIM *Pr, dt3GRID *G )
   }
   DT3_RndPrimCreate(Pr, DT3_RND_PRIM_TRISTRIP, G->V, W * H,
     Ind, (H - 1) * (W * 2 + 1) - 1);    
+
+
   return TRUE;
 } /* End of 'DT3_RndPrimFromGrid' function */
 
@@ -117,6 +109,14 @@ VOID DT3_RndGridAutoNormals( dt3GRID *G )
     }
     G->V[i].N = VecNormalize(G->V[i].N);
   }
+
+  for (i = 0; i < W * H; i++) 
+  {
+    VEC L = VecNormalize(VecSet1(1)); 
+    FLT nl = VecDotVec(L, G->V[i].N);
+    G->V[i].C = VecSet4(nl * 0.8, nl * 0.47, nl * 0.30, 1);
+  }       
+
 } /* End of 'DT3_RndGridAutoNormals' function */
 
 /* Create sphere grid function.
@@ -140,14 +140,9 @@ BOOL DT3_RndGridCreateSphere( dt3GRID *G, FLT R, INT W, INT H )
 
   for (k = 0, i = 0, theta = 0; i < H; i++, theta += PI / (H - 1))
     for (j = 0, phi = 0; j < W; j++, phi += 2 * PI / (W - 1))
-    {
-      G->V[k].N = VecSet(sin(theta) * sin(phi),
-                            cos(theta),
-                            sin(theta) * cos(phi)); 
       G->V[k++].P = VecSet(R * sin(theta) * sin(phi),
-                            R * cos(theta),
-                            R * sin(theta) * cos(phi));
-    }
+                           R * cos(theta),
+                           R * sin(theta) * cos(phi));
 
   return TRUE;
 } /* End of 'DT3_RndGridCreateSphere' function */
