@@ -183,12 +183,8 @@ BOOL DT3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H )
     }      
   DT3_RndPrimTriMeshAutoNormals(V, nv, Ind, nf);
 
-  for (i = 0; i < nv; i++) 
-  {
-    VEC L = VecNormalize(VecSet1(1)); 
-    FLT nl = VecDotVec(L, V[i].N);
-    V[i].C = VecSet4(nl * 0.8, nl * 0.47, nl * 0.30, 1);
-  }
+  for (i = 0; i < W * H; i++)                      
+    V[i].C = VecSet4(0.8, 0.47, 0.30, 1);        
 
   DT3_RndPrimCreate(Pr, DT3_RND_PRIM_TRIMESH, V, nv, Ind, nf);   
 
@@ -413,12 +409,9 @@ BOOL DT3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName )
   fclose(F);
   DT3_RndPrimTriMeshAutoNormals(V, nv, Ind, nf);
 
-  for (i = 0; i < nv; i++) 
-  {
-    VEC L = VecNormalize(VecSet1(1)); 
-    FLT nl = VecDotVec(L, V[i].N);
-    V[i].C = VecSet4(nl * 0.8, nl * 0.47, nl * 0.30, 1);
-  }
+  for (i = 0; i < nv; i++)                      
+    V[i].C = VecSet4(0.8, 0.47, 0.30, 1);
+
   DT3_RndPrimCreate(Pr, DT3_RND_PRIM_TRIMESH, V, nv, Ind, nf);
   free(V);   
   return TRUE;
