@@ -417,10 +417,16 @@ BOOL DT3_RndPrimLoad( dt3PRIM *Pr, CHAR *FileName )
   fclose(F);
   DT3_RndPrimTriMeshAutoNormals(V, nv, Ind, nf);
 
-  for (i = 0; i < nv; i++)                      
+  for (i = 0; i < nv; i++)   
+  {
     V[i].C = VecSet4(0.8, 0.47, 0.30, 1);
+    V[i].T.X = (V[i].P.X + 1.0) * 0.5;  
+    V[i].T.Y = (V[i].P.Z + 1.0) * 0.5;  
+  }
+
 
   DT3_RndPrimCreate(Pr, DT3_RND_PRIM_TRIMESH, V, nv, Ind, nf);
+    
   free(V);   
   return TRUE;
 } /* End of 'DT3_RndPrimLoad' function */
