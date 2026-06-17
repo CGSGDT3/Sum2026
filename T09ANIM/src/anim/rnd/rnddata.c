@@ -14,7 +14,7 @@ INT DT3_RndFrameW, DT3_RndFrameH; /* Work window size */
 DBL
   DT3_RndProjSize = 0.1,     /* Project plane fit square */
   DT3_RndProjDist = 0.1,     /* Distance to project plane from viewer (near) */
-  DT3_RndProjFarClip = 300;  /* Distance to project far clip plane (far) */
+  DT3_RndProjFarClip = 30000;  /* Distance to project far clip plane (far) */
 VEC
   DT3_RndCamAt, DT3_RndCamLoc, DT3_RndCamRight, DT3_RndCamUp; /* Camera position */
 

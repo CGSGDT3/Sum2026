@@ -9,14 +9,10 @@
 
 #include "anim/rnd/rnd.h"
 
-/***
- * Shaders support
- ***/
-
 /* Array of shaders */
-extern dt3SHADER DT3_RndShaders[DT3_MAX_SHADERS];
+dt3SHADER DT3_RndShaders[DT3_MAX_SHADERS];
 /* Shadres array store size */
-extern INT DT3_RndShadersSize;
+INT DT3_RndShadersSize;    
 
 /***
  * Base shaders functions

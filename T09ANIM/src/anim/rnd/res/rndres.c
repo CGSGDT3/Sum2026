@@ -13,6 +13,8 @@
 VOID DT3_RndResInit( VOID )
 {
   DT3_RndShdInit();
+  DT3_RndMtlInit();
+  DT3_RndTexInit();
 } /* End of 'DT3_RndResInit' function */
 
 /* Resource deinitialize function.
@@ -21,6 +23,9 @@ VOID DT3_RndResInit( VOID )
  */
 VOID DT3_RndResClose( VOID )
 {
+  DT3_RndShdClose();
+  DT3_RndMtlClose();
+  DT3_RndTexClose();
 } /* End of 'DT3_RndResClose' function */
 
 /* END OF 'rndres.c' FILE */

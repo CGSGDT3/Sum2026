@@ -30,8 +30,7 @@ static VOID DT3_UnitInit( dt3UNIT_LAND *Uni, dt3ANIM *Ani )
   BITMAP bm;
   INT w, h, x, y;
 
-  Uni->Pos = VecSet1(0);
-  Uni->Size = 1;
+  Uni->Size = 100;
 
   if ((hBm = LoadImage(NULL, "bin/heights/hf.bmp", IMAGE_BITMAP, 0, 0,
                        LR_LOADFROMFILE | LR_CREATEDIBSECTION)) != NULL)
@@ -56,19 +55,9 @@ static VOID DT3_UnitInit( dt3UNIT_LAND *Uni, dt3ANIM *Ani )
       DT3_RndPrimFromGrid(&Uni->Land, &Uni->G);
     }                                  
   }
+  Uni->Pos = VecSet1(0);
 } /* End of 'DT3_UnitInit' function */ 
 
-/* Unit inter frame events handle function.
- * ARGUMENTS:
- *   - self-pointer to unit object:
- *       dt3UNIT_LAND *Uni;
- *   - animation context:
- *       dt3ANIM *Ani;
- * RETURNS: None.
- */
-static VOID DT3_UnitResponse( dt3UNIT_LAND *Uni, dt3ANIM *Ani )
-{
-} /* End of 'DT3_UnitResponse' function */ 
 
 /* Unit render function.
  * ARGUMENTS:
@@ -80,11 +69,12 @@ static VOID DT3_UnitResponse( dt3UNIT_LAND *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitRender( dt3UNIT_LAND *Uni, dt3ANIM *Ani )
 {
-  DT3_RndPrimDraw(&Uni->Land, MatrTranslate(Uni->Pos));
+  DT3_RndPrimDraw(&Uni->Land, MatrMulMatr(MatrTranslate(Uni->Pos),
+    MatrScale(VecSet1(Uni->Size))));
 } /* End of 'DT3_UnitRender' function */ 
 
 /* Unit deinitialization function.
- * ARGUMENTS:
+ * ARGUMENTS:                            f
  *   - self-pointer to unit object:
  *       dt3UNIT_LAND *Uni;
  *   - animation context:
@@ -111,7 +101,6 @@ dt3UNIT * DT3_UnitCreateLand( VOID )
     return NULL;
 
   Uni->Init = (VOID *)DT3_UnitInit;
-  Uni->Response = (VOID *)DT3_UnitResponse;
   Uni->Render = (VOID *)DT3_UnitRender;
   Uni->Close = (VOID *)DT3_UnitClose;
   return (dt3UNIT *)Uni;

@@ -97,21 +97,29 @@ VOID DT3_RndPrimCreate( dt3PRIM *Pr, dt3PRIM_TYPE Type,
  */
 VOID DT3_RndPrimDraw( dt3PRIM *Pr, MATR World )
 {
-  MATR wvp = MatrMulMatr(World, MatrMulMatr(DT3_RndMatrView, DT3_RndMatrProj));
-  UINT ProgId = DT3_RndShaders[0].ProgId;
+  MATR
+    w = MatrMulMatr(Pr->Trans, World),
+    winv = MatrTranspose(MatrInverse(w)),
+    wvp = MatrMulMatr(World, MatrMulMatr(DT3_RndMatrView, DT3_RndMatrProj));
+  UINT ProgId;
+
   INT loc;
 
-  INT prim_type =
-    Pr->Type == DT3_RND_PRIM_LINES ? GL_LINES :
-    Pr->Type == DT3_RND_PRIM_TRIMESH ? GL_TRIANGLES :
-    GL_POINTS;
+  INT prim_type = Pr->Type == DT3_RND_PRIM_LINES ? GL_LINES :
+                     Pr->Type == DT3_RND_PRIM_TRIMESH ? GL_TRIANGLES :
+                     Pr->Type == DT3_RND_PRIM_TRISTRIP ? GL_TRIANGLE_STRIP :
+                     GL_POINTS;
 
+  if ((ProgId = DT3_RndMtlApply(Pr->MtlNo)) == 0)
+    return;
 
   glUseProgram(ProgId);
   if ((loc = glGetUniformLocation(ProgId, "MatrWVP")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, wvp.A[0]);
   if ((loc = glGetUniformLocation(ProgId, "Time")) != -1)
     glUniform1f(loc, DT3_Anim.Time);
+  if ((loc = glGetUniformLocation(ProgId, "MatrWInv")) != -1)
+    glUniformMatrix3fv(loc, 1, FALSE, winv.A[0]);
 
   glLoadMatrixf(wvp.A[0]);
 

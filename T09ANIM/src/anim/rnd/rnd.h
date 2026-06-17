@@ -16,7 +16,7 @@
 #define Gr_W 12
 #define Gr_H 8
 
-extern HWND DT3_hRndWnd;        /* Work window handle */
+extern HWND DT3_hRndWnd;    /* Work window handle */
 extern HDC DT3_hRndDC;     /* Work window device context  */
 extern INT DT3_RndFrameW, DT3_RndFrameH; /* Work window size */
 extern HGLRC DT3_hRndGLRC;
@@ -73,7 +73,8 @@ typedef struct tagdt3PRIM
 
   VEC MinBB, MaxBB;  /* Bound box */
 
-  MATR Trans;   /* Additional transformation matrix */
+  MATR Trans;        /* Additional transformation matrix */
+  INT MtlNo;         /* Material number at stock array */ 
 } dt3PRIM;
 
 /* Work window init function.
@@ -208,6 +209,12 @@ BOOL DT3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H );
  */
 BOOL DT3_RndPrimCreateTh( dt3PRIM *Pr, DBL Ri, DBL Ro, INT W, INT H );
 
+/* Render end function.
+ * ARGUMENTS:
+ *   None.
+ * RETURNS:
+ *   None.
+ */
 VOID DT3_RndEnd( VOID );
 
 /* Flip window full screen mode function.
@@ -313,8 +320,7 @@ VOID DT3_RndGridAutoNormals( dt3GRID *G );
  * RETURNS:
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
-BOOL DT3_RndGridCreateSphere( dt3GRID *G, FLT R, INT W, INT H );  
-
+BOOL DT3_RndGridCreateSphere( dt3GRID *G, FLT R, INT W, INT H );   
 
 #endif /* __rnd_h */
 /* END OF 'rnd.h' FILE */

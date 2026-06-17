@@ -141,6 +141,22 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
   if (Ani->KeysClick['3'])
     glLineWidth(3);
 
+  if (Ani->KeysClick[VK_F8])
+  {
+    HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO info;
+    DWORD NumCharsWritten;
+    COORD Pos = {0};
+
+    GetConsoleScreenBufferInfo(hCon, &info);
+    FillConsoleOutputCharacter(hCon, ' ',
+      (UINT)(info.dwSize.X * info.dwSize.Y), Pos, &NumCharsWritten);  
+    FillConsoleOutputAttribute(hCon, 0x0F,
+      (UINT)(info.dwSize.X * info.dwSize.Y), Pos, &NumCharsWritten);  
+    SetConsoleCursorPosition(hCon, info.dwCursorPosition);
+    SetConsoleCursorPosition(hCon, Pos);
+  }
+
   if (Ani->JBut[JOY_BUTTON7] == 1)
     FlipFullScreen(Ani->hWnd);
   if (Ani->JBut[JOY_BUTTON2] == 1 && Ani->JButClick[JOY_BUTTON2] == 1)

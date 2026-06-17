@@ -5,9 +5,29 @@
  */
 
 #ifndef __rndres_h_
-#define __rndres_h
+#define __rndres_h_
 
 #include "def.h"
+
+/***
+ * Resources functions
+***/
+
+/* Resource initialize function.
+ * ARGUMENTS: None.
+ * RETURNS: None.
+ */
+VOID DT3_RndResInit( VOID );
+
+/* Resource deinitialize function.
+ * ARGUMENTS: None.
+ * RETURNS: None.
+ */
+VOID DT3_RndResClose( VOID );
+
+/***
+ * Shaders handle
+***/
 
 /* Shader constants */
 #define DT3_MAX_SHADERS 20
@@ -20,47 +40,8 @@ typedef struct tagdt3SHADER
   UINT ProgId;            /* Shader program Id */
 } dt3SHADER;
 
-dt3SHADER DT3_RndShaders[DT3_MAX_SHADERS];
-
-INT DT3_RndShadersSize;
-
-/* Save log to file function.
- * ARGUMENTS:
- *   - shader prefix:
- *       CHAR *FileNamePrefix;
- *   - shader name:
- *       CHAR *ShaderName;
- *   - error text:
- *       CHAR *Text;
- * RETURNS: None.
- */
-static VOID DT3_RndShdLog( CHAR *FileNamePrefix, CHAR *ShaderName, CHAR *Text );
-
-/* Load shader text from file function.
- * ARGUMENTS:
- *   - text file name:
- *       CHAR *FileName;
- * RETURNS:
- *   (CHAR *) load text.
- */
-static CHAR * DT3_RndLoadTextFromFile( CHAR *FileName );
-
-/* Load shader program function.
- * ARGUMENTS:
- *   - shader folder prefix (in 'BIN/SHADERS/***'):
- *       CHAR *FileNamePrefix;
- * RETUNS:
- *   (UINT) load shader program Id.
- */
-static UINT DT3_RndShdLoad( CHAR *FileNamePrefix );
-
-/* Delete shader program function.
- * ARGUMENTS:
- *   - shader program Id:
- *       UINT ProgId;
- * RETUNS: None.
- */
-static VOID DT3_RndShdFree( UINT ProgId );
+extern dt3SHADER DT3_RndShaders[DT3_MAX_SHADERS];
+extern INT DT3_RndShadersSize;
 
 /* Add shader to stock from file function.
  * ARGUMENTS:
@@ -89,17 +70,131 @@ VOID DT3_RndShdInit( VOID );
  */
 VOID DT3_RndShdClose( VOID );
 
-/* Resource initialize function.
- * ARGUMENTS: None.
- * RETURNS: None.
- */
-VOID DT3_RndResInit( VOID );
+/***
+ * Texture handle
+***/      
 
-/* Resource deinitialize function.
- * ARGUMENTS: None.
- * RETURNS: None.
+/* Textures stock */
+#define DT3_MAX_TEXTURES 3000
+
+/* Texture representation type */
+typedef struct tagdt3TEXTURE
+{
+  CHAR Name[DT3_STR_MAX]; /* Texture name */
+  INT W, H;               /* Texture size in pixels */
+  UINT TexId;             /* OpenGL texture Id */ 
+} dt3TEXTURE;
+
+extern dt3TEXTURE DT3_RndTextures[DT3_MAX_TEXTURES]; /* Array of textures */
+extern INT DT3_RndTexturesSize;                      /* Textures array store size */
+
+/* Texture array initialization function.
+ * ARGUMENTS:
+ *   None.
+ * RETUNS:
+ *   None.
  */
-VOID DT3_RndResClose( VOID );
+VOID DT3_RndTexInit( VOID );
+
+/* Texture array deinitialization function.
+ * ARGUMENTS:
+ *   None.
+ * RETUNS:
+ *   None.
+ */
+VOID DT3_RndTexClose( VOID );
+
+/* Add texture to stock function.
+ * ARGUMENTS:
+ *   - texture name:
+ *       CHAR *Name;
+ *   - texture size in pixels:
+ *       INT W, H;
+ *   - number of color components:
+ *       INT C;
+ *   - texture pixels data:
+ *       VOID *Bits;
+ * RETURNS:
+ *   (INT) texture stock number (-1 if error is occured).
+ */
+INT DT3_RndTexAddImg( CHAR *Name, INT W, INT H, INT C, VOID *Bits );
+
+/* Add texture from file to stock function.
+ * ARGUMENTS:
+ *   - texture file name:
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (INT) texture stock number (-1 if error is occured).
+ */
+INT DT3_RndTexAddFromFile( CHAR *FileName );
+
+/***
+ * Material handle
+***/
+
+/* Material store type */
+typedef struct tagdt3MATERIAL
+{
+  CHAR Name[DT3_STR_MAX]; /* Material name */
+
+  /* Illumination coefficients */    
+  VEC Ka, Kd, Ks;           /* Ambient, diffuse, specular coefficients */
+  FLT Ph;                   /* Phong power coefficient */
+
+  FLT Trans;                /* Transparency factor */
+
+  INT Tex[8];               /* Texture references from texture table (or -1) */
+                  
+  INT ShdNo;                /* Shader number in shader table */
+} dt3MATERIAL;
+
+/* Material stock */
+#define DT3_MAX_MATERIALS 300
+
+extern dt3MATERIAL DT3_RndMaterials[DT3_MAX_MATERIALS]; /* Array of materials */
+extern INT DT3_RndMaterialsSize;                        /* Materials array */
+
+/* Material array add function.
+ * ARGUMENTS:
+ *   - Pointer to material to be added:
+ *       dt3MATERIAL *Mtl;
+ * RETUNS:
+ *   (INT) number of added material in array.
+ */
+INT DT3_RndMtlAdd( dt3MATERIAL *Mtl );
+
+/* Default material function.
+ * ARGUMENTS:
+ *   None.
+ * RETURNS:
+ *   (dt3MATERIAL) default material.
+ */
+dt3MATERIAL DT3_RndMtlGetDef( VOID );
+
+/* Material array initialization function.
+ * ARGUMENTS:
+ *   None.
+ * RETUNS:
+ *   None.
+ */
+VOID DT3_RndMtlInit( VOID );
+
+/* Material array deinitialization function.
+ * ARGUMENTS:
+ *   None.
+ * RETUNS:
+ *   None.
+ */
+VOID DT3_RndMtlClose( VOID );
+
+/* Using material function.
+ * ARGUMENTS:
+ *     - Material number in material stock:
+ *       INT MtlNo;
+ * RETUNS:
+ *     (INT) progid from shader.
+ */
+INT DT3_RndMtlApply( INT MtlNo );
 
 #endif /* __rndres_h_ */
 

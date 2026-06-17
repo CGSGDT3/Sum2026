@@ -17,12 +17,21 @@
  */
 BOOL DT3_RndGridCreate( dt3GRID *G, INT W, INT H )
 {
+  INT i, j;
   memset(G, 0, sizeof(dt3GRID));
   G->W = W;
   G->H = H;
 
   if ((G->V = malloc(sizeof(dt3VERTEX) * W * H)) == NULL)
     return FALSE;
+
+  for (j = 0; j < W; j++)
+    for (i = 0; i < H; i++)
+    {
+      G->V[i * W + j].N = VecSet(i, 1, -j);
+      G->V[i * W + j].T.X = j / (W - 1.0);
+      G->V[i * W + j].T.Y = i / (H - 1.0);
+    }
 
   memset(G->V, 0, sizeof(dt3VERTEX) * W * H);
   return TRUE;
@@ -65,8 +74,9 @@ BOOL DT3_RndPrimFromGrid( dt3PRIM *Pr, dt3GRID *G )
       Ind[k++] = -1;
   }
   DT3_RndPrimCreate(Pr, DT3_RND_PRIM_TRISTRIP, G->V, W * H,
-    Ind, (H - 1) * (W * 2 + 1) - 1);    
+    Ind, (H - 1) * (W * 2 + 1) - 1);
 
+  free(Ind);
 
   return TRUE;
 } /* End of 'DT3_RndPrimFromGrid' function */

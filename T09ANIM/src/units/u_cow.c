@@ -51,14 +51,19 @@ static VOID DT3_UnitResponse( dt3UNIT_COW *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitRender( dt3UNIT_COW *Uni, dt3ANIM *Ani )
 {
-  INT i, i1, i2, S = 3;
+  INT i, i1, i2, S = 3, k;
 
-  for (i = 0; i < S; i++)
+  for (k = 0, i = 0; i < S; i++)
     for (i1 = 0; i1 < S; i1++)
       for (i2 = 0; i2 < S; i2++)
+      {
+        Uni->COW.MtlNo = k++;
+        if (k > DT3_RndMaterialsSize)
+          k = 0;  
         DT3_RndPrimDraw(&Uni->COW, MatrMulMatr3(MatrScale(VecSet1(0.1)), 
-        MatrTranslate(VecAddVec(Uni->Pos, VecSet(i * 2.5, i1 * 2.5, i2 * 2.5))),
-    MatrRotateZ(30 * sin(Ani->Time))));
+        MatrTranslate(VecAddVec(Uni->Pos, VecSet(i * 2.5, i1 * 2.50, i2 * 2.5))),
+        MatrRotateZ(30 * sin(Ani->Time))));
+      }
 } /* End of 'DT3_UnitRender' function */ 
 
 /* Unit deinitialization function.

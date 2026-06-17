@@ -9,6 +9,7 @@
 
 #include <wglew.h>
 #include <gl/wglext.h>
+#include <stdio.h>
 
 #pragma comment(lib, "opengl32")
 
@@ -104,6 +105,9 @@ VOID DT3_RndInit( HWND hWnd )
 {     
   INT i;
   PIXELFORMATDESCRIPTOR pfd = {0};
+  CONSOLE_FONT_INFOEX cfi = {0};
+  HWND hConWnd;
+
 
   DT3_hRndWnd = hWnd;
 
@@ -141,17 +145,40 @@ VOID DT3_RndInit( HWND hWnd )
     OutputDebugString("\n");
   #endif /* NDEBUG */
 
- 
+    /* Create console */
+  AllocConsole();
+
+  cfi.cbSize = sizeof(CONSOLE_FONT_INFOEX);
+  GetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+  cfi.dwFontSize.Y = 18;
+  cfi.FontWeight = FW_BOLD;
+  SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+
+  freopen("CONOUT$", "w", stdout);
+  system("@chcp 1251 > nul");
+  printf("\x1b[38;2;%d;%d;%dm \x1b[48;2;%d;%d;%dm", 255, 255, 0, 0, 102, 102);
+  printf("Группа компьютерной графики ФМЛ № 30\n");
+  printf("\x1b[38;2;%d;%d;%dm\x1b[48;2;%d;%d;%dm", 0, 255, 0, 90, 90, 90);
+  printf("Computer Graphics Support Group\n");
+  printf("\x1b[38;2;%d;%d;%dm\x1b[48;2;%d;%d;%dm", 255, 255, 255, 0, 0, 0);
+  fflush(stdout);
+
+  hConWnd = GetConsoleWindow();
+  /* MoveWindow(hConWnd, 2560 + 1920 / 2, 0, 1920 / 2, 1080, FALSE); */
+  SetWindowPos(hConWnd, HWND_TOP, 2560 + 1920 / 2, 0, 1920 / 2, 1000, 0); 
 
   /* Render parameters setup */
   glEnable(GL_DEPTH_TEST);
 
   DT3_RndProjSize = 0.1;
   DT3_RndProjDist = DT3_RndProjSize;
-  DT3_RndProjFarClip = 300;
+  DT3_RndProjFarClip = 30000;
   DT3_RndFrameW = 470;
   DT3_RndFrameH = 470;
   DT3_RndCamSet(VecSet(5, 5, 5), VecSet(0, 0, 1), VecSet(0, 1, 0));
+
+  glEnable(GL_PRIMITIVE_RESTART);
+  glPrimitiveRestartIndex(-1);
 
   DT3_RndResInit();
 } /* End of 'DT3_RndInit' function */
