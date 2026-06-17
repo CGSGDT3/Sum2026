@@ -24,9 +24,10 @@ typedef struct tagdt3UNIT_COW
  */
 static VOID DT3_UnitInit( dt3UNIT_COW *Uni, dt3ANIM *Ani )
 {
+  
   DT3_RndPrimLoad(&Uni->COW, "bin/models/cow.obj");
 
-  Uni->Pos = VecSet1(10 * rand0());
+  Uni->Pos = VecSet1(0);
 } /* End of 'DT3_UnitInit' function */ 
 
 /* Unit inter frame events handle function.
@@ -53,13 +54,12 @@ static VOID DT3_UnitRender( dt3UNIT_COW *Uni, dt3ANIM *Ani )
 {
   INT i, i1, i2, S = 3, k;
 
-  for (k = 0, i = 0; i < S; i++)
+  for (k = 1, i = 0; i < S; i++)
     for (i1 = 0; i1 < S; i1++)
       for (i2 = 0; i2 < S; i2++)
       {
-        Uni->COW.MtlNo = k++;
-        if (k > DT3_RndMaterialsSize)
-          k = 0;  
+        Uni->COW.MtlNo = k++ % 20;
+        DT3_RndMaterials[Uni->COW.MtlNo].ShdNo = DT3_RndShdAdd("cow");
         DT3_RndPrimDraw(&Uni->COW, MatrMulMatr3(MatrScale(VecSet1(0.1)), 
         MatrTranslate(VecAddVec(Uni->Pos, VecSet(i * 2.5, i1 * 2.50, i2 * 2.5))),
         MatrRotateZ(30 * sin(Ani->Time))));
@@ -78,7 +78,7 @@ static VOID DT3_UnitClose( dt3UNIT_COW *Uni, dt3ANIM *Ani )
 {
   DT3_RndPrimFree(&Uni->COW);
 } /* End of 'DT3_UnitClose' function */ 
-
+                         
 /* Unit ball creation function.
  * ARGUMENTS:
  *   None.
