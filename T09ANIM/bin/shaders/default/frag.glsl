@@ -2,7 +2,7 @@
 #version 460
 
 layout(location = 0) out vec4 OutColor;
-layout(binding = 1) uniform sampler2D Tex;
+layout(binding = 0) uniform sampler2D Tex;
 
 in vec4 DrawColor;
 in vec3 DrawNormal;
@@ -67,7 +67,7 @@ void main( void )
   // Ks
   vec3 V = normalize(DrawPos - CamLoc);
   vec3 R = reflect(V, N);
-  color += F * Ks * max(0, pow(dot(R, L), Ph));
+  color += F * Ks * max(0, pow(dot(R, L), Ph));  
 
   OutColor = vec4(color, 1);
 }
