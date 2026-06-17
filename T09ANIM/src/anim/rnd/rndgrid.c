@@ -25,6 +25,8 @@ BOOL DT3_RndGridCreate( dt3GRID *G, INT W, INT H )
   if ((G->V = malloc(sizeof(dt3VERTEX) * W * H)) == NULL)
     return FALSE;
 
+  memset(G->V, 0, sizeof(dt3VERTEX) * W * H);
+
   for (j = 0; j < W; j++)
     for (i = 0; i < H; i++)
     {
@@ -33,7 +35,6 @@ BOOL DT3_RndGridCreate( dt3GRID *G, INT W, INT H )
       G->V[i * W + j].T.Y = i / (H - 1.0);
     }
 
-  memset(G->V, 0, sizeof(dt3VERTEX) * W * H);
   return TRUE;
 } /* End of 'DT3_RndGridCreate' function */
 
