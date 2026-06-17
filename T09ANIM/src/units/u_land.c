@@ -52,7 +52,7 @@ static VOID DT3_UnitInit( dt3UNIT_LAND *Uni, dt3ANIM *Ani )
                                     1 - y / (h - 1.0));
         }
       DT3_RndGridAutoNormals(&Uni->G);
-      DT3_RndPrimFromGrid(&Uni->Land, &Uni->G);
+        DT3_RndPrimFromGrid(&Uni->Land, &Uni->G);
     }                                  
   }
   Uni->Pos = VecSet1(0);
@@ -74,7 +74,7 @@ static VOID DT3_UnitRender( dt3UNIT_LAND *Uni, dt3ANIM *Ani )
 } /* End of 'DT3_UnitRender' function */ 
 
 /* Unit deinitialization function.
- * ARGUMENTS:                            f
+ * ARGUMENTS:                            
  *   - self-pointer to unit object:
  *       dt3UNIT_LAND *Uni;
  *   - animation context:
@@ -106,4 +106,4 @@ dt3UNIT * DT3_UnitCreateLand( VOID )
   return (dt3UNIT *)Uni;
 } /* End of 'DT3_UnitCreateLand' function */ 
 
-/* END OF 'u_Land.c' FILE */
+/* END OF 'u_land.c' FILE */
