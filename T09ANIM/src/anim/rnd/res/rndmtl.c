@@ -77,7 +77,7 @@ VOID DT3_RndMtlInit( VOID )
   DT3_RndMaterialsSize = 0;
   DT3_RndMtlAdd(&def);
 
-  for (i = 0; i < 19; i++)
+  for (i = 1; i < 20; i++)
   {
     def.Ka = VecSet(MatLib[i].amb[0], MatLib[i].amb[1], MatLib[i].amb[2]);
     def.Kd = VecSet(MatLib[i].dif[0], MatLib[i].dif[1], MatLib[i].dif[2]);
@@ -159,11 +159,10 @@ INT DT3_RndMtlApply( INT MtlNo )
 
   /* Set textures */
   for (i = 0; i < 8; i++)
-    if (mtl->Tex[i] != -1)
-    {
+  {
       glActiveTexture(GL_TEXTURE0 + i);  
-      glBindTexture(GL_TEXTURE_2D, DT3_RndTextures[i].TexId); 
-    }
+      glBindTexture(GL_TEXTURE_2D, DT3_RndTextures[mtl->Tex[i]].TexId);
+  }
                         
   return prg;
 } /* End of 'DT3_RndMtlApply' function */
