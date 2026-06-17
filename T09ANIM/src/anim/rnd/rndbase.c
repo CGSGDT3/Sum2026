@@ -8,7 +8,7 @@
 #include "anim/anim.h"
 
 #include <wglew.h>
-#include <gl/wglext.h>
+#include <wglext.h>
 #include <stdio.h>
 
 #pragma comment(lib, "opengl32")
@@ -157,7 +157,7 @@ VOID DT3_RndInit( HWND hWnd )
   freopen("CONOUT$", "w", stdout);
   system("@chcp 1251 > nul");
   printf("\x1b[38;2;%d;%d;%dm \x1b[48;2;%d;%d;%dm", 255, 255, 0, 0, 102, 102);
-  printf("Группа компьютерной графики ФМЛ № 30\n");
+  printf("Р“СЂСѓРїРїР° РєРѕРјРїСЊСЋС‚РµСЂРЅРѕР№ РіСЂР°С„РёРєРё Р¤РњР› в„– 30\n");
   printf("\x1b[38;2;%d;%d;%dm\x1b[48;2;%d;%d;%dm", 0, 255, 0, 90, 90, 90);
   printf("Computer Graphics Support Group\n");
   printf("\x1b[38;2;%d;%d;%dm\x1b[48;2;%d;%d;%dm", 255, 255, 255, 0, 0, 0);
