@@ -21,7 +21,7 @@ x64/
 x86/
 bld/
 [Ll]og/
-bin/models
+[Bb]in/models
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
