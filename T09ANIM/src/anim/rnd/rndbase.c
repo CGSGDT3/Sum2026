@@ -169,6 +169,9 @@ VOID DT3_RndInit( HWND hWnd )
 
   /* Render parameters setup */
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
   DT3_RndProjSize = 0.1;
   DT3_RndProjDist = DT3_RndProjSize;
@@ -202,7 +205,7 @@ VOID DT3_RndCopyFrame( VOID )
  */
 VOID DT3_RndStart( VOID )
 {
-  VEC4 ClearColor = {0.30, 0.47, 0.8, 1};
+  VEC4 ClearColor = {0, 0, 0, 1};
   FLT DepthClearValue = 1;
 
   /* Clear frame */

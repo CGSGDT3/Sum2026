@@ -58,8 +58,9 @@ static VOID DT3_UnitRender( dt3UNIT_COW *Uni, dt3ANIM *Ani )
     for (i1 = 0; i1 < S; i1++)
       for (i2 = 0; i2 < S; i2++)
       {
-        Uni->COW.MtlNo = k++ % 20;
-        DT3_RndMaterials[Uni->COW.MtlNo].ShdNo = DT3_RndShdAdd("cow");
+        Uni->COW.MtlNo = k++;
+        if (k > 19)
+          k = 1;
         DT3_RndPrimDraw(&Uni->COW, MatrMulMatr3(MatrScale(VecSet1(0.1)), 
         MatrTranslate(VecAddVec(Uni->Pos, VecSet(i * 2.5, i1 * 2.50, i2 * 2.5))),
         MatrRotateZ(30 * sin(Ani->Time))));
