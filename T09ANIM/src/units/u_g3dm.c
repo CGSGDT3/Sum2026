@@ -11,7 +11,6 @@ typedef struct tagdt3UNIT_G3DM
 {
   UNIT_BASE_FIELDS; /* Basic unit functions */ 
   dt3PRIMS Model;     /* Primitives to drawing */
-  VEC Pos;          /* Vector of position */
 } dt3UNIT_G3DM;
 
 /* Unit initialization function.
@@ -24,8 +23,7 @@ typedef struct tagdt3UNIT_G3DM
  */
 static VOID DT3_UnitInit( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
-  DT3_RndPrimsLoad(&Uni->Model, "bin/models/x6.g3dm");
-  Uni->Pos = VecSet1(0);
+  DT3_RndPrimsLoad(&Uni->Model, "bin/models/btr.g3dm");
 } /* End of 'DT3_UnitInit' function */ 
 
 /* Unit render function.
@@ -38,7 +36,7 @@ static VOID DT3_UnitInit( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitRender( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
-  DT3_RndPrimsDraw(&Uni->Model, MatrMulMatr(MatrTranslate(Uni->Pos), MatrRotateX(-90)));
+  DT3_RndPrimsDraw(&Uni->Model, MatrRotateX(0));
 } /* End of 'DT3_UnitRender' function */ 
 
 /* Unit deinitialization function.
