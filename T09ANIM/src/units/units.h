@@ -50,6 +50,14 @@ dt3UNIT * DT3_UnitCreateCow( VOID );
  */
 dt3UNIT * DT3_UnitCreateLand( VOID );
 
+/* Unit model creation function.
+ * ARGUMENTS:
+ *   None.
+ * RETURNS:
+ *   (dt3UNIT *) pointer to created unit.
+ */
+dt3UNIT * DT3_UnitCreateModel( VOID );
+
 #endif /* __units_h_ */
 
 /* END OF 'units.h' FILE */

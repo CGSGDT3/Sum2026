@@ -33,6 +33,12 @@ extern MATR
   DT3_RndMatrProj, /* Projection coordinate system matrix */
   DT3_RndMatrVP;   /* Stored (View * Proj) matrix */
 
+/* Additional shader parameters */
+
+extern INT DT3_RndShdAddonI[8];
+extern VEC DT3_RndShdAddonV[8];
+extern FLOAT DT3_RndShdAddonF[8];
+
 /* Primitive type */
 typedef enum tagdt3PRIM_TYPE
 {
@@ -76,6 +82,15 @@ typedef struct tagdt3PRIM
   MATR Trans;        /* Additional transformation matrix */
   INT MtlNo;         /* Material number at stock array */ 
 } dt3PRIM;
+
+
+/* Primitive collection data type */
+typedef struct tagdt3PRIMS
+{
+  INT NumOfPrims; /* Number of primitives in array */  
+  dt3PRIM *Prims; /* Array of primitives */
+  MATR Trans;     /* Common transformation matrix */
+} dt3PRIMS;
 
 /* Work window init function.
  * ARGUMENTS:
@@ -321,6 +336,57 @@ VOID DT3_RndGridAutoNormals( dt3GRID *G );
  *   (BOOL) TRUE if success, FALSE otherwise.
  */
 BOOL DT3_RndGridCreateSphere( dt3GRID *G, FLT R, INT W, INT H );   
+
+/* Get material pointer by number function.
+ * ARGUMENTS:
+ *     - Material number in material stock:
+ *         INT MtlNo;
+ * RETUNS:
+ *     (dt3MATERIAL *) pointer to material.
+ */
+dt3MATERIAL * DT3_RndMtlGet( INT MtlNo );
+
+/* Create array of primitives function.
+ * ARGUMENTS:
+ *   - pointer to primitives structure:
+ *       dt3PRIMS *Prs;
+ *   - number of primitives to be add:
+ *       INT NumOfPrims;
+ * RETURNS:
+ *   (BOOL) TRUE if successful, FALSE otherwise.
+ */
+BOOL DT3_RndPrimsCreate( dt3PRIMS *Prs, INT NumOfPrims );
+
+/* Delete array of primitives function.
+ * ARGUMENTS:
+ *   - pointer to primitives structure:
+ *       dt3PRIMS *Prs;
+ * RETURNS: None.
+ */
+VOID DT3_RndPrimsFree( dt3PRIMS *Prs );
+
+/* Draw array of primitives function.
+ * ARGUMENTS:
+ *   - pointer to primitives structure:
+ *       dt3PRIMS *Prs;
+ *   - global transformation matrix:
+ *       MATR World;
+ * RETURNS: None.
+ */
+VOID DT3_RndPrimsDraw( dt3PRIMS *Prs, MATR World );
+
+/* Load primitives from '*.G3DM' file function.
+ * ARGUMENTS:
+ *   - pointer to primitives to create:
+ *       dt3PRIMS *Prs;
+ *   - '*.G3DM' file name:
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FALSE otherwise.
+ */
+BOOL DT3_RndPrimsLoad( dt3PRIMS *Prs, CHAR *FileName );
+
+
 
 #endif /* __rnd_h */
 /* END OF 'rnd.h' FILE */

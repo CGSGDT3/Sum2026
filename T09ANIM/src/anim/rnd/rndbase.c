@@ -205,7 +205,7 @@ VOID DT3_RndCopyFrame( VOID )
  */
 VOID DT3_RndStart( VOID )
 {
-  VEC4 ClearColor = {0, 0, 0, 1};
+  VEC4 ClearColor = {0.95, 0.9, 0.8, 1};
   FLT DepthClearValue = 1;
 
   /* Clear frame */

@@ -23,4 +23,10 @@ MATR
   DT3_RndMatrProj, /* Projection coordinate system matrix */
   DT3_RndMatrVP;   /* Stored (View * Proj) matrix */
 
+/* Additional shader parameters */
+
+INT DT3_RndShdAddonI[8];
+VEC DT3_RndShdAddonV[8];
+FLOAT DT3_RndShdAddonF[8];
+
 /* END OF 'rnddata.c' FILE */

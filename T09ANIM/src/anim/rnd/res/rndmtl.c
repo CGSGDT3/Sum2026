@@ -172,5 +172,17 @@ INT DT3_RndMtlApply( INT MtlNo )
   return prg;
 } /* End of 'DT3_RndMtlApply' function */
 
+/* Get material pointer by number function.
+ * ARGUMENTS:
+ *     - Material number in material stock:
+ *         INT MtlNo;
+ * RETUNS:
+ *     (dt3MATERIAL *) pointer to material.
+ */
+dt3MATERIAL * DT3_RndMtlGet( INT MtlNo )
+{
+  return &DT3_RndMaterials[MtlNo];
+} /* End of 'DT3_RndMtlGet' function */
+
 /* END OF 'rndmtl.c' FILE */
 

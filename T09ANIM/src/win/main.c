@@ -56,7 +56,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
   DT3_AnimInit(hWnd);
   DT3_AnimUnitAdd(DT3_UnitCreateControl());
-  DT3_AnimUnitAdd(DT3_UnitCreateCow());
+  DT3_AnimUnitAdd(DT3_UnitCreateModel());
 
   ShowWindow(hWnd, SW_SHOWNORMAL);
   UpdateWindow(hWnd);

@@ -12,6 +12,7 @@ uniform vec3 CamLoc;
 uniform float Time;
 uniform vec3 Ka, Kd, Ks;
 uniform float Ph;
+uniform float Trans;
 
 uniform bool IsTexture0;
 layout(binding = 0) uniform sampler2D Tex;
@@ -72,5 +73,5 @@ void main( void )
 
   color = Shade(DrawPos, N, V, R, L, vec3(1, 1, 1), F);
   color += Shade(DrawPos, N, V, R, normalize(vec3(1, 1, 1)), vec3(0.30, 0.18, 0.08), 1);
-  OutColor = vec4(color, 1);
+  OutColor = vec4(color, Trans);
 }
