@@ -24,8 +24,8 @@ typedef struct tagdt3UNIT_G3DM
  */
 static VOID DT3_UnitInit( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
-  DT3_RndPrimsLoad(&Uni->Model, "bin/models/Shrek_Toilet.g3dm");
-  Uni->Pos = VecSet(-15, 0, 0);
+  DT3_RndPrimsLoad(&Uni->Model, "bin/models/x6.g3dm");
+  Uni->Pos = VecSet1(0);
 } /* End of 'DT3_UnitInit' function */ 
 
 /* Unit render function.

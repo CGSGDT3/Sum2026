@@ -256,7 +256,7 @@ VOID DT3_RndShdUpdate( VOID )
  */
 VOID DT3_RndShdInit( VOID )
 {
-  DT3_RndShdAdd("light");
+  DT3_RndShdAdd("default");
 } /* End of 'DT3_RndShdInit' function */
 
 /* Shader storage deinitialize function.

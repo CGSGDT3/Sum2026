@@ -167,7 +167,11 @@ INT DT3_RndMtlApply( INT MtlNo )
     name[9] = '0' + i;
     if ((loc = glGetUniformLocation(prg, name)) != -1)
       glUniform1i(loc, mtl->Tex[i] != -1);
-  }
+    if ((loc = glGetUniformLocation(prg, "Addon0")) != -1)
+      glUniform1i(loc, DT3_RndShdAddonI[0]);
+    if ((loc = glGetUniformLocation(prg, "Addon1")) != -1)
+      glUniform1i(loc, DT3_RndShdAddonI[1]);
+   }
                         
   return prg;
 } /* End of 'DT3_RndMtlApply' function */
