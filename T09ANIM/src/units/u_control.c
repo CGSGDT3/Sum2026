@@ -4,6 +4,8 @@
  * PURPOSE: unit CONTROLLER file in animation program.
  */
 
+#include <stdio.h>
+
 #include "units.h"
 
 /* Structure of controller unit */
@@ -111,6 +113,7 @@ static VOID CamTransf( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
 static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
 {
   INT modes[2];
+  CHAR buf[100];
 
   /* Transforming camera position */
 /*  Uni->CamLoc = PointTransform(Uni->CamLoc, MatrRotateY(Ani->DeltaTime * Uni->AngleSpeed * Ani->Mdx));
@@ -156,6 +159,9 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
     SetConsoleCursorPosition(hCon, info.dwCursorPosition);
     SetConsoleCursorPosition(hCon, Pos);
   }
+
+  sprintf(buf, "CGSG FOREVER!!!\nFPS: %f.", DT3_Anim.FPS);
+  DT3_RndFntDraw(buf, VecSet1(10), 10);
 
   if (Ani->JBut[JOY_BUTTON7] == 1)
     FlipFullScreen(Ani->hWnd);

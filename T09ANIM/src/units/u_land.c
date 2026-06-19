@@ -30,7 +30,7 @@ static VOID DT3_UnitInit( dt3UNIT_LAND *Uni, dt3ANIM *Ani )
   BITMAP bm;
   INT w, h, x, y;
 
-  Uni->Size = 100;
+  Uni->Size = 1000;
 
   if ((hBm = LoadImage(NULL, "bin/heights/hf.bmp", IMAGE_BITMAP, 0, 0,
                        LR_LOADFROMFILE | LR_CREATEDIBSECTION)) != NULL)
@@ -52,7 +52,7 @@ static VOID DT3_UnitInit( dt3UNIT_LAND *Uni, dt3ANIM *Ani )
                                     1 - y / (h - 1.0));
         }
       DT3_RndGridAutoNormals(&Uni->G);
-        DT3_RndPrimFromGrid(&Uni->Land, &Uni->G);
+      DT3_RndPrimFromGrid(&Uni->Land, &Uni->G);
     }                                  
   }
   Uni->Pos = VecSet1(0);

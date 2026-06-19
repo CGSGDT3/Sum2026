@@ -196,6 +196,54 @@ VOID DT3_RndMtlClose( VOID );
  */
 INT DT3_RndMtlApply( INT MtlNo );
 
+/***
+ * Fonts handle
+***/
+
+/* Font description structure */
+typedef struct tagdt3FONT
+{
+  DWORD LineH, BaseH;
+  FLT AdvanceX[256];
+} dt3FONT;
+
+/* Load font from .G3DF file function.
+ * ARGUMENTS:
+ *   - font file name:
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (BOOL) TRUE if succes, FALSE otherwise.
+ */                                               
+BOOL DT3_RndFntLoad( CHAR *FileName );
+
+/* Init font subsystem function.
+ * ARGUMENTS:
+ *   None.
+ * RETURNS: 
+ *   None.
+ */       
+VOID DT3_RndFntInit( VOID );
+
+/* Close font subsystem function.
+ * ARGUMENTS:
+ *   None.
+ * RETURNS: 
+ *   None.
+ */       
+VOID DT3_RndFntClose( VOID );
+
+/* Draw screen space string function.
+ * ARGUMENTS:
+ *   - string to draw:
+ *       CHAR *Str;
+ *   - draw position:
+ *       VEC Pos;
+ *   - font size:
+ *      FLT Size;
+ * RETURNS: None.
+ */
+VOID DT3_RndFntDraw( CHAR *Str, VEC Pos, FLT Size );
+
 #endif /* __rndres_h_ */
 
 /* END OF 'rndres.h' FILE */

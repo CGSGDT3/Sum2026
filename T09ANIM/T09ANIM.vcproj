@@ -297,6 +297,10 @@
 					Name="Resources"
 					>
 					<File
+						RelativePath=".\rndfnt.c"
+						>
+					</File>
+					<File
 						RelativePath=".\src\anim\rnd\res\rndmtl.c"
 						>
 					</File>

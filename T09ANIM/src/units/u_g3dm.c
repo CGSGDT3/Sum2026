@@ -23,8 +23,37 @@ typedef struct tagdt3UNIT_G3DM
  */
 static VOID DT3_UnitInit( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
-  DT3_RndPrimsLoad(&Uni->Model, "bin/models/btr.g3dm");
+  DT3_RndPrimsLoad(&Uni->Model, "bin/models/uaz_452.g3dm");
 } /* End of 'DT3_UnitInit' function */ 
+
+/* Unit inter frame events handle function.
+ * ARGUMENTS:
+ *   - self-pointer to unit object:
+ *       dt3UNIT_G3DM *Uni;
+ *   - animation context:
+ *       dt3ANIM *Ani;
+ * RETURNS: None.
+ */
+static VOID DT3_UnitResponse( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
+{
+  VEC center;
+
+  center =  VecDivNum(VecSubVec(Uni->Model.Prims[283].MaxBB, Uni->Model.Prims[283].MinBB), 2);
+  Uni->Model.Prims[283].Trans = MatrMulMatr3(MatrTranslate(VecNeg(center)),
+    MatrRotateX(360 * sin(DT3_Anim.Time)), MatrTranslate(center));
+
+/*  center =  VecDivNum(VecSubVec(Uni->Model.Prims[257].MaxBB, Uni->Model.Prims[257].MinBB), 2);
+  Uni->Model.Prims[257].Trans = MatrMulMatr3(MatrTranslate(VecNeg(center)), 
+    MatrRotateX(360 * sin(DT3_Anim.Time)), MatrTranslate(center));        */
+ 
+/*  center =  VecDivNum(VecSubVec(Uni->Model.Prims[284].MaxBB, Uni->Model.Prims[284].MinBB), 2);
+  Uni->Model.Prims[284].Trans = MatrMulMatr3(MatrTranslate(VecNeg(center)), 
+    MatrRotateX(360 * sin(DT3_Anim.Time)), MatrTranslate(center));
+ 
+  center =  VecDivNum(VecSubVec(Uni->Model.Prims[285].MaxBB, Uni->Model.Prims[285].MinBB), 2);
+  Uni->Model.Prims[285].Trans = MatrMulMatr3(MatrTranslate(VecNeg(center)),
+    MatrRotateX(360 * sin(DT3_Anim.Time)), MatrTranslate(center));  */
+} /* End of 'DT3_UnitResponse' function */ 
 
 /* Unit render function.
  * ARGUMENTS:
@@ -36,7 +65,7 @@ static VOID DT3_UnitInit( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitRender( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
-  DT3_RndPrimsDraw(&Uni->Model, MatrRotateX(0));
+ DT3_RndPrimsDraw(&Uni->Model, MatrMulMatr(MatrScale(VecSet1(0.01635)), MatrRotateX(-90)));
 } /* End of 'DT3_UnitRender' function */ 
 
 /* Unit deinitialization function.
@@ -67,6 +96,7 @@ dt3UNIT * DT3_UnitCreateModel( VOID )
 
   Uni->Init = (VOID *)DT3_UnitInit;
   Uni->Render = (VOID *)DT3_UnitRender;
+  Uni->Response = (VOID *)DT3_UnitResponse;
   Uni->Close = (VOID *)DT3_UnitClose;
   return (dt3UNIT *)Uni;
 } /* End of 'DT3_UnitCreateModel' function */ 

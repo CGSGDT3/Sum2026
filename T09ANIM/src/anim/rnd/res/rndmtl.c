@@ -85,7 +85,6 @@ VOID DT3_RndMtlInit( VOID )
     def.Ks = VecSet(MatLib[i].spec[0], MatLib[i].spec[1], MatLib[i].spec[2]);
     def.Ph = MatLib[i].shin;
     DT3_RndMtlAdd(&def);
-    DT3_RndMaterials[i].Tex[0] = DT3_RndTexAddFromFile("bin/textures/cow.bmp");
   }
 } /* End of 'DT3_RndMtlInit' function */
 

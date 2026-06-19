@@ -15,6 +15,7 @@ VOID DT3_RndResInit( VOID )
   DT3_RndShdInit();
   DT3_RndMtlInit();
   DT3_RndTexInit();
+  DT3_RndFntInit();
 } /* End of 'DT3_RndResInit' function */
 
 /* Resource deinitialize function.
@@ -23,6 +24,7 @@ VOID DT3_RndResInit( VOID )
  */
 VOID DT3_RndResClose( VOID )
 {
+  DT3_RndFntClose();
   DT3_RndShdClose();
   DT3_RndMtlClose();
   DT3_RndTexClose();

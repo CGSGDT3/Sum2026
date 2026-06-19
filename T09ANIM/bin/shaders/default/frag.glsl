@@ -38,10 +38,7 @@ vec3 Shade( vec3 P, vec3 N, vec3 V, vec3 R, vec3 L, vec3 LColor, float F )
 }
 
 void main( void )
-{
-  if (Addon1 > abs(sin(Time / 18.0)) * Addon0)
-    discard;
-
+{                                         
   vec3 N = normalize(DrawNormal);
   vec3 L = normalize(1 + vec3(8 * sin(1 * Time), 1, 1));
 

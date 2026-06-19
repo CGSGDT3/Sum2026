@@ -256,6 +256,7 @@ VOID DT3_RndShdUpdate( VOID )
  */
 VOID DT3_RndShdInit( VOID )
 {
+//  DT3_RndShdAdd ("default");
   DT3_RndShdAdd("default");
 } /* End of 'DT3_RndShdInit' function */
 

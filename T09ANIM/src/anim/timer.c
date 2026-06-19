@@ -41,7 +41,7 @@ VOID DT3_TimerResponse( VOID )
 
   /* Global time */
   DT3_Anim.GlobalTime = (DOUBLE)(t.QuadPart - StartTime) / TimePerSec;
-  DT3_Anim. GlobalDeltaTime = (DOUBLE)(t.QuadPart - OldTime) / TimePerSec;
+  DT3_Anim.GlobalDeltaTime = (DOUBLE)(t.QuadPart - OldTime) / TimePerSec;
   /* Time with pause */
   if (!DT3_Anim.IsPause)
   {

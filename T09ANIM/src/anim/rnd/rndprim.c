@@ -120,6 +120,8 @@ VOID DT3_RndPrimDraw( dt3PRIM *Pr, MATR World )
     glUniform1f(loc, DT3_Anim.Time);
   if ((loc = glGetUniformLocation(ProgId, "MatrWInv")) != -1)
     glUniformMatrix3fv(loc, 1, FALSE, winv.A[0]);
+  if ((loc = glGetUniformLocation(ProgId, "Transform")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, Pr->Trans.A[0]);
 
   glLoadMatrixf(wvp.A[0]);
 
