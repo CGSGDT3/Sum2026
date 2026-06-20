@@ -42,11 +42,11 @@ vec3 Shade( vec3 P, vec3 N, vec3 V, vec3 R, vec3 L, vec3 LColor, float F )
 void main( void )
 {                            
   vec3 N = normalize(DrawNormal);
-  vec3 L = normalize(1 + vec3(8 * sin(1 * Time), 1, 1));
+  vec3 L = normalize(vec3(1) + vec3(10 * cos (Time), 10, 5));
 
-  vec3 LPos = vec3(cos(Time) * 8, 10, sin(Time) * 8);
+  vec3 LPos = vec3(8 * sin(18 * Time), 10, 8 * cos(Time));
   L = normalize(LPos - DrawPos);
-  vec3 D = normalize(vec3(0, 0, 0) - LPos);//vec3(0, -1, 0);
+  vec3 D = normalize(vec3(3, -1, -2) - LPos);//vec3(0, -1, 0);
   float F = 1, a = radians(36.30), b = radians(27.0);
 
 
