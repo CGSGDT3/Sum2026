@@ -218,7 +218,7 @@ BOOL DT3_RndPrimCreateSphere( dt3PRIM *Pr, DBL R, INT W, INT H )
 BOOL DT3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H )
 {
   INT i, m, j, k, nv =  W * H, nf = (H - 1) * (W - 1) * 6, size;
-  DBL phi;
+  DBL phi, u, v;
   dt3VERTEX *V;
   INT *Ind;
 
@@ -229,12 +229,17 @@ BOOL DT3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H )
 
   for (k = 0, i = 0; i < H; i++)
   {
+    v = (DBL)i / (H - 1); 
     m = (DBL)i / (H - 1) * Z; 
 
     for (j = 0; j < W; j++)
     {
+      u = (DBL)j / (W - 1); 
+      V[k].T.X = u;
+      V[k].T.Y = v;
+
       phi = j * 2 * PI / (W - 1);
-     V[k++].P = VecSet(R * cos(phi), m,
+      V[k++].P = VecSet(R * cos(phi), m,
                             R * sin(phi));
     }
   }
@@ -250,6 +255,12 @@ BOOL DT3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H )
       Ind[k++] = (i + 1) * W + j + 1;
     }      
   DT3_RndPrimTriMeshAutoNormals(V, nv, Ind, nf);
+
+  for (i = 0; i < nv; i++)   
+  {
+    V[i].T.X = i / (W - 1.0);
+    V[i].T.Y = i / (H - 1.0);
+  }
 
   DT3_RndPrimCreate(Pr, DT3_RND_PRIM_TRIMESH, V, nv, Ind, nf);   
 

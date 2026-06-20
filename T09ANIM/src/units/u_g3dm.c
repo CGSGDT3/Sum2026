@@ -11,12 +11,12 @@
 /* Structure of ball unit */
 typedef struct tagdt3UNIT_G3DM
 {
-  UNIT_BASE_FIELDS;    /* Basic unit functions */ 
-  dt3PRIMS Model;      /* Primitives to drawing */
-  dt3PRIM Cyll;        /* Cyllinder of Earth */
+  UNIT_BASE_FIELDS;                 /* Basic unit functions */ 
+  dt3PRIMS Model;                   /* Primitives to drawing */
+  dt3PRIM Cyll;                     /* Cyllinder of Earth */
   FLT phi, psi, len, Vcyll, Zcoord; /* Phi - rotation of wheels, psi - rotation of all car, 
-                                * len - sum rotation of wheels by drive, Vcyll - speed of earth cyllindre.
-                                * Angles in degrees */
+                                     * len - sum rotation of wheels by drive, Vcyll - speed of earth cyllindre.
+                                     * Angles in degrees */
 } dt3UNIT_G3DM;
 
 /* Unit car rotation by buttons function.
@@ -29,9 +29,9 @@ typedef struct tagdt3UNIT_G3DM
  */
 static VOID DT3_UnitCarRotation( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
-  FLT phi_max = 59, Aphi = 1, Acyll = 1, MaxCyll = 180; /* Acceleration of cyllindre by time,
-                                                         * constants of max angle of rotation, 
-                                                         * angle acceeration of wheels */
+  FLT phi_max = 59, Aphi = 1, Acyll = 0.1, MaxCyll = 18; /* Acceleration of cyllindre by time,
+                                                          * constants of max angle of rotation, 
+                                                          * angle acceeration of wheels */
   if (Ani->Keys['D'])
     Uni->phi += Aphi;
   if (Ani->Keys['A'])
@@ -67,17 +67,6 @@ static VOID DT3_UnitCarRotation( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
   Uni->len += Uni->Vcyll * Ani->DeltaTime;
 } /* End of ' DT3_UnitCarTransformation' function */ 
 
-/* Is speed of unit zero function.
- * ARGUMENTS:
- *   - self-pointer to unit object:
- *       dt3UNIT_G3DM *Uni;
- * RETURNS: (INT) 0 if zero, 1 if not zero.
- */
-static INT IsZeroSpeed( dt3UNIT_G3DM *Uni )
-{
-  return Uni->Vcyll == 0 ? 0 : 1;
-} /* End of 'IsZeroSpeed' function */
-
 /* Unit initialization function.
  * ARGUMENTS:
  *   - self-pointer to unit object:
@@ -89,8 +78,10 @@ static INT IsZeroSpeed( dt3UNIT_G3DM *Uni )
 static VOID DT3_UnitInit( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
   DT3_RndPrimsLoad(&Uni->Model, "bin/models/Lexus.g3dm");
-  DT3_RndPrimCreateCyll(&Uni->Cyll, 100, 100, 100, 100);
+  DT3_RndPrimCreateCyll(&Uni->Cyll, 1000, 1000, 1000, 1000);
   Uni->phi = 0, Uni->psi = 0, Uni->len = 0, Uni->Vcyll = 0, Uni->Zcoord = 0; 
+  Uni->Cyll.MtlNo = 3;
+  DT3_RndMaterials[Uni->Cyll.MtlNo].Tex[0] = DT3_RndTexAddFromFile("bin/textures/rock.BMP");
 } /* End of 'DT3_UnitInit' function */ 
 
 /* Unit inter frame events handle function.
@@ -116,7 +107,7 @@ static VOID DT3_UnitResponse( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
     center =  VecDivNum(VecAddVec(Uni->Model.Prims[IndW[j]].MaxBB, Uni->Model.Prims[IndW[j]].MinBB), 2);
     for (i = 0; i < 5; i++)       
       Uni->Model.Prims[Ind[j][i]].Trans =  MatrMulMatr3(MatrTranslate(VecNeg(center)),
-      MatrRotateX(R2D(Uni->len / 2 / abs(center.Y))), MatrTranslate(center));           
+      MatrRotateX(R2D(Uni->len)), MatrTranslate(center));           
   }
   for (j = 0; j < 2; j++)
   {
@@ -126,10 +117,10 @@ static VOID DT3_UnitResponse( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
         MatrMulMatr3(MatrTranslate(VecNeg(center)),
         MatrRotateZ(-Uni->phi), MatrTranslate(center)));    
     Uni->Zcoord += -abs(Uni->Vcyll) * sin(Uni->phi) * Ani->DeltaTime / 18;
-    if (Uni->Zcoord > 30)
-      Uni->Zcoord = 30;
-    else if (Uni->Zcoord < -30)
-      Uni->Zcoord = -30;      
+    if (Uni->Zcoord > 47)
+      Uni->Zcoord = 47;
+    else if (Uni->Zcoord < -47)
+      Uni->Zcoord = -47;      
   } 
 } /* End of 'DT3_UnitResponse' function */ 
 
@@ -145,9 +136,13 @@ static VOID DT3_UnitRender( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
   MATR m_rot = MatrMulMatr(MatrRotateZ(-90), MatrRotateX(-90));
 
-  DT3_RndPrimsDraw(&Uni->Model, MatrMulMatr3(MatrScale(VecSet1(0.01635)), MatrTranslate(VecSet(Uni->Zcoord, 0, 0)), MatrRotateX(-90)));
-  DT3_RndPrimDraw(&Uni->Cyll, MatrMulMatr3(MatrRotateY(R2D(IsZeroSpeed(Uni) * Uni->len * cos(Uni->phi))), 
-    MatrTranslate(VecSet(0, -50, -100)), m_rot));
+  DT3_RndPrimsDraw(&Uni->Model, MatrMulMatr(MatrScale(VecSet1(0.098)),/* MatrTranslate(VecSet(Uni->Zcoord, 0, 0)),*/ MatrRotateX(-90)));
+  DT3_RndPrimDraw(&Uni->Cyll, MatrMulMatr3(MatrRotateY(-R2D(Uni->len / 30)), 
+    MatrTranslate(VecSet(0, -500 - Uni->Zcoord * 10, -1000)), m_rot));
+  if (!Ani->IsPause && !Ani->Keys['K'] && !Ani->Keys['Y'])
+    DT3_RndCamSet(VecSet(-0.12176228, 6.7829499, -11.391928), VecSet(0, 0, 1), VecSet(0, 1, 0));
+  else if (!Ani->IsPause && Ani->Keys['K'])
+    DT3_RndCamSet(VecSet(3.7166979, 6.7829499, -10.822050), VecSet(0, 0, 1), VecSet(0, 1, 0));
 } /* End of 'DT3_UnitRender' function */ 
 
 /* Unit deinitialization function.
@@ -161,6 +156,7 @@ static VOID DT3_UnitRender( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 static VOID DT3_UnitClose( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
   DT3_RndPrimsFree(&Uni->Model);
+  DT3_RndPrimFree(&Uni->Cyll);
 } /* End of 'DT3_UnitClose' function */ 
 
 /* Unit model creation function.

@@ -153,4 +153,41 @@ BOOL DT3_RndGridCreateSphere( dt3GRID *G, FLT R, INT W, INT H )
   return TRUE;
 } /* End of 'DT3_RndGridCreateSphere' function */
 
+/* Create cyllinder grid function.
+ * ARGUMENTS:
+ *   - grid data:
+ *       dt3GRID *G;
+ *   - cyllinder radius:
+ *       DBL R;
+  *   - cyllinder height:
+ *       DBL Z;
+ *   - grid size:
+ *       INT W, H;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FALSE otherwise.
+ */
+BOOL DT3_RndGridCreateCyll( dt3GRID *G, FLT R, FLT Z, INT W, INT H )
+{
+  INT i, j, k, m;                   
+  DBL phi;
+
+  if (!DT3_RndGridCreate(G, W, H))
+    return FALSE;
+
+  for (k = 0, i = 0; i < H; i++)
+  {
+    m = (DBL)i / (H - 1) * Z; 
+
+    for (j = 0; j < W; j++)
+    {
+      phi = j * 2 * PI / (W - 1);
+      G->V[k++].P = VecSet(R * cos(phi), m,
+                            R * sin(phi));
+    }
+  }
+
+
+  return TRUE;
+} /* End of 'DT3_RndGridCreateCyll' function */
+
 /* END OF 'rndgrid.c' FILE */

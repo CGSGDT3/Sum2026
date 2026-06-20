@@ -116,6 +116,8 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
   CHAR buf[100];
 
   /* Transforming camera position */
+  if (Ani->IsPause)
+    CamTransf(Uni, Ani);
 /*  Uni->CamLoc = PointTransform(Uni->CamLoc, MatrRotateY(Ani->DeltaTime * Uni->AngleSpeed * Ani->Mdx));
     
   Uni->CamLoc = VecAddVec(Uni->CamLoc, VecMulNum(Uni->CamDir, Ani->DeltaTime * Uni->Speed *
@@ -159,7 +161,7 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
     SetConsoleCursorPosition(hCon, Pos);
   }
 
-  sprintf(buf, "CGSG FOREVER!!!\nFPS: %f.", DT3_Anim.FPS);
+  sprintf(buf, "FPS: %f.\nCGSG FOREVER!!!", DT3_Anim.FPS);
   DT3_RndFntDraw(buf, VecSet1(10), 10);
 
   if (Ani->JBut[JOY_BUTTON7] == 1)
@@ -168,8 +170,6 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
     Ani->IsPause = !Ani->IsPause;
   if (Ani->JBut[JOY_BUTTON8] == 1)
     SendMessage(Ani->hWnd, WM_DESTROY, 30, 0);
-  if (Ani->IsPause)
-      CamTransf(Uni, Ani);
 /*  Uni->CamLoc = VecAddVec(Uni->CamLoc, VecMulNum(Uni->CamDir, Ani->DeltaTime * Uni->Speed *
     (2 * (Ani->JY + Ani->JZ))));
 

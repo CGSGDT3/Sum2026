@@ -30,9 +30,7 @@ vec3 Shade( vec3 P, vec3 N, vec3 V, vec3 R, vec3 L, vec3 LColor, float F )
   vec3 Diff = Kd;
   if (IsTexture0)
   {
-    Diff.rgb = texture(Tex, DrawTexCoord).rgb;
-    if (texture(Tex, DrawTexCoord).a < 0.030)
-      discard;
+    Diff.rgb = texture(Tex, DrawTexCoord).rgb; 
   }
   color += F * LColor * Diff * max(0, dot(N, L));// * DrawColor.rgb;
 
@@ -42,7 +40,7 @@ vec3 Shade( vec3 P, vec3 N, vec3 V, vec3 R, vec3 L, vec3 LColor, float F )
 }
 
 void main( void )
-{                                 
+{                            
   vec3 N = normalize(DrawNormal);
   vec3 L = normalize(1 + vec3(8 * sin(1 * Time), 1, 1));
 

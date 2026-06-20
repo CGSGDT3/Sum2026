@@ -337,6 +337,21 @@ VOID DT3_RndGridAutoNormals( dt3GRID *G );
  */
 BOOL DT3_RndGridCreateSphere( dt3GRID *G, FLT R, INT W, INT H );   
 
+/* Create cyllinder grid function.
+ * ARGUMENTS:
+ *   - grid data:
+ *       dt3GRID *G;
+ *   - cyllinder radius:
+ *       DBL R;
+  *   - cyllinder height:
+ *       DBL Z;
+ *   - grid size:
+ *       INT W, H;
+ * RETURNS:
+ *   (BOOL) TRUE if success, FALSE otherwise.
+ */
+BOOL DT3_RndGridCreateCyll( dt3GRID *G, FLT R, FLT Z, INT W, INT H );
+
 /* Get material pointer by number function.
  * ARGUMENTS:
  *     - Material number in material stock:
