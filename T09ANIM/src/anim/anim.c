@@ -90,6 +90,8 @@ VOID DT3_AnimRender( VOID )
   INT i;
 
   DT3_TimerResponse();
+  DT3_RndShdUpdate();
+
   if (DT3_Anim.IsActive)
     DT3_AnimInputResponse();
 

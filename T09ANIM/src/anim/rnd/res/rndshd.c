@@ -241,7 +241,7 @@ VOID DT3_RndShdUpdate( VOID )
   INT t = clock();
   static INT OldT;
 
-  if (t - OldT > 3 * CLOCKS_PER_SEC)
+  if (t - OldT > CLOCKS_PER_SEC)
     for (i = 0; i < DT3_RndShadersSize; i++)
     {
       DT3_RndShdFree(DT3_RndShaders[i].ProgId);

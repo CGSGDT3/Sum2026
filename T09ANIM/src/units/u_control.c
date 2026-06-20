@@ -120,7 +120,6 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
     
   Uni->CamLoc = VecAddVec(Uni->CamLoc, VecMulNum(Uni->CamDir, Ani->DeltaTime * Uni->Speed *
       (Ani->Keys[VK_UP] - Ani->Keys[VK_DOWN])));*/
-  CamTransf(Uni, Ani);
   if (Ani->Keys['F'] == 1  && Ani->KeysClick['F'] == 1)
     FlipFullScreen(Ani->hWnd);
   if (Ani->Keys['P'] == 1 && Ani->KeysClick['P'] == 1)
@@ -169,6 +168,8 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
     Ani->IsPause = !Ani->IsPause;
   if (Ani->JBut[JOY_BUTTON8] == 1)
     SendMessage(Ani->hWnd, WM_DESTROY, 30, 0);
+  if (Ani->IsPause)
+      CamTransf(Uni, Ani);
 /*  Uni->CamLoc = VecAddVec(Uni->CamLoc, VecMulNum(Uni->CamDir, Ani->DeltaTime * Uni->Speed *
     (2 * (Ani->JY + Ani->JZ))));
 
