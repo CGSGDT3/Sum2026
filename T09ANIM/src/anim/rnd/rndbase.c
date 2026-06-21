@@ -172,7 +172,6 @@ VOID DT3_RndInit( HWND hWnd )
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
   DT3_RndProjSize = 0.1;
   DT3_RndProjDist = DT3_RndProjSize;
   DT3_RndProjFarClip = 30000;
@@ -205,7 +204,15 @@ VOID DT3_RndCopyFrame( VOID )
  */
 VOID DT3_RndStart( VOID )
 {
-  VEC4 ClearColor = {0.95, 0.9, 0.8, 1};
+  VEC4 ClearColor = {1, 0.75, 0.45, 1};
+  /* Another beatiful colors:
+  VEC4 ClearColor = {1.0, 0.55, 0.3, 1.0};
+  VEC4 ClearColor = {0.95, 0.55, 0.75, 1.0};
+  VEC4 ClearColor = {1.0, 0.75, 0.45, 1.0};
+  VEC4 ClearColor = {0.85, 0.35, 0.55, 1.0};
+  VEC4 ClearColor = {0.65, 0.45, 0.85, 1.0};
+  VEC4 ClearColor = {1.0, 0.65, 0.4, 1.0};
+  */
   FLT DepthClearValue = 1;
 
   /* Clear frame */

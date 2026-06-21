@@ -100,7 +100,7 @@ VOID DT3_RndPrimDraw( dt3PRIM *Pr, MATR World )
   MATR
     w = MatrMulMatr(Pr->Trans, World),
     winv = MatrTranspose(MatrInverse(w)),
-    wvp = MatrMulMatr(World, MatrMulMatr(DT3_RndMatrView, DT3_RndMatrProj));
+    wvp = MatrMulMatr(w, MatrMulMatr(DT3_RndMatrView, DT3_RndMatrProj));
   UINT ProgId;
 
   INT loc;
@@ -117,11 +117,9 @@ VOID DT3_RndPrimDraw( dt3PRIM *Pr, MATR World )
   if ((loc = glGetUniformLocation(ProgId, "MatrWVP")) != -1)
     glUniformMatrix4fv(loc, 1, FALSE, wvp.A[0]);
   if ((loc = glGetUniformLocation(ProgId, "Time")) != -1)
-    glUniform1f(loc, DT3_Anim.Time);
+    glUniform1f(loc, DT3_Anim.GlobalTime);
   if ((loc = glGetUniformLocation(ProgId, "MatrWInv")) != -1)
     glUniformMatrix3fv(loc, 1, FALSE, winv.A[0]);
-  if ((loc = glGetUniformLocation(ProgId, "Transform")) != -1)
-    glUniformMatrix4fv(loc, 1, FALSE, Pr->Trans.A[0]);
 
   glLoadMatrixf(wvp.A[0]);
 
@@ -255,12 +253,6 @@ BOOL DT3_RndPrimCreateCyll( dt3PRIM *Pr, DBL R, DBL Z, INT W, INT H )
       Ind[k++] = (i + 1) * W + j + 1;
     }      
   DT3_RndPrimTriMeshAutoNormals(V, nv, Ind, nf);
-
-  for (i = 0; i < nv; i++)   
-  {
-    V[i].T.X = i / (W - 1.0);
-    V[i].T.Y = i / (H - 1.0);
-  }
 
   DT3_RndPrimCreate(Pr, DT3_RND_PRIM_TRIMESH, V, nv, Ind, nf);   
 

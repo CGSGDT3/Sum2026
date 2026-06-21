@@ -115,7 +115,7 @@ INT DT3_RndTexAddFromFile( CHAR *FileName )
 
     fseek(F, 0, SEEK_END);
     flen = ftell(F);
-    fseek(F, 4, SEEK_END);
+    fseek(F, 4, SEEK_SET);
 
     if (w * h * 4 + 4 == flen)
       components = 4;

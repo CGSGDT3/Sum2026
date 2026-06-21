@@ -76,7 +76,6 @@ VOID DT3_RndMtlInit( VOID )
 
   DT3_RndMaterialsSize = 0;
   DT3_RndMtlAdd(&def);
-  DT3_RndMaterials[0].Tex[0] = DT3_RndTexAddFromFile("bin/textures/rock.bmp");
 
   for (i = 1; i < 20; i++)
   {
@@ -162,7 +161,10 @@ INT DT3_RndMtlApply( INT MtlNo )
   for (i = 0; i < 8; i++)
   {
     glActiveTexture(GL_TEXTURE0 + i);  
-    glBindTexture(GL_TEXTURE_2D, DT3_RndTextures[mtl->Tex[i]].TexId);
+    if (mtl->Tex[i] != -1)
+      glBindTexture(GL_TEXTURE_2D, DT3_RndTextures[mtl->Tex[i]].TexId);
+    else
+      glBindTexture(GL_TEXTURE_2D, 0);
     name[9] = '0' + i;
     if ((loc = glGetUniformLocation(prg, name)) != -1)
       glUniform1i(loc, mtl->Tex[i] != -1);
