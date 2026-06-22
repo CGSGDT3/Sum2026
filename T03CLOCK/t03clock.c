@@ -175,8 +175,10 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     GetCursorPos(&pt);
     ScreenToClient(hWnd, &pt);
 
-    BitBlt(hMemDC, pt.x - capyInfo.bmWidth / 2, pt.y - capyInfo.bmHeight / 2, W, H, hDCA, 0, 0, SRCAND);
-    BitBlt(hMemDC, pt.x - capyInfo.bmWidth / 2, pt.y - capyInfo.bmHeight / 2, W, H, hDCO, 0, 0, SRCINVERT);
+    BitBlt(hMemDC, pt.x - capyInfo.bmWidth / 2, 
+      pt.y - capyInfo.bmHeight / 2, W, H, hDCA, 0, 0, SRCAND);
+    BitBlt(hMemDC, pt.x - capyInfo.bmWidth / 2, 
+      pt.y - capyInfo.bmHeight / 2, W, H, hDCO, 0, 0, SRCINVERT);
 
     DeleteObject(hFnt);
     DeleteObject(hPen);

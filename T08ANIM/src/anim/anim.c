@@ -109,7 +109,7 @@ VOID DT3_AnimRender( VOID )
  */
 VOID DT3_AnimUnitAdd( dt3UNIT *Uni )
 {
-  if (DT3_Anim.NumOfUnits < dt3_MAX_UNITS)
+  if (DT3_Anim.NumOfUnits < DT3_MAX_UNITS)
     DT3_Anim.Units[DT3_Anim.NumOfUnits++] = Uni, Uni->Init(Uni, &DT3_Anim);
 } /* End of 'DT3_AnimUnitAdd' function */ 
 

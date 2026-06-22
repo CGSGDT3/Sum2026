@@ -185,10 +185,10 @@ static VOID DT3_UnitRender( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
   DT3_RndPrimsDraw(&Uni->Model, MatrIdentity());
   DT3_RndPrimDraw(&Uni->Cylinder, MatrIdentity());
-  if (!Ani->IsPause && !Ani->Keys['K'] && !Ani->Keys['Y'])
+/*  if (!Ani->IsPause && !Ani->Keys['K'] && !Ani->Keys['Y'])
     DT3_RndCamSet(VecSet(3.7166979, 6.7829499, -10.822050), VecSet(0, 0, 1), VecSet(0, 1, 0));
   else if (!Ani->IsPause && Ani->Keys['K'])
-    DT3_RndCamSet(VecSet(-0.12176228, 6.7829499, -11.391928), VecSet(0, 0, 1), VecSet(0, 1, 0));
+    DT3_RndCamSet(VecSet(-0.12176228, 6.7829499, -11.391928), VecSet(0, 0, 1), VecSet(0, 1, 0));   */
 } /* End of 'DT3_UnitRender' function */ 
 
 /* Unit deinitialization function.

@@ -11,7 +11,7 @@
 #include "timer.h"
 
 /* const of MAX size of UNIT array */
-#define dt3_MAX_UNITS 3000
+#define DT3_MAX_UNITS 3000
 
 /* Forward declaration */
 typedef struct tagdt3UNIT dt3UNIT;
@@ -23,7 +23,7 @@ typedef struct tagdt3ANIM
   HDC hDC;                       /* Animation device context */ 
   INT W, H, Mx, My, Mz, Mdx, Mdy, Mdz, NumOfUnits, JPov;                       
 
-  dt3UNIT * Units[dt3_MAX_UNITS];/* Array of units */
+  dt3UNIT * Units[DT3_MAX_UNITS];/* Array of units */
 
   DBL
     GlobalTime, GlobalDeltaTime, /* Global time and interframe interval */

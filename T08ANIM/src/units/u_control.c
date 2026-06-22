@@ -25,7 +25,7 @@ typedef struct tagdt3UNIT_CONTROL
  */
 static VOID DT3_UnitInit( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
 {
-  Uni->CamLoc = VecSet1(5), Uni->CamDir = VecSet1(1), Uni->CamUp = VecSet(0, 1, 0), Uni->Speed = 2, Uni->AngleSpeed = 12;
+  Uni->CamLoc = VecSet1(30), Uni->CamDir = VecSet1(7), Uni->CamUp = VecSet(0, 6, 0), Uni->Speed = 2, Uni->AngleSpeed = 12;
 } /* End of 'DT3_UnitInit' function */ 
 
 /* Unit inter frame events handle function.

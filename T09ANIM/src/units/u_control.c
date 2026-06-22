@@ -13,7 +13,6 @@ typedef struct tagdt3UNIT_CONTROL
 {
   UNIT_BASE_FIELDS;          /* Basic functions of unit */
 
-  VEC CamLoc, CamDir, CamUp; /* Camera position */
   DBL Speed, AngleSpeed;     /* Angle and linear speed of camera */
 } dt3UNIT_CONTROL;
 
@@ -27,7 +26,8 @@ typedef struct tagdt3UNIT_CONTROL
  */
 static VOID DT3_UnitInit( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
 {
-  Uni->CamLoc = VecSet1(5), Uni->CamDir = VecSet1(1), Uni->CamUp = VecSet(0, 1, 0), Uni->Speed = 2, Uni->AngleSpeed = 12;
+  DT3_RndCamSet(VecSet(-0.12176228, 6.7829499, -11.391928), VecSet(0, 0, 1), VecSet(0, 1, 0));  
+  Uni->Speed = 2, Uni->AngleSpeed = 12;
 } /* End of 'DT3_UnitInit' function */ 
 
 /* Camera transformation function.
@@ -116,8 +116,7 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
   CHAR buf[100];
 
   /* Transforming camera position */
-  if (Ani->IsPause)
-    CamTransf(Uni, Ani);
+  CamTransf(Uni, Ani);
 /*  Uni->CamLoc = PointTransform(Uni->CamLoc, MatrRotateY(Ani->DeltaTime * Uni->AngleSpeed * Ani->Mdx));
     
   Uni->CamLoc = VecAddVec(Uni->CamLoc, VecMulNum(Uni->CamDir, Ani->DeltaTime * Uni->Speed *
@@ -162,7 +161,7 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
   }
 
   sprintf(buf, "FPS: %f.\nCGSG FOREVER!!!", DT3_Anim.FPS);
-  DT3_RndFntDraw(buf, VecSet1(10), 10);
+  DT3_RndFntDraw(buf, VecSet(30, 47, 18), 10);
 
   if (Ani->JBut[JOY_BUTTON7] == 1)
     FlipFullScreen(Ani->hWnd);

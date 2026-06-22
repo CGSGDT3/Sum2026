@@ -213,6 +213,14 @@
 						>
 					</File>
 					<File
+						RelativePath=".\src\units\u_cyl.c"
+						>
+					</File>
+					<File
+						RelativePath=".\src\units\u_th.c"
+						>
+					</File>
+					<File
 						RelativePath=".\src\anim\unit.c"
 						>
 					</File>

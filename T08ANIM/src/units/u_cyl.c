@@ -1,47 +1,47 @@
-/* FILE NAME: u_ball.c
+/* FILE NAME: u_cyl.c
  * PROGRAMMER: DT3
- * DATE: 11.06.2026
- * PURPOSE: unit BALL file in animation program.
+ * DATE: 19.06.2026
+ * PURPOSE: unit CYL file in animation program.
  */ 
 
 #include "units.h"
 
-/* Structure of ball unit */
-typedef struct tagdt3UNIT_BALL
+/* Structure of cyl unit */
+typedef struct tagdt3UNIT_CYL
 {
   UNIT_BASE_FIELDS; /* Basic unit functions */ 
-  dt3PRIM Ball;     /* Primitives to drawing */
+  dt3PRIM Cyl;      /* Primitives to drawing */
   VEC Pos;          /* Vector of position */
-  DBL Size, Speed;  /* Size of ball and his speed of jumping */
-} dt3UNIT_BALL;
+  DBL Size, Speed;  /* Size of cyl and his speed of jumping */
+} dt3UNIT_CYL;
 
 /* Unit initialization function.
  * ARGUMENTS:
  *   - self-pointer to unit object:
- *       dt3UNIT_BALL *Uni;
+ *       dt3UNIT_CYL *Uni;
  *   - animation context:
  *       dt3ANIM *Ani;
  * RETURNS: None.
  */
-static VOID DT3_UnitInit( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
+static VOID DT3_UnitInit( dt3UNIT_CYL *Uni, dt3ANIM *Ani )
 {
   Uni->Pos = VecSet(8 * rand1(), 1, 8 * rand1());
   Uni->Size = 1 + rand1() * 0.5;
   if (Uni->Size < 0.08)
     Uni->Size = 0.08;
   Uni->Speed = 30 * (DBL)rand() / RAND_MAX;
-  DT3_RndPrimCreateSphere(&Uni->Ball, Uni->Size, Gr_W, Gr_H);
+  DT3_RndPrimCreateCyll(&Uni->Cyl, Uni->Size, Uni->Size * 10, Gr_W, Gr_H);
 } /* End of 'DT3_UnitInit' function */ 
 
 /* Unit inter frame events handle function.
  * ARGUMENTS:
  *   - self-pointer to unit object:
- *       dt3UNIT_BALL *Uni;
+ *       dt3UNIT_CYL *Uni;
  *   - animation context:
  *       dt3ANIM *Ani;
  * RETURNS: None.
  */
-static VOID DT3_UnitResponse( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
+static VOID DT3_UnitResponse( dt3UNIT_CYL *Uni, dt3ANIM *Ani )
 {
   Uni->Pos = VecSet(Uni->Pos.X, sin(Uni->Speed * Ani->Time), Uni->Pos.Z);
 } /* End of 'DT3_UnitResponse' function */ 
@@ -49,41 +49,41 @@ static VOID DT3_UnitResponse( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
 /* Unit render function.
  * ARGUMENTS:
  *   - self-pointer to unit object:
- *       dt3UNIT_BALL *Uni;
+ *       dt3UNIT_CYL *Uni;
  *   - animation context:
  *       dt3ANIM *Ani;
  * RETURNS: None.
  */
-static VOID DT3_UnitRender( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
+static VOID DT3_UnitRender( dt3UNIT_CYL *Uni, dt3ANIM *Ani )
 {
-  DT3_RndPrimDraw(&Uni->Ball, MatrMulMatr(MatrTranslate(Uni->Pos),
+  DT3_RndPrimDraw(&Uni->Cyl, MatrMulMatr(MatrTranslate(Uni->Pos),
     MatrRotateY(90 * (Ani->JX + Ani->JR))));
 } /* End of 'DT3_UnitRender' function */ 
 
 /* Unit deinitialization function.
  * ARGUMENTS:
  *   - self-pointer to unit object:
- *       dt3UNIT_BALL *Uni;
+ *       dt3UNIT_CYL *Uni;
  *   - animation context:
  *       dt3ANIM *Ani;
  * RETURNS: None.
  */
-static VOID DT3_UnitClose( dt3UNIT_BALL *Uni, dt3ANIM *Ani )
+static VOID DT3_UnitClose( dt3UNIT_CYL *Uni, dt3ANIM *Ani )
 {
-  DT3_RndPrimFree(&Uni->Ball);
+  DT3_RndPrimFree(&Uni->Cyl);
 } /* End of 'DT3_UnitClose' function */ 
 
-/* Unit ball creation function.
+/* Unit cyl creation function.
  * ARGUMENTS:
  *   None.
  * RETURNS:
  *   (dt3UNIT *) pointer to created unit.
  */
-dt3UNIT * DT3_UnitCreateBall( VOID )
+dt3UNIT * DT3_UnitCreateCyl( VOID )
 {
-  dt3UNIT_BALL *Uni;
+  dt3UNIT_CYL *Uni;
 
-  if ((Uni = (dt3UNIT_BALL *)DT3_AnimUnitCreate(sizeof(dt3UNIT_BALL))) == NULL)
+  if ((Uni = (dt3UNIT_CYL *)DT3_AnimUnitCreate(sizeof(dt3UNIT_CYL))) == NULL)
     return NULL;
 
   Uni->Init = (VOID *)DT3_UnitInit;
@@ -91,6 +91,6 @@ dt3UNIT * DT3_UnitCreateBall( VOID )
   Uni->Render = (VOID *)DT3_UnitRender;
   Uni->Close = (VOID *)DT3_UnitClose;
   return (dt3UNIT *)Uni;
-} /* End of 'DT3_UnitCreateBall' function */ 
+} /* End of 'DT3_UnitCreateCyl' function */ 
 
-/* END OF 'u_ball.c' FILE */
+/* END OF 'u_cyl.c' FILE */
