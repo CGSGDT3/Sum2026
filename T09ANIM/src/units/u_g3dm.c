@@ -4,7 +4,9 @@
  * PURPOSE: unit model file in animation program.
  */ 
 
-#include <time.h>
+#include <windows.h>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm")
 
 #include "units.h"
 
@@ -29,163 +31,178 @@ typedef struct tagdt3UNIT_G3DM
 static VOID DT3_UnitCarRotation( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
   FLT phi_max = 35, Aphi = 180, Acyll = 1, MaxCyl = 30;
+  CHAR Bufbbb[300], Bufaaa[300], Bufst[300];
 
-  /* KeyBoard Mode */
-  if (Uni->Mode == 0)
+  if (!Ani->IsPause)
   {
-    if (Ani->Keys['D'])
-      Uni->SteerAngle += Aphi * Ani->DeltaTime;
-    if (Ani->Keys['A'])
-      Uni->SteerAngle -= Aphi * Ani->DeltaTime;    
-  //  Uni->SteerAngle += Aphi * Ani->DeltaTime * (Ani->JX + Ani->JR);
-    if (Uni->SteerAngle > phi_max)
-      Uni->SteerAngle = phi_max;
-    if (Uni->SteerAngle < -phi_max)
-      Uni->SteerAngle = -phi_max; 
+    mciSendString("status bbb mode", Bufbbb, sizeof(Bufbbb), NULL);
+    mciSendString("status aaa mode", Bufaaa, sizeof(Bufaaa), NULL);
+    mciSendString("status st mode", Bufst, sizeof(Bufaaa), NULL);
 
-  //  Ani->JY
-    if (!Ani->Keys['D'] && !Ani->Keys['A'])
+    if (fabs(Uni->CarSpeed) > 10)
     {
-      Uni->SteerAngle *= 0.95;
-      if (fabs(Uni->SteerAngle) < 0.1)
-        Uni->SteerAngle = 0;
+      if (strcmp(Bufaaa, "playing") != 0 && strcmp(Bufst, "playing") != 0)
+        mciSendString("play aaa from 0", NULL, 0, NULL);
+    }
+    else if (fabs(Uni->CarSpeed > 0.030)) 
+    {
+      if (strcmp(Bufbbb, "playing") != 0 && strcmp(Bufst, "playing") != 0)
+         mciSendString("play bbb from 0", NULL, 0, NULL);
     }
 
-    Uni->Heading += Uni->CarSpeed * Ani->DeltaTime * tan(D2R(Uni->SteerAngle));
-
-    if (Ani->Keys['W'])    
+    /* KeyBoard Mode */
+    if (Uni->Mode == 0)
     {
-      Uni->CylSpeed += Acyll * cos(Uni->Heading) * Ani->DeltaTime;
-      Uni->CarSpeed += Acyll * Ani->DeltaTime;
-    }
-    if (Ani->Keys['S'])
-    {
-      Uni->CylSpeed -= 2 * Acyll * cos(Uni->Heading) * Ani->DeltaTime;
-      Uni->CarSpeed -= 2 * Acyll * Ani->DeltaTime;
-    }
-
-    if (!Ani->Keys['W'] && !Ani->Keys['S'])
-    {
-      if (Uni->CylSpeed > 0)
-      {
-        Uni->CylSpeed -= 10 * Ani->DeltaTime;
-        if (Uni->CylSpeed < 0)
-          Uni->CylSpeed = 0;
-      }
-      else if (Uni->CylSpeed < 0)
-      {
-        Uni->CylSpeed += 10 * Ani->DeltaTime;
-        if (Uni->CylSpeed > 0)
-          Uni->CylSpeed = 0;
-      }
-
-      if (Uni->CarSpeed > 0)
-      {
-        Uni->CarSpeed -= 10 * Ani->DeltaTime;
-        if (Uni->CarSpeed < 0)
-          Uni->CarSpeed = 0;
-      }
-      else if (Uni->CarSpeed < 0)
-      {
-        Uni->CarSpeed += 10 * Ani->DeltaTime;
-        if (Uni->CarSpeed > 0)
-          Uni->CarSpeed = 0;
-      }
-      if (fabs(Uni->CarSpeed) < 0.08)
-          Uni->CarSpeed = 0;
-      if (fabs(Uni->CylSpeed) < 0.08)
-          Uni->CylSpeed = 0;
-    }
-
-    if (Uni->CylSpeed > MaxCyl)
-      Uni->CylSpeed = MaxCyl;
-    if (Uni->CylSpeed < -MaxCyl)
-      Uni->CylSpeed = -MaxCyl;     
-    if (Uni->CarSpeed > MaxCyl)
-      Uni->CarSpeed = MaxCyl;
-    if (Uni->CarSpeed < -MaxCyl)
-      Uni->CarSpeed = -MaxCyl;     
-
-    Uni->CylAngle += Uni->CylSpeed * Ani->DeltaTime;
-    Uni->len += Uni->CarSpeed * Ani->DeltaTime;
-
-    Uni->Heading = DT3_NormalizeAngle(Uni->Heading);
-    Uni->len = DT3_NormalizeAngle(Uni->len);
-    Uni->CylAngle = DT3_NormalizeAngle(Uni->CylAngle);   
-  }
-
-  /* JoyStick Mode */
-  else 
-  {
-    if (fabs(Ani->JX) > 0.018  || fabs(Ani->JZ) > 0.018)
-    {
-      if (fabs(Ani->JX) > 0.018)
-        Uni->SteerAngle += Aphi * Ani->DeltaTime * Ani->JX;
-      if (fabs(Ani->JZ) > 0.018)
-        Uni->SteerAngle += Aphi * Ani->DeltaTime * Ani->JZ;
-
+      if (Ani->Keys['D'])
+        Uni->SteerAngle += Aphi * Ani->DeltaTime;
+      if (Ani->Keys['A'])
+        Uni->SteerAngle -= Aphi * Ani->DeltaTime;    
+    //  Uni->SteerAngle += Aphi * Ani->DeltaTime * (Ani->JX + Ani->JR);
       if (Uni->SteerAngle > phi_max)
         Uni->SteerAngle = phi_max;
       if (Uni->SteerAngle < -phi_max)
         Uni->SteerAngle = -phi_max; 
-    }
 
-    else
-    {
-      Uni->SteerAngle *= 0.95;
-      if (fabs(Uni->SteerAngle) < 0.1)
-        Uni->SteerAngle = 0;
-    }
-
-    Uni->Heading += Uni->CarSpeed * Ani->DeltaTime * tan(D2R(Uni->SteerAngle));
-
-    if (fabs(Ani->JR) > 0.018  || fabs(Ani->JY) > 0.018)
-    {
-      if (fabs(Ani->JR) > 0.018)
+    //  Ani->JY
+      if (!Ani->Keys['D'] && !Ani->Keys['A'])
       {
-        Uni->CylSpeed -= Ani->JR * Acyll * cos(Uni->Heading) * Ani->DeltaTime;
-        Uni->CarSpeed -= Ani->JR * Acyll * Ani->DeltaTime;  
+        Uni->SteerAngle *= 0.95;
+        if (fabs(Uni->SteerAngle) < 0.1)
+          Uni->SteerAngle = 0;
       }
 
-      if (fabs(Ani->JY) > 0.018)
-      {
-        Uni->CylSpeed -= Ani->JY * Acyll * cos(Uni->Heading) * Ani->DeltaTime;
-        Uni->CarSpeed -= Ani->JY * Acyll * Ani->DeltaTime;  
-      }                         
-    }
+      Uni->Heading += Uni->CarSpeed * Ani->DeltaTime * tan(D2R(Uni->SteerAngle));
 
-    else
-    {
-      if (Uni->CylSpeed > 0)
+      if (Ani->Keys['W'])    
       {
-        Uni->CylSpeed -= 10 * Ani->DeltaTime;
-        if (Uni->CylSpeed < 0)
-          Uni->CylSpeed = 0;
+        Uni->CylSpeed += Acyll * cos(Uni->Heading) * Ani->DeltaTime;
+        Uni->CarSpeed += Acyll * Ani->DeltaTime;
       }
-      else if (Uni->CylSpeed < 0)
+      if (Ani->Keys['S'])
       {
-        Uni->CylSpeed += 10 * Ani->DeltaTime;
+        Uni->CylSpeed -= 2 * Acyll * cos(Uni->Heading) * Ani->DeltaTime;
+        Uni->CarSpeed -= 2 * Acyll * Ani->DeltaTime;
+      }
+
+      if (!Ani->Keys['W'] && !Ani->Keys['S'])
+      {
+        if (fabs(Uni->CarSpeed) > 0.005 && fabs(Uni->CarSpeed) < 1 && strcmp(Bufst, "playing") != 0)
+        {
+          mciSendString("pause aaa", NULL, 0, NULL);
+          mciSendString("pause bbb", NULL, 0, NULL);
+          mciSendString("play st from 0", NULL, 0, NULL);
+        }
         if (Uni->CylSpeed > 0)
-          Uni->CylSpeed = 0;
+        {
+          Uni->CylSpeed -= 10 * Ani->DeltaTime;
+          if (Uni->CylSpeed < 0)
+            Uni->CylSpeed = 0;
+        }
+        else if (Uni->CylSpeed < 0)
+        {
+          Uni->CylSpeed += 10 * Ani->DeltaTime;
+          if (Uni->CylSpeed > 0)
+            Uni->CylSpeed = 0;
+        }
+
+        if (Uni->CarSpeed > 0)
+        {
+          Uni->CarSpeed -= 10 * Ani->DeltaTime;
+          if (Uni->CarSpeed < 0)
+            Uni->CarSpeed = 0;
+        }
+        else if (Uni->CarSpeed < 0)
+        {
+          Uni->CarSpeed += 10 * Ani->DeltaTime;
+          if (Uni->CarSpeed > 0)
+            Uni->CarSpeed = 0;
+        }
+        if (fabs(Uni->CarSpeed) < 0.08)
+            Uni->CarSpeed = 0;
+        if (fabs(Uni->CylSpeed) < 0.08)
+            Uni->CylSpeed = 0;
+      }
+    }
+
+    /* JoyStick Mode */
+    else 
+    {
+      if (fabs(Ani->JX) > 0.018  || fabs(Ani->JZ) > 0.018)
+      {
+        if (fabs(Ani->JX) > 0.018)
+          Uni->SteerAngle += Aphi * Ani->DeltaTime * Ani->JX;
+        if (fabs(Ani->JZ) > 0.018)
+          Uni->SteerAngle += Aphi * Ani->DeltaTime * Ani->JZ;
+
+        if (Uni->SteerAngle > phi_max)
+          Uni->SteerAngle = phi_max;
+        if (Uni->SteerAngle < -phi_max)
+          Uni->SteerAngle = -phi_max; 
       }
 
-      if (Uni->CarSpeed > 0)
+      else
       {
-        Uni->CarSpeed -= 10 * Ani->DeltaTime;
-        if (Uni->CarSpeed < 0)
-          Uni->CarSpeed = 0;
+        Uni->SteerAngle *= 0.95;
+        if (fabs(Uni->SteerAngle) < 0.1)
+          Uni->SteerAngle = 0;
       }
-      else if (Uni->CarSpeed < 0)
+
+      Uni->Heading += Uni->CarSpeed * Ani->DeltaTime * tan(D2R(Uni->SteerAngle));
+
+      if (fabs(Ani->JR) > 0.018  || fabs(Ani->JY) > 0.018)
       {
-        Uni->CarSpeed += 10 * Ani->DeltaTime;
+        if (fabs(Ani->JR) > 0.018)
+        {
+          Uni->CylSpeed -= Ani->JR * Acyll * cos(Uni->Heading) * Ani->DeltaTime;
+          Uni->CarSpeed -= Ani->JR * Acyll * Ani->DeltaTime;  
+        }
+
+        if (fabs(Ani->JY) > 0.018)
+        {
+          Uni->CylSpeed -= Ani->JY * Acyll * cos(Uni->Heading) * Ani->DeltaTime;
+          Uni->CarSpeed -= Ani->JY * Acyll * Ani->DeltaTime;  
+        } 
+      }
+
+      else
+      {
+        if (fabs(Uni->CarSpeed) > 0.005 && fabs(Uni->CarSpeed) < 1 && strcmp(Bufst, "playing") != 0)
+        {
+          mciSendString("pause aaa", NULL, 0, NULL);
+          mciSendString("pause bbb", NULL, 0, NULL);
+          mciSendString("play st from 0", NULL, 0, NULL);
+        }
+        if (Uni->CylSpeed > 0)
+        {
+          Uni->CylSpeed -= 10 * Ani->DeltaTime;
+          if (Uni->CylSpeed < 0)
+            Uni->CylSpeed = 0;
+        }
+        else if (Uni->CylSpeed < 0)
+        {
+          Uni->CylSpeed += 10 * Ani->DeltaTime;
+          if (Uni->CylSpeed > 0)
+            Uni->CylSpeed = 0;
+        }
+
         if (Uni->CarSpeed > 0)
-          Uni->CarSpeed = 0;
+        {
+          Uni->CarSpeed -= 10 * Ani->DeltaTime;
+          if (Uni->CarSpeed < 0)
+            Uni->CarSpeed = 0;
+        }
+        else if (Uni->CarSpeed < 0)
+        {
+          Uni->CarSpeed += 10 * Ani->DeltaTime;
+          if (Uni->CarSpeed > 0)
+            Uni->CarSpeed = 0;
+        }
+        if (fabs(Uni->CarSpeed) < 0.08)
+            Uni->CarSpeed = 0;
+        if (fabs(Uni->CylSpeed) < 0.08)
+            Uni->CylSpeed = 0;
       }
-      if (fabs(Uni->CarSpeed) < 0.08)
-          Uni->CarSpeed = 0;
-      if (fabs(Uni->CylSpeed) < 0.08)
-          Uni->CylSpeed = 0;
-    }
+    }          
 
     if (Uni->CylSpeed > MaxCyl)
       Uni->CylSpeed = MaxCyl;
@@ -215,6 +232,10 @@ static VOID DT3_UnitCarRotation( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
  */
 static VOID DT3_UnitInit( dt3UNIT_G3DM *Uni, dt3ANIM *Ani )
 {
+  mciSendString("open bin/sounds/ferrari250.wav type waveaudio alias aaa", NULL, 0, NULL);
+  mciSendString("open bin/sounds/fast-acceleration-ferrari.wav type waveaudio alias bbb", NULL, 0, NULL);
+  mciSendString("open bin/sounds/vyiklyuchenie--v12-zatihaet.wav type waveaudio alias st", NULL, 0, NULL);
+
   DT3_RndPrimsLoad(&Uni->Model, "bin/models/Lexus.g3dm");
   DT3_RndPrimCreateCyll(&Uni->Cylinder, 1000, 120, 1000, 50);
   Uni->SteerAngle = 0, Uni->len = 0, Uni->CylSpeed = 0, Uni->VerticalPos = 0; 
