@@ -158,6 +158,7 @@ INT DT3_RndMtlApply( INT MtlNo )
     glUniform1f(loc, mtl->Trans);
 
   /* Set textures */
+
   for (i = 0; i < 8; i++)
   {
     glActiveTexture(GL_TEXTURE0 + i);  
