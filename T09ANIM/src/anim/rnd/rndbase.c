@@ -144,8 +144,7 @@ VOID DT3_RndInit( HWND hWnd )
     OutputDebugString(glGetString(GL_RENDERER));
     OutputDebugString("\n");
   #endif /* NDEBUG */
-
-    /* Create console */
+  /* Create console */
   AllocConsole();
 
   cfi.cbSize = sizeof(CONSOLE_FONT_INFOEX);
@@ -156,8 +155,6 @@ VOID DT3_RndInit( HWND hWnd )
 
   freopen("CONOUT$", "w", stdout);
   system("@chcp 1251 > nul");
-  printf("\x1b[38;2;%d;%d;%dm \x1b[48;2;%d;%d;%dm", 255, 255, 0, 0, 102, 102);
-  printf("Группа компьютерной графики ФМЛ № 30\n");
   printf("\x1b[38;2;%d;%d;%dm\x1b[48;2;%d;%d;%dm", 0, 255, 0, 90, 90, 90);
   printf("Computer Graphics Support Group\n");
   printf("\x1b[38;2;%d;%d;%dm\x1b[48;2;%d;%d;%dm", 255, 255, 255, 0, 0, 0);
@@ -204,14 +201,14 @@ VOID DT3_RndCopyFrame( VOID )
  */
 VOID DT3_RndStart( VOID )
 {
-  VEC4 ClearColor = {1, 0.75, 0.45, 1};
+  VEC4 ClearColor = {1.0, 0.65, 0.4, 1.0};
+
   /* Another beatiful colors:
   VEC4 ClearColor = {1.0, 0.55, 0.3, 1.0};
-  VEC4 ClearColor = {0.95, 0.55, 0.75, 1.0};
-  VEC4 ClearColor = {1.0, 0.75, 0.45, 1.0};
   VEC4 ClearColor = {0.85, 0.35, 0.55, 1.0};
+  VEC4 ClearColor = {0.95, 0.55, 0.75, 1.0};
   VEC4 ClearColor = {0.65, 0.45, 0.85, 1.0};
-  VEC4 ClearColor = {1.0, 0.65, 0.4, 1.0};
+  VEC4 ClearColor = {1, 0.75, 0.45, 1};
   */
   FLT DepthClearValue = 1;
 

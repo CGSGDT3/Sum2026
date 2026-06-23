@@ -155,7 +155,7 @@ static UINT DT3_RndShdLoad( CHAR *FileNamePrefix )
       /* Link program */
       glLinkProgram(prg);
       /* Errors handle */
-      glGetProgramiv(shd[i].Id, GL_LINK_STATUS, &res);
+      glGetProgramiv(prg, GL_LINK_STATUS, &res);
       if (res != 1)
       {
         glGetProgramInfoLog(shd[i].Id, sizeof(Buf), &res, Buf);

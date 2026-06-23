@@ -60,14 +60,14 @@ static VOID CamTransf( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
   Azimuth = R2D(atan2(sinP, cosP));
   Elevator = R2D(acos(cosT));
 
-  Azimuth += Ani->GlobalDeltaTime * 47 * (Ani->JX + Ani->JR + Ani->Keys[VK_LEFT] - Ani->Keys[VK_RIGHT])
+  Azimuth += Ani->GlobalDeltaTime * 47 * (/*Ani->JX + Ani->JR*/ + Ani->Keys[VK_LEFT] - Ani->Keys[VK_RIGHT])
     - 4 * Ani->Keys[VK_LBUTTON] * Ani->Mdx;
 
-  Elevator += Ani->GlobalDeltaTime * 47 * (Ani->JY + Ani->Keys[VK_UP] - Ani->Keys[VK_DOWN])
+  Elevator += Ani->GlobalDeltaTime * 47 * (/*Ani->JY*/ + Ani->Keys[VK_UP] - Ani->Keys[VK_DOWN])
     - 4 * Ani->Keys[VK_RBUTTON] * Ani->Mdy;
 
    Dist += Ani->GlobalDeltaTime * (Ani->Mdz + 8 * (1 + Ani->Keys[VK_SHIFT] * 28)
-     * (Ani->JZ + Ani->Keys[VK_NEXT] - Ani->Keys[VK_PRIOR]));
+     * (/*Ani->JZ*/ + Ani->Keys[VK_NEXT] - Ani->Keys[VK_PRIOR]));
 
   if (Elevator < 0.08)
     Elevator = 0.08;
@@ -117,7 +117,9 @@ static VOID DT3_UnitResponse( dt3UNIT_CONTROL *Uni, dt3ANIM *Ani )
 
   /* Transforming camera position */
   CamTransf(Uni, Ani);
-/*  Uni->CamLoc = PointTransform(Uni->CamLoc, MatrRotateY(Ani->DeltaTime * Uni->AngleSpeed * Ani->Mdx));
+  if (Ani->Keys['0'])
+      DT3_RndCamSet(VecSet(-0.12176228, 6.7829499, -11.391928), VecSet(0, 0, 1), VecSet(0, 1, 0));  
+  /*  Uni->CamLoc = PointTransform(Uni->CamLoc, MatrRotateY(Ani->DeltaTime * Uni->AngleSpeed * Ani->Mdx));
     
   Uni->CamLoc = VecAddVec(Uni->CamLoc, VecMulNum(Uni->CamDir, Ani->DeltaTime * Uni->Speed *
       (Ani->Keys[VK_UP] - Ani->Keys[VK_DOWN])));*/
